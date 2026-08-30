@@ -1,0 +1,66 @@
+---
+import Base from "../layouts/Base.astro";
+import { inKindDrives, volunteerLinks } from "../data/event";
+---
+
+<Base
+  title="Get involved"
+  description="Volunteer or donate in-kind for Journey Through Bethlehem. Sign up to help, or bring diapers, food, and toys to the nativity."
+>
+  <section class="wrap page-title">
+    <p class="kicker">Serve with us</p>
+    <h1>Get involved.</h1>
+    <p class="lede">
+      Join us and help make this year’s LIVE Nativity event unforgettable with your own unique and special talents.
+    </p>
+  </section>
+
+  <section class="wrap split">
+    <div>
+      <h2>Volunteer with us.</h2>
+      <p>Sign up to volunteer through the forms linked below.</p>
+      <div class="actions">
+        {volunteerLinks.map((link) => (
+          <a class="btn" href={link.href} rel="noreferrer">{link.label}</a>
+        ))}
+      </div>
+    </div>
+    <img
+      class="photo"
+      src="/images/photos/artisans.jpg"
+      alt="Volunteers in period clothing inside a marketplace room."
+      width="1800"
+      height="1209"
+    />
+  </section>
+
+  <section class="wrap">
+    <h2>Donations</h2>
+    <p class="prose">
+      We have three great opportunities to give back to the community this Christmas season. You can shop directly from their Amazon wish-lists below OR bring donations directly to the drop-off tables located throughout the nativity.
+    </p>
+    <div class="cards cards-3" style="margin-top: 1.5rem;">
+      {
+        inKindDrives.map((drive) => (
+          <article class="card">
+            <h3>{drive.title}</h3>
+            <p>{drive.body}</p>
+            <p>
+              <a href={drive.orgHref} rel="noreferrer">{drive.org}</a>
+            </p>
+            <p>
+              <a class="btn" href={drive.amazon} rel="noreferrer">{drive.amazonLabel}</a>
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap">
+    <p>
+      To support the production itself, visit the
+      <a href="/donate">Faith & Fellowship Foundation donation page</a>.
+    </p>
+  </section>
+</Base>

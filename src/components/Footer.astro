@@ -1,0 +1,39 @@
+---
+import { event } from "../data/event";
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-label">Let’s connect.</p>
+      <p>
+        Presented by
+        <a href={event.fffUrl}>{event.presentedBy}</a>.
+      </p>
+      <p>
+        <a href={`mailto:${event.email}`}>{event.email}</a>
+      </p>
+      <img class="fff-lockup" src="/images/brand/fff-logo.png" alt="Faith & Fellowship Foundation" width="120" height="134" />
+    </div>
+    <div>
+      <p class="footer-label">Visit</p>
+      <ul class="footer-links">
+        <li><a href="/tickets">Tickets</a></li>
+        <li><a href="/get-involved">Get involved</a></li>
+        <li><a href="/donate">Donate</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/privacy-policy">Privacy</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-label">Follow</p>
+      <ul class="footer-links">
+        <li><a href={event.instagram}>Instagram</a></li>
+        <li><a href={event.facebook}>Facebook</a></li>
+        <li>
+          <a href={event.mapsUrl}>{event.venueFull}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>

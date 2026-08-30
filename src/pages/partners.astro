@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import PartnerGrid from "../components/PartnerGrid.astro";
+import { partners } from "../data/event";
+---
+
+<Base
+  title="Partners"
+  description="Churches and community organizations that make Journey Through Bethlehem possible."
+>
+  <section class="wrap page-title">
+    <p class="kicker">Community</p>
+    <h1>Our partners</h1>
+    <p class="lede">
+      Journey Through Bethlehem is a community production. These are the partners named on the current event site — no others added.
+    </p>
+  </section>
+
+  <section class="wrap">
+    <PartnerGrid />
+    <ul class="prose" style="margin-top: 2rem;">
+      {
+        partners.map((partner) => (
+          <li>
+            <a href={partner.href} rel="noreferrer">{partner.name}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

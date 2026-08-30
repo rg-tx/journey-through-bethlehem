@@ -1,0 +1,107 @@
+---
+import Base from "../layouts/Base.astro";
+import PartnerGrid from "../components/PartnerGrid.astro";
+import { event } from "../data/event";
+
+const photos = [
+  { src: "/images/photos/camel.jpg", alt: "A Bactrian camel in period trappings at the live nativity." },
+  { src: "/images/photos/choir.jpg", alt: "Women and girls in white and gold robes singing at the nativity." },
+  { src: "/images/photos/nativity-126.jpg", alt: "Children in biblical costumes during the nativity performance." },
+  { src: "/images/photos/marketplace.jpg", alt: "A marketplace stall with baked goods at Journey Through Bethlehem." },
+  { src: "/images/photos/bethlehem-sign.jpg", alt: "Guests gathered under a Bethlehem sign in the marketplace." },
+  { src: "/images/photos/nativity-142.jpg", alt: "Actors in historical costumes on the nativity stage." },
+  { src: "/images/photos/artisans.jpg", alt: "Volunteers in period clothing inside a decorated marketplace room." },
+  { src: "/images/photos/nativity-120.jpg", alt: "Children and adults in biblical costumes at the live nativity." },
+];
+---
+
+<Base
+  title="Journey Through Bethlehem | Free Live Nativity in DFW"
+  description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
+>
+  <section class="hero-identity" aria-label="Journey through Bethlehem">
+    <img
+      src="/images/brand/tt-header.jpg"
+      alt="Journey through Bethlehem, presented by Faith & Fellowship Foundation, with a painted nativity of Mary, Joseph, and the child in the manger."
+      width="1620"
+      height="839"
+    />
+  </section>
+
+  <section class="invite">
+    <div class="invite-inner">
+      <p class="kicker">You’re invited.</p>
+      <h1 class="display">
+        Celebrate the birth of Christ at a free community event
+      </h1>
+      <div class="meta-block">
+        <p><strong>{event.datesLabel}</strong></p>
+        <p>
+          <a href={event.mapsUrl}>{event.venueName}<br />{event.venueCity}</a>
+        </p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/tickets">Get tickets</a>
+        <a class="btn btn-ghost" href="/get-involved">Get involved</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap split">
+    <div>
+      <h2>A live nativity in Trophy Club</h2>
+      <p>
+        You are invited to the {event.annual} Live Nativity Production celebrating the birth of Jesus Christ! Experience the true meaning of the holiday season as we bring the story of the Nativity to life. Immerse yourself in the interactive Bethlehem marketplace, listen to live music, sample foods, toss a dreidel, make a clay lamp and see live manger animals.
+      </p>
+      <p>
+        The evening will culminate with a live musical performance of Christ’s nativity story, complete with actors, animals and beautiful scenery. Witness the humble stable, the guiding star, and a joyous celebration through music and acting. Bring your friends and family to be a part of this heartwarming community celebration of faith and love.
+      </p>
+    </div>
+    <figure>
+      <img
+        class="photo"
+        src="/images/photos/manger-scene.jpg"
+        alt="The full live nativity cast in biblical costumes before the stable at night."
+        width="1800"
+        height="1201"
+      />
+      <figcaption class="photo-caption">From a previous Journey Through Bethlehem</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap" aria-label="From the nativity">
+    <div class="gallery">
+      {photos.map((photo) => <img src={photo.src} alt={photo.alt} width="800" height="533" />)}
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Our partners</h2>
+    <p class="prose">This community event is made possible by churches, civic partners, and neighbors who give their time each December.</p>
+    <PartnerGrid />
+    <p style="margin-top: 1.25rem;">
+      <a href="/partners">See all partners</a>
+    </p>
+  </section>
+
+  <section class="wrap split">
+    <div>
+      <h2>Accommodations</h2>
+      <p>
+        Sign language interpretation services are available at the 7:00 p.m. performance on Friday, December 4, and all showtimes on Saturday and Sunday, December 5 and 6. Just select sign language under the accommodation options when you reserve your ticket.
+      </p>
+      <p>
+        Spanish translation services are available at all showtimes, every night. Just select Spanish language under the accommodation options when you reserve your ticket.
+      </p>
+    </div>
+    <figure>
+      <img
+        class="photo"
+        src="/images/photos/shepherds.jpg"
+        alt="Two men in biblical robes at the nativity."
+        width="720"
+        height="960"
+      />
+    </figure>
+  </section>
+</Base>

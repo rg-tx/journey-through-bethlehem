@@ -1,0 +1,12 @@
+name = "journey-through-bethlehem"
+compatibility_date = "2026-08-30"
+pages_build_output_dir = "dist"
+
+# Preview on Cloudflare Pages only.
+# Do not point journeythroughbethlehem.org here until Reed says to cut over.
+# Squarespace stays live until then.
+
+# Set these as Pages secrets / environment variables — never commit live keys:
+# STRIPE_SECRET_KEY
+# STRIPE_PUBLISHABLE_KEY
+# STRIPE_DONATE_PRICE_ID   (optional; checkout uses custom amounts via price_data)
