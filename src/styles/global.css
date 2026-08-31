@@ -106,7 +106,7 @@ p:last-child {
 }
 
 .site-header a {
-  color: var(--ink);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -126,20 +126,33 @@ p:last-child {
 }
 
 .brand img {
-  height: 58px;
+  height: auto;
   width: auto;
+  max-height: 54px;
   max-width: min(280px, 62vw);
 }
 
 .nav-toggle {
-  font-family: var(--font-sans);
-  font-size: 1rem;
+  appearance: none;
   background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--ink);
-  min-height: var(--tap);
-  min-width: var(--tap);
-  padding: 0 0.9rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: var(--tap);
+  height: var(--tap);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--accent);
 }
 
 .nav {
@@ -184,7 +197,7 @@ p:last-child {
   }
 
   .brand img {
-    height: 68px;
+    max-height: 55px;
     max-width: 320px;
   }
 }
@@ -253,6 +266,8 @@ p:last-child {
 }
 
 .celebrate-box .christ {
+  font-family: var(--font-display);
+  font-style: normal;
   font-size: clamp(2.1rem, 6vw, 3.4rem);
   line-height: 1.05;
   margin: 0.25rem 0 0.35rem;

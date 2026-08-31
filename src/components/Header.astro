@@ -12,8 +12,10 @@ import { nav } from "../data/event";
         height="113"
       />
     </a>
-    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">
-      Menu
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
     </button>
     <nav class="nav" id="site-nav" data-nav aria-label="Primary">
       {nav.map((item) => (
