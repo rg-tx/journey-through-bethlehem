@@ -75,8 +75,8 @@ export const walkStations = [
   },
   {
     title: "The stable",
-    src: "/images/photos/manger-scene.jpg",
-    alt: "The live nativity cast before the stable at night.",
+    src: "/images/brand/nativity-scene-2.png",
+    alt: "A painterly nativity of Mary, Joseph, and the child at the stable.",
   },
   {
     title: "The star",
