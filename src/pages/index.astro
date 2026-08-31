@@ -1,18 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import PartnerGrid from "../components/PartnerGrid.astro";
-import { event } from "../data/event";
-
-const photos = [
-  { src: "/images/photos/camel.jpg", alt: "A Bactrian camel in period trappings at the live nativity." },
-  { src: "/images/photos/choir.jpg", alt: "Women and girls in white and gold robes singing at the nativity." },
-  { src: "/images/photos/nativity-126.jpg", alt: "Children in biblical costumes during the nativity performance." },
-  { src: "/images/photos/marketplace.jpg", alt: "A marketplace stall with baked goods at Journey Through Bethlehem." },
-  { src: "/images/photos/bethlehem-sign.jpg", alt: "Guests gathered under a Bethlehem sign in the marketplace." },
-  { src: "/images/photos/nativity-142.jpg", alt: "Actors in historical costumes on the nativity stage." },
-  { src: "/images/photos/artisans.jpg", alt: "Volunteers in period clothing inside a decorated marketplace room." },
-  { src: "/images/photos/nativity-120.jpg", alt: "Children and adults in biblical costumes at the live nativity." },
-];
+import { event, involveRows, walkStations } from "../data/event";
 ---
 
 <Base
@@ -20,98 +8,108 @@ const photos = [
   description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
   image="/images/brand/nativity-hero.jpg"
 >
-  <section class="hero-nativity" aria-label="Journey through Bethlehem">
+  <section class="bleed-art" aria-label="Nativity painting">
     <img
-      class="hero-art"
       src="/images/brand/nativity-hero.jpg"
       alt="A painterly nativity of Mary, Joseph, and the child in the manger."
       width="2400"
-      height="1244"
-    />
-    <img
-      class="hero-lockup"
-      src="/images/brand/wordmark-on-art.png"
-      alt="Journey through Bethlehem, presented by Faith & Fellowship Foundation"
-      width="520"
-      height="184"
+      height="1345"
     />
   </section>
 
-  <div class="ink-rule" aria-hidden="true"></div>
-
-  <section class="hero-sky" aria-label="Celebrate the birth of Christ">
-    <img
-      src="/images/brand/night-sky.jpg"
-      alt=""
-      width="2200"
-      height="1100"
-    />
-    <div class="celebrate">
-      <h1 class="celebrate-box">
-        <span>Celebrate the</span>
-        <span>birth of</span>
-        <span class="christ">Christ</span>
-        <span>at a free</span>
-        <span>community event</span>
-      </h1>
-    </div>
-  </section>
-
-  <section class="wrap invite-block">
-    <p class="invited">You’re invited.</p>
-    <p class="dates">December 3rd–6th, 2026</p>
-    <p class="venue">
-      <a href={event.mapsUrl}>{event.venueName}<br />{event.venueCity}</a>
+  <section class="invite">
+    <h1 class="invite-h1">
+      <span class="invite-lead">Celebrate the birth of</span>
+      <span class="invite-christ">Christ</span>
+      <span class="invite-lead">at a free community event</span>
+    </h1>
+    <p class="invite-when">{event.datesLabel} · Trophy Club</p>
+    <hr class="rule" />
+    <p class="invite-address">
+      <a href={event.mapsUrl}>{event.venueFull}</a>
     </p>
+    <hr class="rule" />
+    <p class="invite-copy">Admission is free. Reserve a showtime so we can welcome you at the gate.</p>
     <div class="actions">
       <a class="btn" href="/tickets">Get tickets</a>
-      <a class="btn btn-ghost" href="/get-involved">Get Involved</a>
+    </div>
+    <p class="invite-note">Tickets open November 1, 2026.</p>
+  </section>
+
+  <section class="bleed-art sky" aria-label="Night sky painting">
+    <img src="/images/brand/night-sky.jpg" alt="" width="2200" height="1100" />
+  </section>
+
+  <section class="wrap" aria-label="The walk">
+    <div class="section-head">
+      <div>
+        <h2>The walk</h2>
+      </div>
+      <div class="walk-controls">
+        <button class="walk-btn" type="button" data-walk-prev aria-label="Previous station">‹</button>
+        <button class="walk-btn" type="button" data-walk-next aria-label="Next station">›</button>
+      </div>
+    </div>
+    <div class="walk-track" data-walk>
+      {
+        walkStations.map((station) => (
+          <article class="walk-card">
+            <img src={station.src} alt={station.alt} width="800" height="600" />
+            <p>{station.title}</p>
+          </article>
+        ))
+      }
     </div>
   </section>
 
-  <section class="wrap">
-    <p>
-      You are invited to the {event.annual} Live Nativity Production celebrating the birth of Jesus Christ! Experience the true meaning of the holiday season as we bring the story of the Nativity to life.
-    </p>
-    <p>
-      Immerse yourself in the interactive Bethlehem marketplace, listen to live music, sample foods, toss a dreidel, make a clay lamp and see live manger animals.
-    </p>
-    <p>
-      The evening will culminate with a live musical performance of Christ’s nativity story, complete with actors, animals and beautiful scenery. Witness the humble stable, the guiding star, and a joyous celebration through music and acting.
-    </p>
-    <p>
-      Bring your friends and family to be a part of this heartwarming community celebration of faith and love.
-    </p>
-  </section>
-
-  <section class="wrap" aria-label="From the nativity">
-    <img
-      class="photo"
-      src="/images/photos/manger-scene.jpg"
-      alt="The full live nativity cast in biblical costumes before the stable at night."
-      width="1800"
-      height="1201"
-    />
-    <div class="gallery" style="margin-top: 0.75rem;">
-      {photos.map((photo) => <img src={photo.src} alt={photo.alt} width="800" height="533" />)}
+  <section class="wrap" aria-label="Get involved">
+    <div class="section-head">
+      <div>
+        <h2>Get involved</h2>
+      </div>
     </div>
+    {
+      involveRows.map((row) => (
+        <details class="reveal">
+          <summary>{row.title}</summary>
+          <div class="reveal-body">
+            <img src={row.src} alt={row.alt} width="1200" height="800" />
+            <div>
+              <p>{row.body}</p>
+              <div class="actions" style="margin-top: 1rem;">
+                <a class="btn btn-deep" href={row.href} rel="noreferrer">
+                  {row.action}
+                </a>
+              </div>
+            </div>
+          </div>
+        </details>
+      ))
+    }
   </section>
 
-  <section class="wrap">
-    <h2>Our Partners</h2>
-    <PartnerGrid />
-    <p style="margin-top: 1.25rem;">
-      <a href="/partners">See all partners</a>
-    </p>
-  </section>
-
-  <section class="wrap">
-    <h2>Accommodations</h2>
-    <p>
-      Sign language interpretation services are available at the 7:00 p.m. performance on Friday, December 4, and all showtimes on Saturday and Sunday, December 5 and 6. Just select sign language under the accommodation options when you reserve your ticket.
-    </p>
-    <p>
-      Spanish translation services are available at all showtimes, every night. Just select Spanish language under the accommodation options when you reserve your ticket.
-    </p>
+  <section class="wrap" id="showtimes" aria-label="Showtimes">
+    <div class="section-head">
+      <div>
+        <h2>Showtimes</h2>
+        <p class="section-sub">All times America/Chicago. Open a night, or go to the full table.</p>
+      </div>
+      <a class="btn btn-surface" href="/tickets#showtimes">See tickets</a>
+    </div>
+    {
+      event.showtimes.map((night) => (
+        <details class="night">
+          <summary>{night.date}</summary>
+          <div class="night-body">
+            <div class="times">
+              {night.times.map((time) => (
+                <span class="time">{time} PM</span>
+              ))}
+            </div>
+            {night.weekday === "Friday" && <p class="night-note">ASL at the 7:00 PM performance.</p>}
+          </div>
+        </details>
+      ))
+    }
   </section>
 </Base>

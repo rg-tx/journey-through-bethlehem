@@ -1,5 +1,7 @@
 ---
 import { nav } from "../data/event";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
 <header class="site-header">
@@ -12,15 +14,29 @@ import { nav } from "../data/event";
         height="113"
       />
     </a>
-    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+    <button
+      class="nav-toggle"
+      type="button"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Menu"
+    >
       <span class="nav-toggle-bar"></span>
       <span class="nav-toggle-bar"></span>
       <span class="nav-toggle-bar"></span>
     </button>
     <nav class="nav" id="site-nav" data-nav aria-label="Primary">
-      {nav.map((item) => (
-        <a href={item.href}>{item.label}</a>
-      ))}
+      {
+        nav.map((item) => {
+          const active = path === item.href;
+          return (
+            <a href={item.href} aria-current={active ? "page" : undefined} class:list={[{ "is-active": active }]}>
+              {item.label}
+            </a>
+          );
+        })
+      }
     </nav>
   </div>
 </header>

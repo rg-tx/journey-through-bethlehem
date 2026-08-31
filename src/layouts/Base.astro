@@ -57,6 +57,26 @@ const ogImage = new URL(image, Astro.site).href;
         const open = nav?.classList.toggle("is-open");
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
       });
+
+      const track = document.querySelector<HTMLElement>("[data-walk]");
+      const prev = document.querySelector<HTMLButtonElement>("[data-walk-prev]");
+      const next = document.querySelector<HTMLButtonElement>("[data-walk-next]");
+
+      function cardStep() {
+        if (!track) return 0;
+        const card = track.querySelector<HTMLElement>(".walk-card");
+        if (!card) return 0;
+        const styles = getComputedStyle(track);
+        const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+        return card.getBoundingClientRect().width + gap;
+      }
+
+      prev?.addEventListener("click", () => {
+        track?.scrollBy({ left: -cardStep(), behavior: "smooth" });
+      });
+      next?.addEventListener("click", () => {
+        track?.scrollBy({ left: cardStep(), behavior: "smooth" });
+      });
     </script>
   </body>
 </html>

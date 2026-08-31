@@ -46,8 +46,70 @@ export const event = {
 
 export const nav = [
   { href: "/tickets", label: "Tickets" },
-  { href: "/get-involved", label: "Get Involved" },
+  { href: "/get-involved", label: "Get involved" },
   { href: "/donate", label: "Donate" },
+] as const;
+
+export const volunteerAdultUrl =
+  "https://m.signupgenius.com/#!/showSignUp/10C0A49A9AE2DA3F9C16-59033479-volunteer";
+export const volunteerYouthUrl =
+  "https://m.signupgenius.com/#!/showSignUp/10C0A49A9AE2DA3F9C16-59556125-youth";
+export const foodDriveUrl =
+  "https://m.signupgenius.com/#!/showSignUp/10C0A49A9AE2DA3F9C16-59054454-food";
+
+export const walkStations = [
+  {
+    title: "Marketplace",
+    src: "/images/photos/marketplace.jpg",
+    alt: "A volunteer at a marketplace stall with baskets of bread.",
+  },
+  {
+    title: "Choir",
+    src: "/images/photos/choir.jpg",
+    alt: "Women and girls in white and gold robes singing at the nativity.",
+  },
+  {
+    title: "The road",
+    src: "/images/photos/camel.jpg",
+    alt: "A camel in period trappings on the road to the nativity.",
+  },
+  {
+    title: "The stable",
+    src: "/images/photos/manger-scene.jpg",
+    alt: "The live nativity cast before the stable at night.",
+  },
+  {
+    title: "The star",
+    src: "/images/photos/shepherds.jpg",
+    alt: "Volunteers in biblical dress in front of a night-sky star backdrop.",
+  },
+] as const;
+
+export const involveRows = [
+  {
+    title: "Volunteer",
+    src: "/images/photos/manger-scene.jpg",
+    alt: "Cast and a Roman soldier on horseback at the live nativity.",
+    body: "Join us and help make this year’s live nativity unforgettable with your own talents. Adults sign up through the live form.",
+    href: volunteerAdultUrl,
+    action: "Sign up to volunteer",
+  },
+  {
+    title: "Youth",
+    src: "/images/photos/nativity-126.jpg",
+    alt: "Youth in biblical costumes during the nativity performance.",
+    body: "Youth sign up through the live form.",
+    href: volunteerYouthUrl,
+    action: "Youth sign-up",
+  },
+  {
+    title: "Give goods",
+    src: "/images/photos/artisans.jpg",
+    alt: "Volunteers in period clothing inside a decorated marketplace room.",
+    body: "Bring diapers, food, or toys to the nativity, or shop the Amazon lists. The food drive sign-up is live. Stripe gifts for the production are not open yet.",
+    href: foodDriveUrl,
+    action: "Food drive sign-up",
+  },
 ] as const;
 
 export const partners = [
