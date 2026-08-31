@@ -46,9 +46,8 @@ export const event = {
 
 export const nav = [
   { href: "/tickets", label: "Tickets" },
-  { href: "/get-involved", label: "Get involved" },
+  { href: "/get-involved", label: "Get Involved" },
   { href: "/donate", label: "Donate" },
-  { href: "/partners", label: "Partners" },
 ] as const;
 
 export const partners = [

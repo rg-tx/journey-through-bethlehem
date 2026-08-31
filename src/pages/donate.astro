@@ -7,7 +7,6 @@ import Base from "../layouts/Base.astro";
   description="Give to Faith & Fellowship Foundation in support of Journey Through Bethlehem and year-round community service."
 >
   <section class="wrap page-title">
-    <p class="kicker">Faith & Fellowship Foundation</p>
     <h1>Your support unites us.</h1>
     <p class="lede">
       Help the Faith & Fellowship Foundation create cherished traditions like Journey Through Bethlehem and continue our vital, year-round service to the community. Since we are a 501(c)(3) organization all donations are tax-deductible to the fullest extent permitted by law.
@@ -15,11 +14,11 @@ import Base from "../layouts/Base.astro";
   </section>
 
   <section class="wrap split">
-    <form id="donate-form" class="card" novalidate>
+    <form id="donate-form" novalidate>
       <h2>Make a donation</h2>
       <p id="donate-banner" class="notice" hidden>Donations open soon. This form is ready for Faith & Fellowship Foundation’s Stripe account.</p>
 
-      <p class="kicker">Suggested amounts</p>
+      <p>Suggested amounts</p>
       <div class="donate-amounts" role="group" aria-label="Suggested amounts">
         <button type="button" data-amount="10" class="is-on">$10</button>
         <button type="button" data-amount="20">$20</button>
@@ -33,7 +32,7 @@ import Base from "../layouts/Base.astro";
         <input id="custom-amount" name="custom" type="number" min="1" step="1" inputmode="numeric" />
       </div>
 
-      <p class="kicker">Frequency</p>
+      <p>Frequency</p>
       <div class="freq" role="group" aria-label="Donation frequency">
         <button type="button" data-freq="once" class="is-on">One-time</button>
         <button type="button" data-freq="monthly">Monthly</button>
