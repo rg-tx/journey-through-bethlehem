@@ -94,7 +94,9 @@ p:last-child {
 }
 
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 40;
   background: var(--surface);
   color: var(--ink);
   border-bottom: 1px solid var(--line);
@@ -125,8 +127,9 @@ p:last-child {
 }
 
 .brand img {
-  height: 48px;
+  height: auto;
   width: auto;
+  max-height: 48px;
   max-width: min(280px, 70vw);
   object-fit: contain;
   object-position: left center;
@@ -186,6 +189,10 @@ p:last-child {
 }
 
 @media (min-width: 768px) {
+  .brand img {
+    max-height: 52px;
+  }
+
   .nav-toggle {
     display: none;
   }
@@ -202,38 +209,43 @@ p:last-child {
   }
 }
 
-.bleed-art {
+@media (min-width: 1440px) {
+  .brand img {
+    max-height: 56px;
+  }
+}
+
+.hero-art,
+.sky-art {
   position: relative;
   background: var(--sky);
   line-height: 0;
 }
 
-.bleed-art img {
+.hero-art img,
+.sky-art img {
   width: 100%;
   height: clamp(16.5rem, 52vw, 36rem);
   object-fit: cover;
   object-position: center 55%;
 }
 
-.bleed-art.sky {
-  background: var(--sky);
-}
-
-.bleed-art.sky img {
+.sky-art img {
   height: clamp(18rem, 58vw, 40rem);
   object-position: center 28%;
 }
 
-.bleed-art.photo {
+.market-art {
   background: #2a221c;
 }
 
-.bleed-art.photo img {
+.market-art img {
   height: clamp(16rem, 48vw, 32rem);
   object-position: center 38%;
 }
 
-.bleed-art::after {
+.hero-art::after,
+.sky-art::after {
   content: "";
   position: absolute;
   left: 0;
@@ -250,18 +262,20 @@ p:last-child {
   padding: 2.5rem 1.25rem;
 }
 
-.invite {
+.paper-invite {
+  position: static;
   text-align: center;
+  background: var(--paper);
   padding: 2.75rem 1.25rem 3.25rem;
   max-width: 38rem;
   margin: 0 auto;
 }
 
-.invite-h1 {
+.paper-invite-h1 {
   margin: 0 0 1.5rem;
 }
 
-.invite-lead {
+.paper-invite-lead {
   display: block;
   font-family: var(--font-ui);
   font-size: clamp(1.05rem, 2.4vw, 1.25rem);
@@ -270,7 +284,7 @@ p:last-child {
   line-height: 1.4;
 }
 
-.invite-christ {
+.paper-invite-christ {
   display: block;
   font-family: var(--font-display);
   font-size: clamp(3.1rem, 12vw, 5.4rem);
@@ -279,7 +293,7 @@ p:last-child {
   margin: 0.2rem 0 0.35rem;
 }
 
-.invite-when {
+.paper-invite-when {
   font-family: var(--font-ui);
   color: var(--accent);
   font-size: 1rem;
@@ -293,21 +307,21 @@ p:last-child {
   max-width: 22rem;
 }
 
-.invite-address {
+.paper-invite-address {
   font-family: var(--font-serif);
   margin: 0;
 }
 
-.invite-address a {
+.paper-invite-address a {
   color: var(--ink);
 }
 
-.invite-copy {
+.paper-invite-copy {
   font-family: var(--font-serif);
   margin: 1.35rem 0 1.6rem;
 }
 
-.invite-note {
+.paper-invite-note {
   font-family: var(--font-ui);
   font-size: 0.92rem;
   color: var(--ink-soft);
@@ -320,7 +334,7 @@ p:last-child {
   gap: 0.75rem;
 }
 
-.invite .actions {
+.paper-invite .actions {
   justify-content: center;
 }
 
