@@ -21,8 +21,6 @@ specifics when confirmed.
   `src/data/event.ts` for the canonical www.signupgenius.com share links
   (the m. versions force the mobile UI on desktop).
 - **Per-showtime Ticket Tailor links** — time chips currently deep-link to
-  the series page. If Ticket Tailor exposes per-occurrence URLs, wire them
-  into `event.showtimes`.
-- **Email capture** — bind a KV namespace named `SUBSCRIBERS` to the Pages
-  project to activate the form (see wrangler.toml), and decide who mails
-  the list when tickets open.
+  the series page. Do not wire per-occurrence `checkout_url` / view-event
+  IDs while the 2026 series is still draft (those URLs 404). After Ticket
+  Tailor is published, those URLs can replace the series link.

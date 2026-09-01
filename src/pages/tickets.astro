@@ -1,6 +1,5 @@
 ---
 import Base from "../layouts/Base.astro";
-import EmailCapture from "../components/EmailCapture.astro";
 import { event, faq } from "../data/event";
 ---
 
@@ -35,12 +34,9 @@ import { event, faq } from "../data/event";
     <div data-when="prelaunch">
       <div class="notice">
         <p>
-          Reservations open <strong>{event.ticketsOpenLabel}</strong>. Leave your email below and
-          we’ll send a reminder when they open.
+          Reservations open <strong>{event.ticketsOpenLabel}</strong>. Showtimes are listed below.
+          Check back here to reserve — admission is free, and we never take payment for tickets.
         </p>
-      </div>
-      <div style="margin-top: 1.25rem; max-width: 34rem;">
-        <EmailCapture />
       </div>
       <div class="actions" style="margin-top: 1.5rem;">
         <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
@@ -61,12 +57,9 @@ import { event, faq } from "../data/event";
     <div data-when="past">
       <div class="notice">
         <p>
-          The {event.year} walk has ended. Thank you for a wonderful four nights. Leave your email
-          and we’ll tell you when next December’s reservations open.
+          The {event.year} walk has ended. Thank you for a wonderful four nights. We hope to
+          welcome you again next December.
         </p>
-      </div>
-      <div style="margin-top: 1.25rem; max-width: 34rem;">
-        <EmailCapture />
       </div>
     </div>
   </section>

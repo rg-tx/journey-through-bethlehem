@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import PrivacyNotice from "../components/PrivacyNotice.astro";
 import { event, siteState } from "../data/event";
 
 interface Props {
@@ -105,6 +106,7 @@ const eventJsonLd = JSON.stringify({
       <slot />
     </main>
     <Footer />
+    <PrivacyNotice />
     <script>
       // --- mobile nav: toggle, Escape, outside click, focus return ---
       const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
