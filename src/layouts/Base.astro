@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { event } from "../data/event";
+import { event, siteState } from "../data/event";
 
 interface Props {
   title: string;
@@ -13,21 +13,62 @@ interface Props {
 const {
   title,
   description = "Free live nativity in Trophy Club, Texas — December 3–6, 2026. Presented by Faith & Fellowship Foundation.",
-  image = "/images/brand/nativity-hero.png",
+  image = "/images/brand/og-wordmark.jpg",
 } = Astro.props;
 
 const pageTitle = title.includes("Journey") ? title : `${title} — ${event.shortName}`;
 const canonical = new URL(Astro.url.pathname === "/" ? "/" : Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
+// Build-time default; a tiny inline script re-stamps at runtime so the site
+// flips states (tickets open, event week, past) without waiting for a deploy.
+const state = siteState();
+
+const eventJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: event.name,
+  startDate: event.dateStart,
+  endDate: event.dateEnd,
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  eventStatus: "https://schema.org/EventScheduled",
+  location: {
+    "@type": "Place",
+    name: event.name,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: event.venueName,
+      addressLocality: "Trophy Club",
+      addressRegion: "TX",
+      postalCode: "76262",
+      addressCountry: "US",
+    },
+  },
+  image: [ogImage],
+  description,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: new URL("/tickets", Astro.site).href,
+    validFrom: event.ticketsOpenIso,
+  },
+  organizer: {
+    "@type": "Organization",
+    name: event.presentedBy,
+    url: event.fffUrl,
+  },
+});
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-state={state}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f5f1" />
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -36,12 +77,26 @@ const ogImage = new URL(image, Astro.site).href;
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Tenor+Sans&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/playfair-display-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
+    <link rel="preload" href="/fonts/pt-serif-400.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline define:vars={{ ticketsOpenIso: event.ticketsOpenIso, eventStartIso: event.eventStartIso, eventEndIso: event.eventEndIso }}>
+      // Mark JS availability (reveals stay visible without it) and correct
+      // the site state at runtime so nothing goes stale between deploys.
+      document.documentElement.classList.add("js");
+      const now = Date.now();
+      let state = "prelaunch";
+      if (now >= Date.parse(eventEndIso)) state = "past";
+      else if (now >= Date.parse(eventStartIso)) state = "eventWeek";
+      else if (now >= Date.parse(ticketsOpenIso)) state = "open";
+      document.documentElement.dataset.state = state;
+    </script>
+    <script type="application/ld+json" set:html={eventJsonLd} is:inline />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -51,32 +106,78 @@ const ogImage = new URL(image, Astro.site).href;
     </main>
     <Footer />
     <script>
+      // --- mobile nav: toggle, Escape, outside click, focus return ---
       const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
       const nav = document.querySelector<HTMLElement>("[data-nav]");
-      toggle?.addEventListener("click", () => {
-        const open = nav?.classList.toggle("is-open");
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      });
 
-      const track = document.querySelector<HTMLElement>("[data-walk]");
-      const prev = document.querySelector<HTMLButtonElement>("[data-walk-prev]");
-      const next = document.querySelector<HTMLButtonElement>("[data-walk-next]");
-
-      function cardStep() {
-        if (!track) return 0;
-        const card = track.querySelector<HTMLElement>(".walk-card");
-        if (!card) return 0;
-        const styles = getComputedStyle(track);
-        const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
-        return card.getBoundingClientRect().width + gap;
+      function setNav(open: boolean) {
+        nav?.classList.toggle("is-open", open);
+        toggle?.setAttribute("aria-expanded", open ? "true" : "false");
       }
 
-      prev?.addEventListener("click", () => {
-        track?.scrollBy({ left: -cardStep(), behavior: "smooth" });
+      toggle?.addEventListener("click", () => {
+        setNav(!nav?.classList.contains("is-open"));
       });
-      next?.addEventListener("click", () => {
-        track?.scrollBy({ left: cardStep(), behavior: "smooth" });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && nav?.classList.contains("is-open")) {
+          setNav(false);
+          toggle?.focus();
+        }
       });
+
+      document.addEventListener("click", (e) => {
+        if (
+          nav?.classList.contains("is-open") &&
+          e.target instanceof Node &&
+          !nav.contains(e.target) &&
+          !toggle?.contains(e.target)
+        ) {
+          setNav(false);
+        }
+      });
+
+      // --- header shadow once the page scrolls ---
+      const header = document.querySelector<HTMLElement>(".site-header");
+      let scrolledFrame = 0;
+      window.addEventListener(
+        "scroll",
+        () => {
+          cancelAnimationFrame(scrolledFrame);
+          scrolledFrame = requestAnimationFrame(() => {
+            header?.classList.toggle("is-scrolled", window.scrollY > 8);
+          });
+        },
+        { passive: true },
+      );
+
+      // --- gentle reveals; everything stays visible without JS ---
+      const revealed = document.querySelectorAll<HTMLElement>("[data-reveal]");
+      if (revealed.length && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in-view");
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px" },
+        );
+        revealed.forEach((el) => io.observe(el));
+      }
+
+      // --- the quiet countdown line ---
+      const cd = document.querySelector<HTMLElement>("[data-countdown]");
+      if (cd) {
+        const start = Date.parse(cd.dataset.countdown || "");
+        const nights = Math.max(0, Math.ceil((start - Date.now()) / 86_400_000));
+        const num = cd.querySelector<HTMLElement>("[data-countdown-nights]");
+        if (num && nights > 0) {
+          num.textContent = String(nights);
+        }
+      }
     </script>
   </body>
 </html>

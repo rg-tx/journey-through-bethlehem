@@ -1,6 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
-import { foodDriveUrl, inKindDrives, volunteerAdultUrl, volunteerYouthUrl } from "../data/event";
+import {
+  event,
+  foodDriveUrl,
+  inKindDrives,
+  volunteerAdultUrl,
+  volunteerRoles,
+  volunteerYouthUrl,
+} from "../data/event";
 ---
 
 <Base
@@ -8,59 +15,99 @@ import { foodDriveUrl, inKindDrives, volunteerAdultUrl, volunteerYouthUrl } from
   description="Volunteer or donate in-kind for Journey Through Bethlehem. Sign up to help, or bring diapers, food, and toys to the nativity."
   image="/images/photos/marketplace.jpg"
 >
-  <section class="hero-art market-art" aria-label="Marketplace">
+  <section class="page-art" aria-hidden="true">
     <img
-      src="/images/photos/marketplace.jpg"
-      alt="A smiling volunteer at a marketplace stall during the nativity."
-      width="1800"
-      height="1201"
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      fetchpriority="high"
+      decoding="async"
     />
   </section>
 
   <section class="wrap page-title">
-    <h1>Get involved.</h1>
+    <p class="kicker">It takes a village — literally</p>
+    <h1>Get involved</h1>
+    <p class="lede">
+      Bethlehem is built, staffed, and torn down by neighbors. Whether you can give a night in
+      costume or a box of diapers, there’s a place for you in the town.
+    </p>
   </section>
 
   <section class="wrap split">
-    <img
-      class="split-photo soldier"
-      src="/images/photos/manger-scene.jpg"
-      alt="A Roman soldier on horseback beside the live nativity cast."
-      width="1800"
-      height="1201"
-    />
+    <figure class="matted" data-reveal>
+      <img
+        src="/images/photos/manger-scene-720.jpg"
+        srcset="/images/photos/manger-scene-720.jpg 720w, /images/photos/manger-scene.jpg 1800w"
+        sizes="(min-width: 900px) 45vw, 92vw"
+        alt="A Roman soldier on horseback beside the live nativity cast."
+        width="720"
+        height="480"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
     <div>
-      <h2>Volunteer with us.</h2>
+      <h2>Volunteer with us</h2>
       <p>
-        Join us and help make this year’s live nativity unforgettable with your own talents. Adults sign up through the live form.
+        No experience needed and costumes are provided — pick a night and a role on the sign-up
+        form, and we’ll take it from there. A few of the ways people serve:
       </p>
-      <div class="actions" style="margin-top: 1.25rem;">
+      <div class="roles">
+        {
+          volunteerRoles.map((role) => (
+            <div class="role">
+              <h3>{role.title}</h3>
+              <p>{role.body}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="actions">
         <a class="btn btn-deep" href={volunteerAdultUrl} rel="noreferrer">Sign up to volunteer</a>
       </div>
+      <p class="section-sub" style="margin-top: 0.9rem;">
+        Questions about roles or shifts? <a href={`mailto:${event.email}`}>{event.email}</a>
+      </p>
     </div>
   </section>
 
   <section class="wrap split">
-    <img
-      class="split-photo"
-      src="/images/photos/nativity-126.jpg"
-      alt="Youth in biblical costumes during the nativity performance."
-      width="1800"
-      height="1200"
-    />
+    <figure class="matted" data-reveal>
+      <img
+        src="/images/photos/nativity-126-720.jpg"
+        srcset="/images/photos/nativity-126-720.jpg 720w, /images/photos/nativity-126.jpg 1800w"
+        sizes="(min-width: 900px) 45vw, 92vw"
+        alt="Youth in biblical costumes during the nativity performance."
+        width="720"
+        height="480"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
     <div>
-      <h2>Youth volunteers.</h2>
-      <p>Youth sign up through the live form.</p>
+      <h2>Youth volunteers</h2>
+      <p>
+        Young people carry much of Bethlehem — shepherds, angels, musicians, marketplace helpers.
+        It’s a service opportunity, a night out with friends, and a story they’ll tell later.
+        Youth have their own sign-up.
+      </p>
       <div class="actions" style="margin-top: 1.25rem;">
         <a class="btn btn-deep" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
       </div>
     </div>
   </section>
 
-  <section class="wrap">
-    <h2>Give goods.</h2>
+  <section class="wrap" id="give-goods">
+    <p class="kicker">The marketplace gives back</p>
+    <h2>Give goods</h2>
     <p class="prose">
-      Stripe donations for the production are not open yet. You can shop the Amazon lists below or bring donations to the drop-off tables at the nativity. The food drive sign-up is live.
+      Each drive below supports a local partner organization. Bring items to the drop-off tables
+      at the nativity, or shop the Amazon lists from home. The food drive also needs hands —
+      sign-up is open now.
     </p>
     <div class="actions" style="margin: 1.15rem 0 0.5rem;">
       <a class="btn btn-surface" href={foodDriveUrl} rel="noreferrer">Food drive sign-up</a>
@@ -69,8 +116,9 @@ import { foodDriveUrl, inKindDrives, volunteerAdultUrl, volunteerYouthUrl } from
       inKindDrives.map((drive) => (
         <article class="drive">
           <h3>{drive.title}</h3>
-          <p>{drive.body}</p>
+          <p class="prose">{drive.body}</p>
           <p>
+            Benefits{" "}
             <a href={drive.orgHref} rel="noreferrer">
               {drive.org}
             </a>

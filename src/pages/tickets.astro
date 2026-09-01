@@ -1,35 +1,80 @@
 ---
 import Base from "../layouts/Base.astro";
-import { event } from "../data/event";
+import EmailCapture from "../components/EmailCapture.astro";
+import { event, faq } from "../data/event";
 ---
 
 <Base
   title="Tickets"
-  description={`Free tickets for Journey Through Bethlehem, December 3–6, 2026 in Trophy Club, Texas. Tickets open ${event.ticketsOpenLabel}.`}
+  description={`Free tickets for Journey Through Bethlehem, December 3–6, 2026 in Trophy Club, Texas. Reservations open ${event.ticketsOpenLabel}.`}
 >
+  <section class="page-art" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </section>
+
   <section class="wrap page-title">
     <p class="kicker">Admission is free</p>
     <h1>Tickets</h1>
     <p class="lede">
-      Reserve a showtime so we can welcome your family at the gate. Reservations are Ticket Tailor. We do not take payment for tickets on this site.
+      Reserving a showtime is free — it simply tells us when to welcome your family at the gate,
+      so the walk never gets crowded. We never take payment for tickets.
     </p>
   </section>
 
   <section class="wrap">
-    <div class="notice">
-      <p>
-        Tickets open November 1, 2026 at 12:00 a.m. Chicago time. The series is not on sale yet. When it is published, the same link will open the reservation page.
+    <div data-when="prelaunch">
+      <div class="notice">
+        <p>
+          Reservations open <strong>{event.ticketsOpenLabel}</strong>. Leave your email below and
+          we’ll write the moment they do.
+        </p>
+      </div>
+      <div style="margin-top: 1.25rem; max-width: 34rem;">
+        <EmailCapture />
+      </div>
+      <div class="actions" style="margin-top: 1.5rem;">
+        <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
+      </div>
+    </div>
+
+    <div data-when="open eventWeek">
+      <div class="actions">
+        <a class="btn btn-deep" href={event.ticketsUrl} rel="noreferrer">Reserve a showtime</a>
+        <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
+      </div>
+      <p class="section-sub" style="margin-top: 0.9rem;">
+        Reservations are handled securely by Ticket Tailor. Showtimes are capped and popular
+        nights fill quickly.
       </p>
     </div>
-    <div class="actions" style="margin-top: 1.25rem;">
-      <a class="btn btn-deep" href={event.ticketsUrl} rel="noreferrer">Get tickets</a>
-      <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
+
+    <div data-when="past">
+      <div class="notice">
+        <p>
+          The {event.year} walk has ended — thank you for a wonderful four nights. Leave your
+          email and we’ll tell you when next December’s reservations open.
+        </p>
+      </div>
+      <div style="margin-top: 1.25rem; max-width: 34rem;">
+        <EmailCapture />
+      </div>
     </div>
   </section>
 
-  <section class="wrap" id="showtimes">
+  <section class="wrap on-paper" id="showtimes">
     <h2>Showtimes</h2>
-    <p class="section-sub" style="margin-bottom: 1.25rem;">All times are America/Chicago, in the evening.</p>
+    <p class="section-sub" style="margin-bottom: 1.25rem;">
+      Evening walks, {event.datesLabel}. All times Central.
+    </p>
     <table class="showtimes">
       <thead>
         <tr>
@@ -45,7 +90,19 @@ import { event } from "../data/event";
               <td>
                 <div class="times">
                   {night.times.map((time) => (
-                    <span class="time">{time} PM</span>
+                    <>
+                      <span class="time" data-when="prelaunch past">
+                        {time} PM
+                      </span>
+                      <a
+                        class="time-link"
+                        href={event.ticketsUrl}
+                        rel="noreferrer"
+                        data-when="open eventWeek"
+                      >
+                        {time} PM
+                      </a>
+                    </>
                   ))}
                 </div>
               </td>
@@ -54,8 +111,27 @@ import { event } from "../data/event";
         }
       </tbody>
     </table>
-    <p class="lede" style="margin-top: 1.5rem;">
-      Sign language is offered at Friday’s 7:00 p.m. show and at every Saturday and Sunday showtime. Spanish translation is offered every night. Select the accommodation when you reserve.
+    <p class="lede" style="margin-top: 1.5rem;">{event.accommodations}</p>
+  </section>
+
+  <section class="wrap" id="plan-your-visit">
+    <p class="kicker">Plan your visit</p>
+    <h2>Good things to know</h2>
+    <div style="margin-top: 1.5rem;">
+      {
+        faq.map((item) => (
+          <details class="reveal">
+            <summary>{item.q}</summary>
+            <div class="reveal-body">
+              <p>{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+    <p class="section-sub" style="margin-top: 1.5rem;">
+      Anything else — group visits, accessibility, lost mittens —
+      <a href={`mailto:${event.email}`}>{event.email}</a>.
     </p>
   </section>
 </Base>

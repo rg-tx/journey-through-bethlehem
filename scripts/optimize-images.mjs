@@ -22,6 +22,24 @@ async function optimize(file) {
   const rel = path.relative(root, file);
   const isPhoto = rel.startsWith("photos/");
   const isBrandArt = /tt-header|og-wordmark|wordmark-on-art/.test(rel);
+  // Painterly artwork has no flat regions — lossless PNG is ~22x heavier for no
+  // visible gain. Route paintings to WebP (full + 768w variant for srcset).
+  const isPainting = /nativity-hero|night-sky|nativity-scene-2/.test(rel);
+
+  if (isPainting) {
+    const base = file.replace(/\.(png|jpg|jpeg|webp)$/i, "");
+    for (const width of [1456, 768]) {
+      const out = width === 1456 ? `${base}.webp` : `${base}-768.webp`;
+      await sharp(buf, { failOn: "none" })
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(out + ".tmp");
+      await fs.rename(out + ".tmp", out);
+      const stat = await fs.stat(out);
+      console.log(`webp ${rel} → ${path.basename(out)} (${(stat.size / 1024).toFixed(0)}kb)`);
+    }
+    return base + ".webp";
+  }
 
   if (isPhoto || isBrandArt) {
     const out = file.replace(/\.(png|jpg|jpeg|webp)$/i, ".jpg");
@@ -32,6 +50,15 @@ async function optimize(file) {
     await pipeline.jpeg({ quality: 80, progressive: true, mozjpeg: true }).toFile(out + ".tmp");
     await fs.rename(out + ".tmp", out);
     if (out !== file) await fs.unlink(file).catch(() => {});
+    if (isPhoto && !/-720\.jpg$/.test(out)) {
+      const small = out.replace(/\.jpg$/, "-720.jpg");
+      await sharp(buf, { failOn: "none" })
+        .rotate()
+        .resize({ width: 720, withoutEnlargement: true })
+        .jpeg({ quality: 78, progressive: true, mozjpeg: true })
+        .toFile(small + ".tmp");
+      await fs.rename(small + ".tmp", small);
+    }
     const stat = await fs.stat(out);
     console.log(`jpg  ${rel} → ${path.basename(out)} (${meta.format} ${meta.width}x${meta.height} → ${(stat.size / 1024).toFixed(0)}kb)`);
     return out;
@@ -48,7 +75,12 @@ async function optimize(file) {
   return out;
 }
 
-const files = (await walk(root)).filter((f) => /\.(png|jpg|jpeg|webp|ico)$/i.test(f));
+const files = (await walk(root)).filter(
+  (f) =>
+    /\.(png|jpg|jpeg|webp|ico)$/i.test(f) &&
+    // never reprocess generated variants or already-encoded WebP
+    !/(-720\.jpg|-768\.webp|\.webp)$/i.test(f),
+);
 for (const file of files) {
   try {
     await optimize(file);

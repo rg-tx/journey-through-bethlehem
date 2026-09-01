@@ -6,13 +6,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="/">
-      <img
-        src="/images/brand/wordmark.png"
-        alt="Journey through Bethlehem, presented by Faith & Fellowship Foundation"
-        width="2000"
-        height="706"
-      />
+    <a class="brand" href="/" aria-label="Journey through Bethlehem — home">
+      <span class="brand-script" aria-hidden="true">Journey through</span>
+      <span class="brand-name">Bethlehem</span>
     </a>
     <button
       class="nav-toggle"
@@ -32,7 +28,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
           const active = path === item.href;
           return (
             <a href={item.href} aria-current={active ? "page" : undefined} class:list={[{ "is-active": active }]}>
-              {item.label}
+              <span>{item.label}</span>
             </a>
           );
         })

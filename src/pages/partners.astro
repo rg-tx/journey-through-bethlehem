@@ -1,30 +1,36 @@
 ---
 import Base from "../layouts/Base.astro";
 import PartnerGrid from "../components/PartnerGrid.astro";
-import { partners } from "../data/event";
 ---
 
 <Base
   title="Partners"
   description="Churches and community organizations that make Journey Through Bethlehem possible."
 >
+  <section class="page-art" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </section>
+
   <section class="wrap page-title">
-    <h1>Our Partners</h1>
+    <p class="kicker">A community production</p>
+    <h1>Our partners</h1>
     <p class="lede">
-      Journey Through Bethlehem is a community production. These are the partners named on the current event site — no others added.
+      Bethlehem rises each December because churches, charities, and the Town of Trophy Club build
+      it together. These are the organizations that make the walk possible — and the neighbors
+      your marketplace gifts support.
     </p>
   </section>
 
   <section class="wrap">
     <PartnerGrid />
-    <ul class="prose" style="margin-top: 2rem;">
-      {
-        partners.map((partner) => (
-          <li>
-            <a href={partner.href} rel="noreferrer">{partner.name}</a>
-          </li>
-        ))
-      }
-    </ul>
   </section>
 </Base>

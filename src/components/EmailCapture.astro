@@ -1,0 +1,93 @@
+---
+import { event } from "../data/event";
+
+interface Props {
+  /** Visual ground the form sits on. */
+  tone?: "paper" | "night";
+}
+
+const { tone = "paper" } = Astro.props;
+---
+
+<form class="subscribe" data-subscribe novalidate>
+  <label class="visually-hidden" for={`subscribe-email-${tone}`}>Email address</label>
+  <input
+    id={`subscribe-email-${tone}`}
+    name="email"
+    type="email"
+    autocomplete="email"
+    placeholder="you@example.com"
+    required
+  />
+  <!-- honeypot: humans never see or fill this -->
+  <input
+    type="text"
+    name="website"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+    style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+  />
+  <button class:list={["btn", { "btn-gold": tone === "night" }]} type="submit">
+    Remind me
+  </button>
+  <p class="subscribe-status" role="status" data-subscribe-status style="flex-basis:100%;"></p>
+</form>
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script define:vars={{ contactEmail: event.email }}>
+  for (const form of document.querySelectorAll("[data-subscribe]")) {
+    if (form.dataset.bound) continue; // this inline script repeats per instance
+    form.dataset.bound = "true";
+    const status = form.querySelector("[data-subscribe-status]");
+    const input = form.querySelector('input[type="email"]');
+    const say = (msg) => {
+      if (status) status.textContent = msg;
+    };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = input?.value.trim() || "";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        say("Please enter a valid email address.");
+        return;
+      }
+      say("One moment…");
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            email,
+            website: form.querySelector('input[name="website"]')?.value || "",
+          }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          say("You’re on the list — we’ll email you when reservations open.");
+          form.reset();
+          return;
+        }
+        if (data.configured === false) {
+          say(`Signups aren’t connected yet — email ${contactEmail} and we’ll add you by hand.`);
+          return;
+        }
+        say(data.error || "Something went wrong. Please try again.");
+      } catch {
+        say(`We couldn’t reach the signup service — email ${contactEmail} and we’ll add you by hand.`);
+      }
+    });
+  }
+</script>

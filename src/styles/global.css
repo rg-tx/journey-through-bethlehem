@@ -1,18 +1,45 @@
+@import "./fonts.css";
+
+/* ------------------------------------------------------------------
+   Journey Through Bethlehem — design system
+   Three notes, played with confidence: paper, night, and candlelight.
+   ------------------------------------------------------------------ */
+
 :root {
+  /* paper (day) */
   --paper: #f7f5f1;
-  --surface: #fff;
-  --ink: #645044;
-  --ink-soft: #7a6a5d;
+  --surface: #fffdf9;
+  --ink: #453629;
+  --ink-strong: #2e2318;
+  --ink-soft: #756557;
   --line: #e4dfd4;
+
+  /* slate (the wordmark's blue) */
   --accent: #395f72;
   --accent-deep: #2c4a59;
-  --sky: #1c2a30;
+
+  /* candlelight */
+  --gold: #8a6420; /* AA on paper — kickers, small type */
+  --gold-bright: #d8b263; /* on night grounds */
+
+  /* night */
+  --night: #16232a;
+  --night-2: #1c2a30;
+  --night-text: #ece5d4;
+  --night-soft: #a9b4b4;
+  --night-line: #2d3d45;
+
   --tap: 44px;
   --radius: 6px;
   --page: 70rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-1: 200ms;
+  --dur-2: 700ms;
+
   --font-ui: "Tenor Sans", "Helvetica Neue", Helvetica, sans-serif;
-  --font-serif: "PT Serif", "Times New Roman", serif;
-  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-serif: "PT Serif", Georgia, "Times New Roman", serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 *,
@@ -34,6 +61,15 @@ body {
   background: var(--paper);
 }
 
+/* Cross-fade between pages where supported; a normal jump elsewhere. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 250ms;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -43,31 +79,39 @@ img {
 a {
   color: var(--ink);
   text-underline-offset: 0.18em;
+  transition: color var(--dur-1) var(--ease-out);
 }
 
 a:hover {
   color: var(--accent);
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.15;
-  color: var(--ink);
+  color: var(--ink-strong);
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 5vw, 3.6rem);
+  font-size: clamp(2.25rem, 5vw, 3.4rem);
 }
 
 h2 {
-  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
 }
 
 h3 {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
 }
 
 p {
@@ -83,7 +127,7 @@ p:last-child {
   left: 0.75rem;
   top: -4rem;
   background: var(--accent);
-  color: var(--surface);
+  color: #fff;
   padding: 0.6rem 0.9rem;
   z-index: 100;
   font-family: var(--font-ui);
@@ -93,14 +137,72 @@ p:last-child {
   top: 0.75rem;
 }
 
+/* ---------- motion ---------- */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reveals hide only when JS is present to add .in-view later. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    opacity: 0;
+    translate: 0 16px;
+  }
+  html.js [data-reveal].in-view {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      translate var(--dur-2) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- header ---------- */
+
 .site-header {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: var(--surface);
+  background: var(--paper);
   color: var(--ink);
   border-bottom: 1px solid var(--line);
-  overflow: visible;
+  transition: box-shadow var(--dur-1) var(--ease-out);
+}
+
+.site-header.is-scrolled {
+  box-shadow: 0 1px 12px rgba(46, 35, 24, 0.09);
 }
 
 .site-header a {
@@ -111,28 +213,37 @@ p:last-child {
 .header-inner {
   max-width: var(--page);
   margin: 0 auto;
-  padding: 0.7rem 1.25rem;
+  padding: 0.55rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  overflow: visible;
 }
 
+/* Live-type wordmark: crisp at any size, inherits color. */
 .brand {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   min-height: var(--tap);
-  overflow: visible;
+  line-height: 1;
 }
 
-.brand img {
-  height: auto;
-  width: auto;
-  max-height: 48px;
-  max-width: min(420px, 78vw);
-  object-fit: contain;
-  object-position: left center;
+.brand-script {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin: 0 0 0.15rem 0.1rem;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
 }
 
 .nav-toggle {
@@ -149,6 +260,7 @@ p:last-child {
   align-items: center;
   gap: 5px;
   color: var(--accent-deep);
+  cursor: pointer;
 }
 
 .nav-toggle-bar {
@@ -169,7 +281,7 @@ p:last-child {
   left: 0;
   right: 0;
   top: 100%;
-  background: var(--surface);
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
   padding: 0.4rem 1.25rem 0.85rem;
   z-index: 20;
@@ -183,16 +295,22 @@ p:last-child {
   align-items: center;
 }
 
-.nav a.is-active {
-  text-decoration: underline;
-  text-underline-offset: 0.28em;
+/* Animated underline, grown from the left. */
+.nav a span {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: left calc(100% - 0.15em);
+  transition: background-size var(--dur-1) var(--ease-out);
+  padding-bottom: 0.25em;
+}
+
+.nav a:hover span,
+.nav a.is-active span {
+  background-size: 100% 1px;
 }
 
 @media (min-width: 768px) {
-  .brand img {
-    max-height: 52px;
-  }
-
   .nav-toggle {
     display: none;
   }
@@ -209,52 +327,51 @@ p:last-child {
   }
 }
 
-@media (min-width: 1440px) {
-  .brand img {
-    max-height: 56px;
-  }
-}
+/* ---------- painted art bands ---------- */
 
 .hero-art,
 .sky-art {
   position: relative;
-  background: var(--sky);
+  background: var(--night);
   line-height: 0;
 }
 
 .hero-art img,
 .sky-art img {
   width: 100%;
-  height: clamp(16.5rem, 52vw, 36rem);
+  height: clamp(17rem, 52vw, 37rem);
   object-fit: cover;
-  object-position: center 55%;
-}
-
-.sky-art img {
-  height: clamp(18rem, 58vw, 40rem);
-  object-position: center 28%;
-}
-
-.market-art {
-  background: #2a221c;
-}
-
-.market-art img {
-  height: clamp(16rem, 48vw, 32rem);
+  /* keep the star and stable in the safe zone; fade lands on foreground */
   object-position: center 38%;
+  /* hand-feathered dissolve into paper: two stacked, offset fades */
+  -webkit-mask-image: linear-gradient(180deg, #000 78%, rgba(0, 0, 0, 0.55) 90%, transparent 100%),
+    linear-gradient(180deg, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(180deg, #000 78%, rgba(0, 0, 0, 0.55) 90%, transparent 100%),
+    linear-gradient(180deg, #000 86%, transparent 100%);
+  mask-composite: intersect;
 }
 
-.hero-art::after,
-.sky-art::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 24%;
-  background: linear-gradient(180deg, transparent, var(--paper));
-  pointer-events: none;
+.hero-art {
+  background: var(--paper);
 }
+
+/* slim painted band for interior pages */
+.page-art {
+  position: relative;
+  background: var(--night);
+  line-height: 0;
+  overflow: hidden;
+}
+
+.page-art img {
+  width: 100%;
+  height: clamp(7rem, 16vw, 11rem);
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* ---------- layout ---------- */
 
 .wrap {
   max-width: var(--page);
@@ -263,10 +380,8 @@ p:last-child {
 }
 
 .paper-invite {
-  position: static;
   text-align: center;
-  background: var(--paper);
-  padding: 2.75rem 1.25rem 3.25rem;
+  padding: 2.5rem 1.25rem 3.5rem;
   max-width: 38rem;
   margin: 0 auto;
 }
@@ -308,16 +423,10 @@ p:last-child {
 }
 
 .paper-invite-address {
-  font-family: var(--font-serif);
   margin: 0;
 }
 
-.paper-invite-address a {
-  color: var(--ink);
-}
-
 .paper-invite-copy {
-  font-family: var(--font-serif);
   margin: 1.35rem 0 1.6rem;
 }
 
@@ -326,6 +435,23 @@ p:last-child {
   font-size: 0.92rem;
   color: var(--ink-soft);
   margin: 1rem 0 0;
+}
+
+/* the quiet countdown line */
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-top: 1.4rem;
+}
+
+.countdown img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
 }
 
 .actions {
@@ -337,6 +463,8 @@ p:last-child {
 .paper-invite .actions {
   justify-content: center;
 }
+
+/* ---------- buttons ---------- */
 
 .btn {
   font-family: var(--font-ui);
@@ -350,13 +478,26 @@ p:last-child {
   align-items: center;
   justify-content: center;
   background: var(--accent);
-  color: var(--surface);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out),
+    translate var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out);
 }
 
 .btn:hover {
   background: var(--accent-deep);
   border-color: var(--accent-deep);
-  color: var(--surface);
+  color: #fff;
+  translate: 0 -1px;
+  box-shadow: 0 2px 10px rgba(44, 74, 89, 0.25);
+}
+
+.btn:active {
+  translate: 0 0;
+  box-shadow: none;
 }
 
 .btn-deep {
@@ -372,8 +513,24 @@ p:last-child {
 
 .btn-surface:hover {
   background: var(--paper);
-  color: var(--ink);
+  color: var(--ink-strong);
   border-color: var(--ink-soft);
+  box-shadow: 0 2px 10px rgba(46, 35, 24, 0.12);
+}
+
+/* candlelit button for night grounds */
+.btn-gold {
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+  color: var(--night);
+  font-weight: 400;
+}
+
+.btn-gold:hover {
+  background: #e3c47e;
+  border-color: #e3c47e;
+  color: var(--night);
+  box-shadow: 0 2px 14px rgba(216, 178, 99, 0.35);
 }
 
 .btn[disabled],
@@ -381,6 +538,8 @@ p:last-child {
   opacity: 0.55;
   pointer-events: none;
 }
+
+/* ---------- section furniture ---------- */
 
 .section-head {
   display: flex;
@@ -399,9 +558,9 @@ p:last-child {
 .kicker {
   font-family: var(--font-ui);
   font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--gold);
   margin: 0 0 0.55rem;
 }
 
@@ -412,47 +571,421 @@ p:last-child {
   font-size: 0.98rem;
 }
 
-.walk-controls {
-  display: flex;
-  gap: 0.5rem;
+/* ---------- the journey (home) ---------- */
+
+.journey {
+  position: relative;
+  background: var(--night);
+  color: var(--night-text);
 }
 
-.walk-btn {
-  width: var(--tap);
-  height: var(--tap);
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink);
-  border-radius: var(--radius);
-  font-size: 1.2rem;
-  line-height: 1;
+.journey-sky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  line-height: 0;
 }
 
-.walk-track {
+.journey-sky img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+/* Deepen the painting so night-text stays legible over its bright clouds. */
+.journey-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 35, 42, 0.38) 0%,
+    rgba(22, 35, 42, 0.52) 55%,
+    rgba(22, 35, 42, 0.68) 100%
+  );
+}
+
+/* stars breathe, never blink */
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stars i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--night-text);
+  box-shadow: 0 0 6px 1px rgba(236, 229, 212, 0.7);
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stars i {
+    animation: twinkle var(--tw, 5s) ease-in-out infinite;
+    animation-delay: var(--td, 0s);
+  }
+}
+
+.journey-track {
+  position: relative;
+  margin-top: -100dvh; /* stations scroll over the sticky sky */
+  z-index: 1;
+}
+
+.journey-intro {
+  min-height: 88dvh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 1.25rem;
+}
+
+.journey-intro .kicker {
+  color: var(--gold-bright);
+}
+
+.journey-intro h2 {
+  color: var(--night-text);
+  font-size: clamp(2rem, 5vw, 3rem);
+  max-width: 18ch;
+  margin: 0 0 1rem;
+  text-shadow: 0 1px 18px rgba(12, 20, 24, 0.75);
+}
+
+.journey-intro p {
+  max-width: 34rem;
+  color: var(--night-text);
+  text-shadow: 0 1px 12px rgba(12, 20, 24, 0.75);
+}
+
+.journey-intro .kicker {
+  text-shadow: 0 1px 10px rgba(12, 20, 24, 0.8);
+}
+
+.station {
+  min-height: 92dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+}
+
+.station-card {
+  width: min(24rem, 100%);
+  text-align: center;
+}
+
+.station-card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  /* a doorway into the town */
+  border-radius: 50% 50% 0 0 / 26% 26% 0 0;
+  border: 1px solid rgba(236, 229, 212, 0.28);
+  padding: 0.5rem;
+  background: rgba(22, 35, 42, 0.55);
+  filter: saturate(0.9) brightness(0.98);
+}
+
+.station-num {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin: 1.2rem 0 0.3rem;
+}
+
+.station-card h3 {
+  color: var(--night-text);
+  font-size: 1.6rem;
+  margin: 0 0 0.4rem;
+  text-shadow: 0 1px 14px rgba(12, 20, 24, 0.8);
+}
+
+.station-card p {
+  color: var(--night-text);
+  margin: 0;
+  text-shadow: 0 1px 10px rgba(12, 20, 24, 0.8);
+}
+
+.station-num {
+  text-shadow: 0 1px 10px rgba(12, 20, 24, 0.8);
+}
+
+/* the finale breaks the pattern: full-bleed painting, one CTA */
+.finale {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  padding: 0 1.25rem 5.5rem;
+}
+
+.finale-art {
+  position: absolute;
+  inset: 0;
+}
+
+.finale-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.finale-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22, 35, 42, 0.55) 0%, transparent 35%, transparent 55%, rgba(22, 35, 42, 0.82) 100%);
+}
+
+.finale-content {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+}
+
+.finale-content .station-num {
+  margin-top: 0;
+}
+
+.finale-content h3 {
+  color: var(--night-text);
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  margin: 0 0 0.5rem;
+}
+
+.finale-content p {
+  color: var(--night-text);
+  margin: 0 0 1.5rem;
+}
+
+.finale-content .actions {
+  justify-content: center;
+}
+
+/* ---------- night sections (showtimes on home, footer) ---------- */
+
+.night-section {
+  position: relative;
+  background: linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+  color: var(--night-text);
+}
+
+.night-section h2 {
+  color: var(--night-text);
+}
+
+.night-section .section-sub {
+  color: var(--night-soft);
+}
+
+.night-section .kicker {
+  color: var(--gold-bright);
+}
+
+.night-section a {
+  color: var(--night-text);
+}
+
+.night-section a:hover {
+  color: var(--gold-bright);
+}
+
+/* showtimes as lit windows */
+.nights-grid {
+  display: grid;
   gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 0.4rem;
+  margin-top: 1.75rem;
 }
 
-.walk-card {
-  flex: 0 0 min(78vw, 20.5rem);
-  scroll-snap-align: start;
+@media (min-width: 800px) {
+  .nights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.walk-card img {
+.night-card {
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+  background: rgba(28, 42, 48, 0.6);
+  padding: 1.15rem 1.25rem 1.3rem;
+}
+
+.night-card h3 {
+  color: var(--night-text);
+  font-size: 1.15rem;
+  margin: 0 0 0.7rem;
+}
+
+.times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+/* pre-launch: quiet listed times, not fake buttons */
+.time {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--night-soft);
+  border-bottom: 1px dotted var(--night-line);
+  padding: 0.15rem 0.1rem;
+}
+
+/* on paper grounds (tickets table) */
+.on-paper .time {
+  color: var(--ink-soft);
+  border-bottom-color: var(--line);
+}
+
+/* once tickets are live: glowing, tappable chips */
+.time-link {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--gold-bright);
+  border: 1px solid rgba(216, 178, 99, 0.45);
+  border-radius: var(--radius);
+  min-height: var(--tap);
+  min-width: 5.2rem;
+  padding: 0.5rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out);
+}
+
+.time-link:hover {
+  background: rgba(216, 178, 99, 0.12);
+  color: var(--gold-bright);
+  box-shadow: 0 0 14px rgba(216, 178, 99, 0.25);
+}
+
+.on-paper .time-link {
+  color: var(--accent-deep);
+  border-color: var(--accent);
+}
+
+.on-paper .time-link:hover {
+  background: rgba(57, 95, 114, 0.08);
+  color: var(--accent-deep);
+  box-shadow: none;
+}
+
+.night-note {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  color: var(--night-soft);
+  margin-top: 0.65rem;
+}
+
+/* ---------- involve cards (home) ---------- */
+
+.cards {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 800px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    translate var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out);
+}
+
+.card:hover {
+  translate: 0 -2px;
+  box-shadow: 0 6px 22px rgba(46, 35, 24, 0.1);
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  filter: saturate(0.9);
+}
+
+.card-body {
+  padding: 1.15rem 1.25rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.card-body h3 {
+  margin: 0;
+}
+
+.card-body p {
+  margin: 0;
+  font-size: 0.98rem;
+  flex: 1;
+}
+
+.card-link {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  align-self: flex-start;
+  padding-bottom: 0.1rem;
+}
+
+.card-link:hover {
+  color: var(--accent);
+}
+
+/* ---------- photos as artifacts ---------- */
+
+.matted {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 0.5rem;
+}
+
+.matted img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  filter: saturate(0.9);
 }
 
-.walk-card p {
-  font-family: var(--font-serif);
-  margin: 0.7rem 0 0;
+.photo-caption {
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
 }
+
+/* ---------- disclosure rows (FAQ) ---------- */
 
 .reveal {
   border-bottom: 1px solid var(--line);
@@ -462,8 +995,7 @@ p:last-child {
   border-top: 1px solid var(--line);
 }
 
-.reveal summary,
-.night summary {
+.reveal summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -472,86 +1004,35 @@ p:last-child {
   cursor: pointer;
   list-style: none;
   font-family: var(--font-serif);
-  padding: 0.35rem 0;
+  font-size: 1.08rem;
+  color: var(--ink-strong);
+  padding: 0.55rem 0;
 }
 
-.reveal summary::-webkit-details-marker,
-.night summary::-webkit-details-marker {
+.reveal summary::-webkit-details-marker {
   display: none;
 }
 
-.reveal summary::after,
-.night summary::after {
+.reveal summary::after {
   content: "+";
   font-family: var(--font-ui);
-  color: var(--ink-soft);
+  color: var(--gold);
   font-size: 1.25rem;
   line-height: 1;
+  transition: rotate var(--dur-1) var(--ease-out);
 }
 
-.reveal[open] summary::after,
-.night[open] summary::after {
-  content: "−";
+.reveal[open] summary::after {
+  content: "+";
+  rotate: 45deg;
 }
 
 .reveal-body {
-  display: grid;
-  gap: 1rem;
-  padding: 0 0 1.4rem;
+  padding: 0 0 1.3rem;
+  max-width: 44rem;
 }
 
-.reveal-body img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-}
-
-@media (min-width: 800px) {
-  .reveal-body {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 2rem;
-    padding-bottom: 1.75rem;
-  }
-}
-
-.night {
-  border-bottom: 1px solid var(--line);
-}
-
-.night:first-of-type {
-  border-top: 1px solid var(--line);
-}
-
-.night-body {
-  padding: 0 0 1rem;
-}
-
-.times {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.time {
-  font-family: var(--font-ui);
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink);
-  min-height: var(--tap);
-  min-width: 5.2rem;
-  padding: 0.5rem 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.night-note {
-  font-family: var(--font-ui);
-  font-size: 0.92rem;
-  color: var(--ink-soft);
-  margin-top: 0.65rem;
-}
+/* ---------- showtimes table (tickets) ---------- */
 
 .showtimes {
   width: 100%;
@@ -570,6 +1051,8 @@ p:last-child {
   font-family: var(--font-ui);
   font-weight: 400;
   font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink-soft);
 }
 
@@ -591,7 +1074,8 @@ p:last-child {
 
 .notice {
   border: 1px solid var(--line);
-  background: #efeae2;
+  background: #efe9dd;
+  border-radius: var(--radius);
   padding: 1.05rem 1.15rem;
 }
 
@@ -602,7 +1086,7 @@ p:last-child {
 
 .lede,
 .prose {
-  max-width: 40rem;
+  max-width: 42rem;
 }
 
 .prose h2 {
@@ -626,36 +1110,134 @@ p:last-child {
   }
 }
 
-.split-photo {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-
-.split-photo.soldier {
-  object-position: 88% 45%;
-}
-
 .drive {
   padding: 1.5rem 0;
   border-top: 1px solid var(--line);
 }
 
-.site-footer {
-  background: var(--paper);
-  color: var(--ink);
-  border-top: 1px solid var(--line);
-  margin-top: 1rem;
+.drive .prose {
+  max-width: 44rem;
 }
 
-.site-footer a {
+/* ---------- roles ---------- */
+
+.roles {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+@media (min-width: 800px) {
+  .roles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.role {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 1rem 1.15rem 1.1rem;
+}
+
+.role h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.35rem;
+}
+
+.role p {
+  margin: 0;
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- email capture ---------- */
+
+.subscribe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.subscribe input {
+  font: inherit;
+  font-size: 1rem;
+  min-height: var(--tap);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
   color: var(--ink);
+  border-radius: var(--radius);
+  width: min(19rem, 100%);
+}
+
+.subscribe input::placeholder {
+  color: var(--ink-soft);
+}
+
+.subscribe-status {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin-top: 0.75rem;
+}
+
+/* ---------- footer: every page ends at night ---------- */
+
+.site-footer {
+  position: relative;
+  margin-top: 3.5rem;
+  background: var(--night);
+  color: var(--night-soft);
+}
+
+.footer-sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.footer-sky img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+  opacity: 0.5;
+  /* mirror of the hero: night dissolves up into the page above */
+  -webkit-mask-image: linear-gradient(0deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(0deg, #000 55%, transparent 100%);
+}
+
+.footer-scene {
+  position: relative;
+  text-align: center;
+  padding: 4.5rem 1.25rem 2.5rem;
+}
+
+.footer-scene img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  box-shadow: 0 0 24px rgba(216, 178, 99, 0.35);
+}
+
+.footer-line {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.45rem;
+  color: var(--night-text);
+  margin: 0;
 }
 
 .footer-inner {
+  position: relative;
   max-width: var(--page);
   margin: 0 auto;
-  padding: 2.25rem 1.25rem 2.75rem;
+  padding: 1.5rem 1.25rem 2.75rem;
   display: grid;
   gap: 1.5rem;
 }
@@ -666,14 +1248,27 @@ p:last-child {
   }
 }
 
+.site-footer a {
+  color: var(--night-text);
+}
+
+.site-footer a:hover {
+  color: var(--gold-bright);
+}
+
 .footer-brand {
   font-family: var(--font-display);
   font-size: 1.2rem;
+  color: var(--night-text);
   margin: 0 0 0.5rem;
 }
 
 .footer-label {
   font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
   margin: 0 0 0.35rem;
 }
 
@@ -693,13 +1288,15 @@ p:last-child {
 .footer-quiet {
   font-family: var(--font-ui);
   font-size: 0.9rem;
-  color: var(--ink-soft);
+  color: var(--night-soft);
   margin-top: 1rem;
 }
 
 .footer-quiet a {
-  color: var(--ink-soft);
+  color: var(--night-soft);
 }
+
+/* ---------- partners ---------- */
 
 .partners {
   display: grid;
@@ -714,20 +1311,40 @@ p:last-child {
 }
 
 .partner {
-  min-height: 6.5rem;
-  padding: 0.75rem;
+  min-height: 7.5rem;
+  padding: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition:
+    translate var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out);
+}
+
+.partner:hover {
+  translate: 0 -2px;
+  box-shadow: 0 4px 16px rgba(46, 35, 24, 0.1);
 }
 
 .partner img {
-  max-height: 4.25rem;
+  max-height: 4rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  filter: grayscale(1) opacity(0.75);
+  transition: filter var(--dur-1) var(--ease-out);
 }
+
+.partner:hover img,
+.partner:focus-visible img {
+  filter: none;
+}
+
+/* ---------- donate ---------- */
 
 .donate-amounts,
 .freq {
@@ -748,13 +1365,25 @@ p:last-child {
   background: var(--surface);
   color: var(--ink);
   border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out);
 }
 
-.donate-amounts button.is-on,
-.freq button.is-on {
-  background: var(--accent);
-  color: var(--surface);
+.donate-amounts button:hover,
+.freq button:hover {
   border-color: var(--accent);
+}
+
+.donate-amounts button[aria-pressed="true"],
+.freq button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  /* survives forced-colors / high-contrast where backgrounds are stripped */
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .field {
@@ -780,4 +1409,30 @@ p:last-child {
 
 .status {
   margin-top: 1rem;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
+
+.trust {
+  border-top: 1px solid var(--line);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  font-size: 0.97rem;
+}
+
+.trust h2 {
+  font-size: 1.3rem;
+}
+
+/* ---------- state machine ---------- */
+/* Pages render every state's markup; the build stamps a default and a tiny
+   script corrects it at runtime. Elements opt in via data-when. */
+
+/* Hide the variants that don't match the current state; matching elements
+   keep their own display value untouched. */
+html[data-state="prelaunch"] [data-when]:not([data-when~="prelaunch"]),
+html[data-state="open"] [data-when]:not([data-when~="open"]),
+html[data-state="eventWeek"] [data-when]:not([data-when~="eventWeek"]),
+html[data-state="past"] [data-when]:not([data-when~="past"]) {
+  display: none !important;
 }

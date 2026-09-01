@@ -1,19 +1,24 @@
 ---
 import Base from "../layouts/Base.astro";
-import { event, involveRows, walkStations } from "../data/event";
+import WalkJourney from "../components/WalkJourney.astro";
+import EmailCapture from "../components/EmailCapture.astro";
+import { event, involveCards } from "../data/event";
 ---
 
 <Base
   title="Journey Through Bethlehem | Free Live Nativity in DFW"
   description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
-  image="/images/brand/nativity-hero.png"
 >
   <section class="hero-art" aria-label="Nativity painting">
     <img
-      src="/images/brand/nativity-hero.png"
+      src="/images/brand/nativity-hero.webp"
+      srcset="/images/brand/nativity-hero-768.webp 768w, /images/brand/nativity-hero.webp 1456w"
+      sizes="100vw"
       alt="A painterly nativity of Mary, Joseph, and the child in the manger."
       width="1456"
       height="816"
+      fetchpriority="high"
+      decoding="async"
     />
   </section>
 
@@ -29,87 +34,134 @@ import { event, involveRows, walkStations } from "../data/event";
       <a href={event.mapsUrl}>{event.venueFull}</a>
     </p>
     <hr class="rule" />
-    <p class="paper-invite-copy">Admission is free. Reserve a showtime so we can welcome you at the gate.</p>
-    <div class="actions">
-      <a class="btn" href="/tickets">Get tickets</a>
+
+    <div data-when="prelaunch">
+      <p class="paper-invite-copy">
+        Admission is free — reservations open {event.ticketsOpenLabel}. Leave your email and we’ll
+        write the moment they do.
+      </p>
+      <EmailCapture />
+      <p class="paper-invite-note">
+        Or read about <a href="/tickets">tickets and showtimes</a> first.
+      </p>
     </div>
-    <p class="paper-invite-note">Tickets open November 1, 2026.</p>
+
+    <div data-when="open">
+      <p class="paper-invite-copy">
+        Admission is free. Reserve a showtime so we can welcome you at the gate — nights fill
+        quickly.
+      </p>
+      <div class="actions">
+        <a class="btn" href="/tickets">Reserve a showtime</a>
+      </div>
+    </div>
+
+    <div data-when="eventWeek">
+      <p class="paper-invite-copy">
+        Bethlehem is open tonight. Admission is free — reserve a showtime and come as you are.
+      </p>
+      <div class="actions">
+        <a class="btn" href="/tickets">See tonight’s showtimes</a>
+      </div>
+    </div>
+
+    <div data-when="past">
+      <p class="paper-invite-copy">
+        That’s a wrap on the {event.annual} Journey Through Bethlehem — thank you, Trophy Club.
+        Leave your email and be first to hear about next December.
+      </p>
+      <EmailCapture />
+    </div>
+
+    <p class="countdown" data-countdown={event.eventStartIso} data-when="prelaunch open">
+      <img src="/images/brand/star-320.webp" alt="" width="26" height="26" decoding="async" />
+      <span
+        ><span data-countdown-nights>{Math.max(1, Math.ceil((Date.parse(event.eventStartIso) - Date.now()) / 86_400_000))}</span>
+        nights until Bethlehem</span
+      >
+    </p>
   </section>
 
-  <section class="sky-art" aria-label="Night sky painting">
-    <img src="/images/brand/night-sky.png" alt="" width="1456" height="816" />
-  </section>
+  <WalkJourney />
 
-  <section class="wrap" aria-label="The walk">
-    <div class="section-head">
-      <div>
-        <h2>The walk</h2>
+  <section class="night-section" id="showtimes" aria-label="Showtimes">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Four nights only</p>
+          <h2>Showtimes</h2>
+          <p class="section-sub">
+            Evening walks, {event.datesLabel}. All times Central.
+          </p>
+        </div>
+        <a class="btn btn-gold" href="/tickets" data-when="open eventWeek">Reserve a showtime</a>
+        <a class="btn btn-gold" href="/tickets" data-when="prelaunch">Plan your visit</a>
       </div>
-      <div class="walk-controls">
-        <button class="walk-btn" type="button" data-walk-prev aria-label="Previous station">‹</button>
-        <button class="walk-btn" type="button" data-walk-next aria-label="Next station">›</button>
+      <div class="nights-grid">
+        {
+          event.showtimes.map((night) => (
+            <div class="night-card" data-reveal>
+              <h3>{night.date}</h3>
+              <div class="times">
+                {night.times.map((time) => (
+                  <>
+                    <span class="time" data-when="prelaunch past">
+                      {time} PM
+                    </span>
+                    <a
+                      class="time-link"
+                      href={event.ticketsUrl}
+                      rel="noreferrer"
+                      data-when="open eventWeek"
+                    >
+                      {time} PM
+                    </a>
+                  </>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
-    </div>
-    <div class="walk-track" data-walk>
-      {
-        walkStations.map((station) => (
-          <article class="walk-card">
-            <img src={station.src} alt={station.alt} width="800" height="600" />
-            <p>{station.title}</p>
-          </article>
-        ))
-      }
+      <p class="night-note">{event.accommodations}</p>
     </div>
   </section>
 
   <section class="wrap" aria-label="Get involved">
     <div class="section-head">
       <div>
-        <h2>Get involved</h2>
+        <p class="kicker">It takes a village — literally</p>
+        <h2>Help build Bethlehem</h2>
+        <p class="section-sub">
+          The town is staffed entirely by volunteers, and the marketplace gives back.
+        </p>
       </div>
+      <a class="btn btn-surface" href="/get-involved">All the ways to help</a>
     </div>
-    {
-      involveRows.map((row) => (
-        <details class="reveal">
-          <summary>{row.title}</summary>
-          <div class="reveal-body">
-            <img src={row.src} alt={row.alt} width="1200" height="800" />
-            <div>
-              <p>{row.body}</p>
-              <div class="actions" style="margin-top: 1rem;">
-                <a class="btn btn-deep" href={row.href} rel="noreferrer">
-                  {row.action}
-                </a>
-              </div>
+    <div class="cards">
+      {
+        involveCards.map((card, i) => (
+          <article class="card" data-reveal style={`--reveal-delay:${i * 90}ms;`}>
+            <img
+              src={card.src720}
+              srcset={`${card.src720} 720w, ${card.src} 1800w`}
+              sizes="(min-width: 800px) 30vw, 92vw"
+              alt={card.alt}
+              width="720"
+              height="480"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="card-body">
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+              <a class="card-link" href={card.href} rel="noreferrer">
+                {card.action}
+              </a>
             </div>
-          </div>
-        </details>
-      ))
-    }
-  </section>
-
-  <section class="wrap" id="showtimes" aria-label="Showtimes">
-    <div class="section-head">
-      <div>
-        <h2>Showtimes</h2>
-        <p class="section-sub">All times America/Chicago. Open a night, or go to the full table.</p>
-      </div>
-      <a class="btn btn-surface" href="/tickets#showtimes">See tickets</a>
+          </article>
+        ))
+      }
     </div>
-    {
-      event.showtimes.map((night) => (
-        <details class="night">
-          <summary>{night.date}</summary>
-          <div class="night-body">
-            <div class="times">
-              {night.times.map((time) => (
-                <span class="time">{time} PM</span>
-              ))}
-            </div>
-            {night.weekday === "Friday" && <p class="night-note">ASL at the 7:00 PM performance.</p>}
-          </div>
-        </details>
-      ))
-    }
   </section>
 </Base>

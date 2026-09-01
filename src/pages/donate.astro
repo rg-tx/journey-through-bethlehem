@@ -1,30 +1,51 @@
 ---
 import Base from "../layouts/Base.astro";
+import { event } from "../data/event";
 ---
 
 <Base
   title="Donate"
   description="Give to Faith & Fellowship Foundation in support of Journey Through Bethlehem and year-round community service."
 >
+  <section class="page-art" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </section>
+
   <section class="wrap page-title">
-    <h1>Your support unites us.</h1>
+    <p class="kicker">Support the nativity</p>
+    <h1>Your support unites us</h1>
     <p class="lede">
-      Help the Faith & Fellowship Foundation create cherished traditions like Journey Through Bethlehem and continue our vital, year-round service to the community. Since we are a 501(c)(3) organization all donations are tax-deductible to the fullest extent permitted by law.
+      Bethlehem is rebuilt every year by volunteers — but the sets, costumes, lighting, and animal
+      care are real costs. Gifts to the Faith &amp; Fellowship Foundation keep the walk free for
+      every family and sustain the Foundation’s year-round service to the community. We are a
+      501(c)(3) organization; donations are tax-deductible to the fullest extent permitted by law.
     </p>
   </section>
 
   <section class="wrap split">
     <form id="donate-form" novalidate>
       <h2>Make a donation</h2>
-      <p id="donate-banner" class="notice" hidden>Donations open soon. This form is ready for Faith & Fellowship Foundation’s Stripe account.</p>
+      <p id="donate-banner" class="notice" hidden>
+        Online giving opens soon. In the meantime, email
+        <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help you give another way.
+      </p>
 
-      <p>Suggested amounts</p>
-      <div class="donate-amounts" role="group" aria-label="Suggested amounts">
-        <button type="button" data-amount="10" class="is-on">$10</button>
-        <button type="button" data-amount="20">$20</button>
-        <button type="button" data-amount="50">$50</button>
-        <button type="button" data-amount="100">$100</button>
-        <button type="button" data-amount="custom">Custom</button>
+      <p id="amount-label">Choose an amount</p>
+      <div class="donate-amounts" role="group" aria-labelledby="amount-label">
+        <button type="button" data-amount="20" aria-pressed="false">$20</button>
+        <button type="button" data-amount="50" aria-pressed="true">$50</button>
+        <button type="button" data-amount="100" aria-pressed="false">$100</button>
+        <button type="button" data-amount="250" aria-pressed="false">$250</button>
+        <button type="button" data-amount="custom" aria-pressed="false">Custom</button>
       </div>
 
       <div class="field" id="custom-field" hidden>
@@ -32,26 +53,45 @@ import Base from "../layouts/Base.astro";
         <input id="custom-amount" name="custom" type="number" min="1" step="1" inputmode="numeric" />
       </div>
 
-      <p>Frequency</p>
-      <div class="freq" role="group" aria-label="Donation frequency">
-        <button type="button" data-freq="once" class="is-on">One-time</button>
-        <button type="button" data-freq="monthly">Monthly</button>
-        <button type="button" data-freq="quarterly">Quarterly</button>
+      <p id="freq-label">Frequency</p>
+      <div class="freq" role="group" aria-labelledby="freq-label">
+        <button type="button" data-freq="once" aria-pressed="true">One-time</button>
+        <button type="button" data-freq="monthly" aria-pressed="false">Monthly</button>
+        <button type="button" data-freq="quarterly" aria-pressed="false">Quarterly</button>
       </div>
 
       <button class="btn" id="donate-submit" type="submit">Donate</button>
       <p class="status" id="donate-status" role="status"></p>
+
+      <div class="trust">
+        <h2>Where your gift goes</h2>
+        <p>
+          Gifts fund the production — sets, costumes, lighting, animals — and the
+          <a href={event.fffUrl} rel="noreferrer">Faith &amp; Fellowship Foundation’s</a> work in
+          the community all year. Checkout is handled securely by Stripe, and your receipt arrives
+          by email.
+        </p>
+        <p>
+          Planning a larger gift, or prefer to give by check? Write to
+          <a href={`mailto:${event.email}`}>{event.email}</a> — we’d love to talk.
+        </p>
+      </div>
     </form>
 
-    <figure>
+    <figure class="matted">
       <img
-        class="photo"
-        src="/images/photos/marketplace.jpg"
+        src="/images/photos/marketplace-720.jpg"
+        srcset="/images/photos/marketplace-720.jpg 720w, /images/photos/marketplace.jpg 1800w"
+        sizes="(min-width: 900px) 45vw, 92vw"
         alt="A smiling volunteer at a marketplace stall during the nativity."
-        width="1800"
-        height="1201"
+        width="720"
+        height="480"
+        loading="lazy"
+        decoding="async"
       />
-      <figcaption class="photo-caption">Gifts support the nativity and year-round work of the Foundation.</figcaption>
+      <figcaption class="photo-caption">
+        Gifts support the nativity and the year-round work of the Foundation.
+      </figcaption>
     </figure>
   </section>
 </Base>
@@ -66,7 +106,11 @@ import Base from "../layouts/Base.astro";
   const status = document.querySelector<HTMLElement>("#donate-status");
   const banner = document.querySelector<HTMLElement>("#donate-banner");
 
-  let amount = 10;
+  const MAX_DOLLARS = 1000;
+  const LARGE_GIFT_MSG =
+    "For gifts over $1,000, email team@journeythroughbethlehem.org — we’d love to help directly.";
+
+  let amount = 50;
   let custom = false;
   let frequency: "once" | "monthly" | "quarterly" = "once";
   let configured = false;
@@ -75,15 +119,18 @@ import Base from "../layouts/Base.astro";
     if (status) status.textContent = message;
   }
 
-  function lockForm(message: string) {
+  function press(group: NodeListOf<HTMLButtonElement>, active: HTMLButtonElement) {
+    group.forEach((b) => b.setAttribute("aria-pressed", b === active ? "true" : "false"));
+  }
+
+  function lockForm() {
     configured = false;
     banner?.removeAttribute("hidden");
     if (submit) {
       submit.disabled = true;
-      submit.textContent = "Donations open soon";
+      submit.textContent = "Online giving opens soon";
       submit.classList.add("is-disabled");
     }
-    setStatus(message);
   }
 
   async function checkConfig() {
@@ -91,29 +138,28 @@ import Base from "../layouts/Base.astro";
       const res = await fetch("/api/donate-config");
       const data = await res.json();
       if (!data?.configured) {
-        lockForm("Stripe is not connected yet. No charge will be made.");
+        lockForm();
         return;
       }
       configured = true;
     } catch {
-      lockForm("Stripe is not connected yet. No charge will be made.");
+      lockForm();
     }
   }
 
   amounts.forEach((button) => {
     button.addEventListener("click", () => {
-      amounts.forEach((b) => b.classList.remove("is-on"));
-      button.classList.add("is-on");
+      press(amounts, button);
       custom = button.dataset.amount === "custom";
       customField?.toggleAttribute("hidden", !custom);
+      if (custom) customInput?.focus();
       if (!custom) amount = Number(button.dataset.amount);
     });
   });
 
   freqs.forEach((button) => {
     button.addEventListener("click", () => {
-      freqs.forEach((b) => b.classList.remove("is-on"));
-      button.classList.add("is-on");
+      press(freqs, button);
       frequency = button.dataset.freq as typeof frequency;
     });
   });
@@ -124,6 +170,10 @@ import Base from "../layouts/Base.astro";
     const dollars = custom ? Number(customInput?.value) : amount;
     if (!Number.isFinite(dollars) || dollars < 1) {
       setStatus("Please enter an amount of at least $1.");
+      return;
+    }
+    if (dollars > MAX_DOLLARS) {
+      setStatus(LARGE_GIFT_MSG);
       return;
     }
     if (submit) submit.disabled = true;
@@ -140,7 +190,8 @@ import Base from "../layouts/Base.astro";
         return;
       }
       if (data.configured === false) {
-        lockForm("Donations open soon. Stripe is not connected yet.");
+        lockForm();
+        setStatus("");
         return;
       }
       setStatus(data.error || "Unable to start checkout. Please try again.");

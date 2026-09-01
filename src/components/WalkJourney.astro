@@ -1,0 +1,106 @@
+---
+import { walkStations, walkFinale } from "../data/event";
+
+// Hand-placed stars over the painting's own sky — they breathe, never blink.
+const stars = [
+  { x: 8, y: 12, tw: 5.2, td: 0.0 },
+  { x: 16, y: 34, tw: 6.1, td: 1.3 },
+  { x: 23, y: 8, tw: 4.6, td: 2.1 },
+  { x: 31, y: 22, tw: 5.8, td: 0.7 },
+  { x: 38, y: 6, tw: 6.4, td: 3.0 },
+  { x: 47, y: 17, tw: 4.9, td: 1.8 },
+  { x: 55, y: 9, tw: 5.5, td: 0.4 },
+  { x: 63, y: 27, tw: 6.0, td: 2.6 },
+  { x: 71, y: 12, tw: 4.7, td: 1.1 },
+  { x: 78, y: 31, tw: 5.9, td: 3.4 },
+  { x: 85, y: 7, tw: 5.1, td: 0.9 },
+  { x: 91, y: 21, tw: 6.3, td: 2.2 },
+  { x: 12, y: 52, tw: 5.4, td: 1.6 },
+  { x: 44, y: 41, tw: 6.2, td: 0.2 },
+  { x: 68, y: 46, tw: 4.8, td: 2.9 },
+  { x: 88, y: 43, tw: 5.7, td: 1.4 },
+];
+---
+
+<section class="journey" aria-label="What to expect on the walk">
+  <div class="journey-sky" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="stars">
+      {
+        stars.map((s) => (
+          <i style={`left:${s.x}%;top:${s.y}%;--tw:${s.tw}s;--td:${s.td}s;`}></i>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="journey-track">
+    <div class="journey-intro">
+      <p class="kicker">What to expect</p>
+      <h2 data-reveal>Walk through Bethlehem the night He was born.</h2>
+      <p data-reveal>
+        Journey Through Bethlehem is an outdoor walking tour of a town rebuilt for four December
+        nights — live actors, carolers, artisans, and animals along a lantern-lit road that ends at
+        the stable. Reserve a showtime, come as you are, and take the walk at your own pace.
+      </p>
+    </div>
+
+    <ol class="journey-stations" style="list-style:none;margin:0;padding:0;">
+      {
+        walkStations.map((station, i) => (
+          <li class="station">
+            <div class="station-card" data-reveal>
+              <img
+                src={station.src720}
+                srcset={`${station.src720} 720w, ${station.src} 1800w`}
+                sizes="(min-width: 500px) 384px, 90vw"
+                alt={station.alt}
+                width="720"
+                height="900"
+                loading="lazy"
+                decoding="async"
+              />
+              <p class="station-num">Station {i + 1}</p>
+              <h3>{station.title}</h3>
+              <p>{station.line}</p>
+            </div>
+          </li>
+        ))
+      }
+      <li class="finale">
+        <div class="finale-art" aria-hidden="true">
+          <img
+            src={walkFinale.src}
+            srcset={`${walkFinale.src768} 768w, ${walkFinale.src} 1456w`}
+            sizes="100vw"
+            alt=""
+            width="1456"
+            height="816"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="finale-content" data-reveal>
+          <p class="station-num">The last station</p>
+          <h3>{walkFinale.title}</h3>
+          <p>{walkFinale.line}</p>
+          <div class="actions">
+            <a class="btn btn-gold" href="/tickets" data-when="prelaunch open eventWeek">
+              Reserve your night
+            </a>
+            <a class="btn btn-gold" href="/tickets" data-when="past">See this year’s story</a>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
