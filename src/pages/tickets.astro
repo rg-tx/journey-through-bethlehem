@@ -1,0 +1,138 @@
+---
+import Base from "../layouts/Base.astro";
+import EmailCapture from "../components/EmailCapture.astro";
+import { event, faq } from "../data/event";
+---
+
+<Base
+  title="Tickets"
+  description={`Free tickets for Journey Through Bethlehem, December 3–6, 2026 in Trophy Club, Texas. Reservations open ${event.ticketsOpenLabel}.`}
+>
+  <section class="page-art" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      style="object-position: center 6%;"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </section>
+
+  <section class="wrap page-title">
+    <p class="kicker">Admission is free</p>
+    <h1>Tickets</h1>
+    <p class="lede">
+      Reserving a showtime is free. It just tells us when to welcome your family at the gate, and
+      it keeps the walk from getting crowded. We never take payment for tickets.
+    </p>
+  </section>
+
+  <section class="wrap">
+    <div data-when="prelaunch">
+      <div class="notice">
+        <p>
+          Reservations open <strong>{event.ticketsOpenLabel}</strong>. Leave your email below and
+          we’ll send a reminder when they open.
+        </p>
+      </div>
+      <div style="margin-top: 1.25rem; max-width: 34rem;">
+        <EmailCapture />
+      </div>
+      <div class="actions" style="margin-top: 1.5rem;">
+        <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
+      </div>
+    </div>
+
+    <div data-when="open eventWeek">
+      <div class="actions">
+        <a class="btn btn-deep" href={event.ticketsUrl} rel="noreferrer">Reserve a showtime</a>
+        <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
+      </div>
+      <p class="section-sub" style="margin-top: 0.9rem;">
+        Reservations are handled securely by Ticket Tailor. Showtimes are capped to keep the walk
+        unhurried.
+      </p>
+    </div>
+
+    <div data-when="past">
+      <div class="notice">
+        <p>
+          The {event.year} walk has ended. Thank you for a wonderful four nights. Leave your email
+          and we’ll tell you when next December’s reservations open.
+        </p>
+      </div>
+      <div style="margin-top: 1.25rem; max-width: 34rem;">
+        <EmailCapture />
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap on-paper" id="showtimes">
+    <h2>Showtimes</h2>
+    <p class="section-sub" style="margin-bottom: 1.25rem;">
+      Evening walks, {event.datesLabel}. All times Central.
+    </p>
+    <table class="showtimes">
+      <thead>
+        <tr>
+          <th scope="col">Night</th>
+          <th scope="col">Performances</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          event.showtimes.map((night) => (
+            <tr>
+              <th scope="row">{night.date}</th>
+              <td>
+                <div class="times">
+                  {night.times.map((time) => (
+                    <>
+                      <span class="time" data-when="prelaunch past">
+                        {time} PM
+                      </span>
+                      <a
+                        class="time-link"
+                        href={event.ticketsUrl}
+                        rel="noreferrer"
+                        data-when="open eventWeek"
+                      >
+                        {time} PM
+                      </a>
+                    </>
+                  ))}
+                </div>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p class="lede" style="margin-top: 1.5rem;">{event.accommodations}</p>
+  </section>
+
+  <section class="wrap" id="plan-your-visit">
+    <p class="kicker">Plan your visit</p>
+    <h2>Good things to know</h2>
+    <div style="margin-top: 1.5rem;">
+      {
+        faq.map((item) => (
+          <details class="reveal">
+            <summary>{item.q}</summary>
+            <div class="reveal-body">
+              <p>{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+    <p class="section-sub" style="margin-top: 1.5rem;">
+      Questions about group visits or accessibility? Email
+      <a href={`mailto:${event.email}`}>{event.email}</a>.
+    </p>
+  </section>
+</Base>

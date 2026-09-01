@@ -1,0 +1,204 @@
+---
+import Base from "../layouts/Base.astro";
+import { event } from "../data/event";
+---
+
+<Base
+  title="Donate"
+  description="Give to Faith & Fellowship Foundation in support of Journey Through Bethlehem and year-round community service."
+>
+  <section class="page-art" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      style="object-position: center 52%;"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </section>
+
+  <section class="wrap page-title">
+    <h1>Keep the walk free</h1>
+    <p class="lede">
+      Volunteers rebuild Bethlehem every year. The sets, costumes, lighting, and animal care still
+      cost real money, and gifts to the Faith &amp; Fellowship Foundation are what keep admission
+      free for every family. The Foundation is a 501(c)(3) nonprofit, so donations are
+      tax-deductible to the fullest extent permitted by law.
+    </p>
+  </section>
+
+  <section class="wrap split">
+    <form id="donate-form" novalidate>
+      <h2>Make a donation</h2>
+      <p id="donate-banner" class="notice" hidden>
+        Online giving opens soon. In the meantime, email
+        <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help you give another way.
+      </p>
+
+      <p id="amount-label">Choose an amount</p>
+      <div class="donate-amounts" role="group" aria-labelledby="amount-label">
+        <button type="button" data-amount="20" aria-pressed="false">$20</button>
+        <button type="button" data-amount="50" aria-pressed="true">$50</button>
+        <button type="button" data-amount="100" aria-pressed="false">$100</button>
+        <button type="button" data-amount="250" aria-pressed="false">$250</button>
+        <button type="button" data-amount="custom" aria-pressed="false">Custom</button>
+      </div>
+
+      <div class="field" id="custom-field" hidden>
+        <label for="custom-amount">Custom amount (USD)</label>
+        <input id="custom-amount" name="custom" type="number" min="1" step="1" inputmode="numeric" />
+      </div>
+
+      <p id="freq-label">Frequency</p>
+      <div class="freq" role="group" aria-labelledby="freq-label">
+        <button type="button" data-freq="once" aria-pressed="true">One-time</button>
+        <button type="button" data-freq="monthly" aria-pressed="false">Monthly</button>
+      </div>
+
+      <button class="btn" id="donate-submit" type="submit">Donate</button>
+      <p class="status" id="donate-status" role="status"></p>
+
+      <div class="trust">
+        <h2>Where your gift goes</h2>
+        <p>
+          Gifts fund the production and the
+          <a href={event.fffUrl} rel="noreferrer">Faith &amp; Fellowship Foundation’s</a> work in
+          the community all year. Checkout is handled securely by Stripe, and your receipt arrives
+          by email.
+        </p>
+        <p>
+          Planning a larger gift, or prefer to give by check? Write to
+          <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help.
+        </p>
+      </div>
+    </form>
+
+    <figure class="matted">
+      <img
+        src="/images/photos/marketplace-720.jpg"
+        srcset="/images/photos/marketplace-720.jpg 720w, /images/photos/marketplace.jpg 1800w"
+        sizes="(min-width: 900px) 45vw, 92vw"
+        alt="A smiling volunteer at a marketplace stall during the nativity."
+        width="720"
+        height="480"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption class="photo-caption">
+        Gifts support the nativity and the year-round work of the Foundation.
+      </figcaption>
+    </figure>
+  </section>
+</Base>
+
+<script>
+  const amounts = document.querySelectorAll<HTMLButtonElement>("[data-amount]");
+  const freqs = document.querySelectorAll<HTMLButtonElement>("[data-freq]");
+  const customField = document.querySelector<HTMLElement>("#custom-field");
+  const customInput = document.querySelector<HTMLInputElement>("#custom-amount");
+  const form = document.querySelector<HTMLFormElement>("#donate-form");
+  const submit = document.querySelector<HTMLButtonElement>("#donate-submit");
+  const status = document.querySelector<HTMLElement>("#donate-status");
+  const banner = document.querySelector<HTMLElement>("#donate-banner");
+
+  const MAX_DOLLARS = 1000;
+  const LARGE_GIFT_MSG =
+    "For gifts over $1,000, email team@journeythroughbethlehem.org and we’ll help directly.";
+
+  let amount = 50;
+  let custom = false;
+  let frequency: "once" | "monthly" | "quarterly" = "once";
+  let configured = false;
+
+  function setStatus(message: string) {
+    if (status) status.textContent = message;
+  }
+
+  function press(group: NodeListOf<HTMLButtonElement>, active: HTMLButtonElement) {
+    group.forEach((b) => b.setAttribute("aria-pressed", b === active ? "true" : "false"));
+  }
+
+  function lockForm() {
+    configured = false;
+    banner?.removeAttribute("hidden");
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = "Online giving opens soon";
+      submit.classList.add("is-disabled");
+    }
+  }
+
+  async function checkConfig() {
+    try {
+      const res = await fetch("/api/donate-config");
+      const data = await res.json();
+      if (!data?.configured) {
+        lockForm();
+        return;
+      }
+      configured = true;
+    } catch {
+      lockForm();
+    }
+  }
+
+  amounts.forEach((button) => {
+    button.addEventListener("click", () => {
+      press(amounts, button);
+      custom = button.dataset.amount === "custom";
+      customField?.toggleAttribute("hidden", !custom);
+      if (custom) customInput?.focus();
+      if (!custom) amount = Number(button.dataset.amount);
+    });
+  });
+
+  freqs.forEach((button) => {
+    button.addEventListener("click", () => {
+      press(freqs, button);
+      frequency = button.dataset.freq as typeof frequency;
+    });
+  });
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!configured) return;
+    const dollars = custom ? Number(customInput?.value) : amount;
+    if (!Number.isFinite(dollars) || dollars < 1) {
+      setStatus("Please enter an amount of at least $1.");
+      return;
+    }
+    if (dollars > MAX_DOLLARS) {
+      setStatus(LARGE_GIFT_MSG);
+      return;
+    }
+    if (submit) submit.disabled = true;
+    setStatus("Opening a secure Stripe checkout…");
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ amount: Math.round(dollars * 100), frequency }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      if (data.configured === false) {
+        lockForm();
+        setStatus("");
+        return;
+      }
+      setStatus(data.error || "Unable to start checkout. Please try again.");
+    } catch {
+      setStatus("Unable to reach checkout. Please try again.");
+    }
+    if (submit) submit.disabled = false;
+  });
+
+  checkConfig();
+</script>

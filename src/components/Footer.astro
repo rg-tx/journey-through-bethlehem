@@ -1,0 +1,61 @@
+---
+import { event } from "../data/event";
+---
+
+<footer class="site-footer">
+  <div class="footer-sky" aria-hidden="true">
+    <img
+      src="/images/brand/night-sky.webp"
+      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+      sizes="100vw"
+      alt=""
+      width="1456"
+      height="816"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="footer-scene">
+    <img
+      src="/images/brand/star-320.webp"
+      alt=""
+      width="54"
+      height="54"
+      loading="lazy"
+      decoding="async"
+    />
+    <p class="footer-line">See you in Bethlehem.</p>
+  </div>
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand">Journey through Bethlehem</p>
+      <p>
+        Presented by <a href={event.fffUrl} rel="noreferrer">{event.presentedBy}</a>. A free live
+        nativity in Trophy Club, Texas.
+      </p>
+      <p class="footer-quiet">
+        <a href="/privacy-policy">Privacy</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/partners">Partners</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/donate">Donate</a>
+      </p>
+    </div>
+    <div>
+      <p class="footer-label">Visit</p>
+      <ul class="footer-links">
+        <li><a href="/tickets">Tickets</a></li>
+        <li><a href="/tickets#plan-your-visit">Plan your visit</a></li>
+        <li><a href="/get-involved">Get involved</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-label">Say hello</p>
+      <ul class="footer-links">
+        <li><a href={`mailto:${event.email}`}>{event.email}</a></li>
+        <li><a href={event.instagram} rel="noreferrer">Instagram</a></li>
+        <li><a href={event.facebook} rel="noreferrer">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
