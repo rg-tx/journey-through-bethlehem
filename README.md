@@ -59,4 +59,16 @@ Tickets open November 1, 2026, 12:00 a.m. America/Chicago. Do not clone Ticket T
 
 ## Brand
 
-Locked restyle tokens: paper `#f7f5f1`, surface `#fff`, ink `#645044`, ink-soft `#7a6a5d`, line `#e4dfd4`, accent `#395f72`, accent-deep `#2c4a59`, sky `#1c2a30`. Fonts: Tenor Sans (UI), PT Serif (body), Playfair Display (display). Paintings and the marketplace photo have no overlay type. Header wordmark max-height 48px, unclipped. 44px tap targets.
+Three notes: **paper, night, and candlelight.** Tokens live in `src/styles/global.css`.
+
+- Paper `#f7f3ec` (warmed toward the painted plaster), plaster `#efe6da`, surface `#fffdf9`
+- Ink `#3b2f25` / ink-strong `#231a12` / ink-soft `#6f6157`, lines `#e1d8ca`
+- Slate (the wordmark's blue) `#395f72`, deep `#2c4a59`
+- Candlelight: gold `#8a6420` on paper, gold-bright `#d9b667` and candle `#f4d59a` on night
+- Night `#121d24` / `#1a2930`, night-text `#ede6d6`
+
+Fonts (self-hosted WOFF2): Tenor Sans for the engraved voice (dates, labels, times, buttons), PT Serif for body, Playfair Display for display and the italic "voice" lines.
+
+Rules: the home hero is the familiar nativity painting with the approved wordmark lockup (with "Presented by") laid over it, as on the flyer; the header uses the lockup without the presenter line. Other paintings carry no type; interior pages float a paper title card over a legible painting. No email capture or reminders anywhere, by decision of the organizers. Source art lives in the shared "JtB Images" folder; `scripts/import-brand-assets.mjs` converts it. Photographs are framed as artifacts: arched doorways on night, matted 4:3 on paper. The star is the one recurring glyph. 44px tap targets everywhere.
+
+Preview any site state locally with `?state=prelaunch|open|eventWeek|past`.

@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Consent from "../components/Consent.astro";
 import { event, siteState } from "../data/event";
 
 interface Props {
@@ -68,14 +69,15 @@ const eventJsonLd = JSON.stringify({
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f7f5f1" />
+    <meta name="theme-color" content="#f7f3ec" />
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -85,6 +87,7 @@ const eventJsonLd = JSON.stringify({
       crossorigin
     />
     <link rel="preload" href="/fonts/pt-serif-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/tenor-sans-400.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline define:vars={{ ticketsOpenIso: event.ticketsOpenIso, eventStartIso: event.eventStartIso, eventEndIso: event.eventEndIso }}>
       // Mark JS availability (reveals stay visible without it) and correct
       // the site state at runtime so nothing goes stale between deploys.
@@ -94,6 +97,9 @@ const eventJsonLd = JSON.stringify({
       if (now >= Date.parse(eventEndIso)) state = "past";
       else if (now >= Date.parse(eventStartIso)) state = "eventWeek";
       else if (now >= Date.parse(ticketsOpenIso)) state = "open";
+      // Preview any state locally with ?state=open|eventWeek|past|prelaunch
+      const forced = new URLSearchParams(location.search).get("state");
+      if (forced && ["prelaunch", "open", "eventWeek", "past"].includes(forced)) state = forced;
       document.documentElement.dataset.state = state;
     </script>
     <script type="application/ld+json" set:html={eventJsonLd} is:inline />
@@ -105,6 +111,7 @@ const eventJsonLd = JSON.stringify({
       <slot />
     </main>
     <Footer />
+    <Consent />
     <script>
       // --- mobile nav: toggle, Escape, outside click, focus return ---
       const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");

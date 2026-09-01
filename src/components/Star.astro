@@ -1,0 +1,22 @@
+---
+/** The star they follow — the site's one recurring glyph. Inherits color. */
+interface Props {
+  class?: string;
+  size?: number;
+}
+const { class: className, size = 24 } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path
+    fill="currentColor"
+    d="M12 0l1.35 8.9L17.3 6.7l-2.2 3.95L24 12l-8.9 1.35 2.2 3.95-3.95-2.2L12 24l-1.35-8.9L6.7 17.3l2.2-3.95L0 12l8.9-1.35L6.7 6.7l3.95 2.2z"
+  />
+</svg>

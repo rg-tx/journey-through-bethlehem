@@ -20,9 +20,12 @@ specifics when confirmed.
 - **SignUpGenius links** — swap the m.signupgenius.com URLs in
   `src/data/event.ts` for the canonical www.signupgenius.com share links
   (the m. versions force the mobile UI on desktop).
-- **Per-showtime Ticket Tailor links** — time chips currently deep-link to
-  the series page. If Ticket Tailor exposes per-occurrence URLs, wire them
-  into `event.showtimes`.
-- **Email capture** — bind a KV namespace named `SUBSCRIBERS` to the Pages
-  project to activate the form (see wrangler.toml), and decide who mails
-  the list when tickets open.
+- **Per-showtime Ticket Tailor links** — every time chip has an optional
+  `url` in `event.showtimes[].slots` and falls back to the series page. Each
+  occurrence of a recurring Ticket Tailor event has its own page (dashboard →
+  the date → Share, or `GET /v1/event_series/{id}/events` → `url`). Paste
+  those in so a tap lands on the exact showtime. Ticket Tailor's site blocks
+  automated fetches, so this could not be verified from here.
+- **Cookie / privacy notice** — copy in `src/components/Consent.astro` says
+  the site sets no tracking cookies. Keep that true, or update the copy if
+  analytics are ever added.

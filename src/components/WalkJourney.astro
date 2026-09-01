@@ -1,28 +1,17 @@
 ---
-import { walkStations, walkFinale } from "../data/event";
+import { walkMoments, walkFinale } from "../data/event";
 
 // Hand-placed stars over the painting's own sky — they breathe, never blink.
 const stars = [
-  { x: 8, y: 12, tw: 5.2, td: 0.0 },
-  { x: 16, y: 34, tw: 6.1, td: 1.3 },
-  { x: 23, y: 8, tw: 4.6, td: 2.1 },
-  { x: 31, y: 22, tw: 5.8, td: 0.7 },
-  { x: 38, y: 6, tw: 6.4, td: 3.0 },
-  { x: 47, y: 17, tw: 4.9, td: 1.8 },
-  { x: 55, y: 9, tw: 5.5, td: 0.4 },
-  { x: 63, y: 27, tw: 6.0, td: 2.6 },
-  { x: 71, y: 12, tw: 4.7, td: 1.1 },
-  { x: 78, y: 31, tw: 5.9, td: 3.4 },
-  { x: 85, y: 7, tw: 5.1, td: 0.9 },
-  { x: 91, y: 21, tw: 6.3, td: 2.2 },
-  { x: 12, y: 52, tw: 5.4, td: 1.6 },
-  { x: 44, y: 41, tw: 6.2, td: 0.2 },
-  { x: 68, y: 46, tw: 4.8, td: 2.9 },
-  { x: 88, y: 43, tw: 5.7, td: 1.4 },
+  { x: 6, y: 10, tw: 5.2, td: 0.0 }, { x: 14, y: 30, tw: 6.1, td: 1.3 }, { x: 22, y: 7, tw: 4.6, td: 2.1 },
+  { x: 31, y: 20, tw: 5.8, td: 0.7 }, { x: 40, y: 5, tw: 6.4, td: 3.0 }, { x: 48, y: 15, tw: 4.9, td: 1.8 },
+  { x: 57, y: 8, tw: 5.5, td: 0.4 }, { x: 65, y: 24, tw: 6.0, td: 2.6 }, { x: 73, y: 11, tw: 4.7, td: 1.1 },
+  { x: 80, y: 29, tw: 5.9, td: 3.4 }, { x: 88, y: 6, tw: 5.1, td: 0.9 }, { x: 94, y: 19, tw: 6.3, td: 2.2 },
+  { x: 10, y: 48, tw: 5.4, td: 1.6 }, { x: 45, y: 38, tw: 6.2, td: 0.2 }, { x: 70, y: 44, tw: 4.8, td: 2.9 },
 ];
 ---
 
-<section class="journey" aria-label="What to expect on the walk">
+<section class="journey" id="what-to-expect" aria-labelledby="walk-title">
   <div class="journey-sky" aria-hidden="true">
     <img
       src="/images/brand/night-sky.webp"
@@ -35,72 +24,162 @@ const stars = [
       decoding="async"
     />
     <div class="stars">
-      {
-        stars.map((s) => (
-          <i style={`left:${s.x}%;top:${s.y}%;--tw:${s.tw}s;--td:${s.td}s;`}></i>
-        ))
-      }
+      {stars.map((s) => <i style={`left:${s.x}%;top:${s.y}%;--tw:${s.tw}s;--td:${s.td}s;`}></i>)}
     </div>
   </div>
 
-  <div class="journey-track">
+  <div class="journey-inner">
     <div class="journey-intro">
       <p class="kicker">What to expect</p>
-      <h2 data-reveal>Walk through Bethlehem the night He was born.</h2>
+      <h2 id="walk-title" data-reveal>An evening in Bethlehem.</h2>
       <p data-reveal>
-        Journey Through Bethlehem is an outdoor walking tour of a town rebuilt for four December
-        nights: live actors, carolers, artisans, and animals along a lantern-lit road that ends at
-        the stable. Reserve a showtime, come as you are, and take the walk at your own pace.
+        Arrive for your showtime and step through the gate into a town rebuilt for four December
+        nights. Wander the marketplace, follow the carols down the lantern-lit road past travelers
+        and live animals, and gather at the stable for a live musical telling of the nativity.
       </p>
     </div>
+  </div>
 
-    <ol class="journey-stations" style="list-style:none;margin:0;padding:0;">
+  <div class="carousel" data-carousel>
+    <ul class="carousel-track" data-carousel-track tabindex="0" aria-label="Photos from the walk. Scroll sideways to see more.">
       {
-        walkStations.map((station, i) => (
-          <li class="station">
-            <div class="station-card" data-reveal>
+        walkMoments.map((m, i) => (
+          <li class="slide" data-slide>
+            <figure>
               <img
-                src={station.src720}
-                srcset={`${station.src720} 720w, ${station.src} 1800w`}
-                sizes="(min-width: 500px) 384px, 90vw"
-                alt={station.alt}
+                src={m.src720}
+                srcset={`${m.src720} 720w, ${m.src} 1800w`}
+                sizes="(min-width: 900px) 34rem, 80vw"
+                alt={m.alt}
                 width="720"
-                height="900"
-                loading="lazy"
+                height="480"
+                loading={i < 2 ? "eager" : "lazy"}
                 decoding="async"
+                draggable="false"
               />
-              <p class="station-num">Station {i + 1}</p>
-              <h3>{station.title}</h3>
-              <p>{station.line}</p>
-            </div>
+              <figcaption>{m.caption}</figcaption>
+            </figure>
           </li>
         ))
       }
-      <li class="finale">
-        <div class="finale-art" aria-hidden="true">
-          <img
-            src={walkFinale.src}
-            srcset={`${walkFinale.src768} 768w, ${walkFinale.src} 1456w`}
-            sizes="100vw"
-            alt=""
-            width="1456"
-            height="816"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="finale-content" data-reveal>
-          <p class="station-num">The last station</p>
-          <h3>{walkFinale.title}</h3>
-          <p>{walkFinale.line}</p>
-          <div class="actions">
-            <a class="btn btn-gold" href="/tickets" data-when="prelaunch open eventWeek">
-              Reserve your night
-            </a>
-            <a class="btn btn-gold" href="/tickets" data-when="past">See this year’s story</a>
-          </div>
-        </div>
-      </li>
-    </ol>
+    </ul>
+    <div class="carousel-controls">
+      <button class="carousel-btn" type="button" data-carousel-prev aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <ol class="carousel-dots" data-carousel-dots aria-hidden="true">
+        {walkMoments.map(() => <li></li>)}
+      </ol>
+      <button class="carousel-btn" type="button" data-carousel-next aria-label="Next photo">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="finale-art" aria-hidden="true">
+      <video
+        data-finale-video
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster={walkFinale.poster}
+        width="1280"
+        height="720"
+      >
+        <source src={walkFinale.video} type="video/mp4" />
+      </video>
+    </div>
+    <div class="finale-content" data-reveal>
+      <p class="kicker">The road to Bethlehem</p>
+      <h3>{walkFinale.title}</h3>
+      <p>{walkFinale.line}</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="#showtimes" data-when="prelaunch">See showtimes</a>
+        <a class="btn btn-gold" href="/tickets" data-when="open eventWeek">Reserve your night</a>
+        <a class="btn btn-gold" href="/get-involved" data-when="past">Join us next year</a>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  // --- carousel: native scroll-snap, arrows, dots, desktop drag ---
+  const root = document.querySelector<HTMLElement>("[data-carousel]");
+  const track = root?.querySelector<HTMLElement>("[data-carousel-track]");
+  if (root && track) {
+    const slides = [...track.querySelectorAll<HTMLElement>("[data-slide]")];
+    const dots = [...(root.querySelectorAll<HTMLElement>("[data-carousel-dots] li") || [])];
+    const prev = root.querySelector<HTMLButtonElement>("[data-carousel-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-carousel-next]");
+    let current = 0;
+
+    const setActive = (i: number) => {
+      current = i;
+      slides.forEach((s, j) => s.classList.toggle("is-active", j === i));
+      dots.forEach((d, j) => d.classList.toggle("is-active", j === i));
+      if (prev) prev.disabled = i === 0;
+      if (next) next.disabled = i === slides.length - 1;
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && e.intersectionRatio > 0.6) setActive(slides.indexOf(e.target as HTMLElement));
+        }
+      },
+      { root: track, threshold: [0.6] },
+    );
+    slides.forEach((s) => io.observe(s));
+    setActive(0);
+
+    const go = (i: number) => {
+      const target = slides[Math.max(0, Math.min(slides.length - 1, i))];
+      target?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    };
+    prev?.addEventListener("click", () => go(current - 1));
+    next?.addEventListener("click", () => go(current + 1));
+    track.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(current + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); go(current - 1); }
+    });
+
+    // drag with a mouse; touch already scrolls natively
+    let dragging = false, startX = 0, startLeft = 0, moved = false;
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse") return;
+      dragging = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+      track.classList.add("is-dragging");
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      track.scrollLeft = startLeft - dx;
+    });
+    const end = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove("is-dragging");
+      if (moved) go(Math.round(track.scrollLeft / slides[0].offsetWidth));
+    };
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+  }
+
+  // --- the finale video plays only when on screen, and never under reduced motion ---
+  const video = document.querySelector<HTMLVideoElement>("[data-finale-video]");
+  if (video && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const vio = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { video.play().catch(() => {}); }
+          else video.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    vio.observe(video);
+  }
+</script>

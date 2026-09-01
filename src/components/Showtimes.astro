@@ -1,0 +1,39 @@
+---
+/** Four nights as cards. Live chips deep-link to the showtime's own Ticket Tailor page when known. */
+import { event } from "../data/event";
+
+interface Props {
+  /** "night" on dark grounds (home), "paper" on the tickets page. */
+  tone?: "night" | "paper";
+}
+const { tone = "night" } = Astro.props;
+---
+
+<div class:list={[tone === "night" ? "nights" : "schedule"]}>
+  {
+    event.showtimes.map((night, i) => (
+      <div class:list={[tone === "night" ? "night-card" : "schedule-night"]} data-reveal style={`--reveal-delay:${i * 70}ms;`}>
+        <p class="weekday">{night.weekday}</p>
+        <h3>{night.date}</h3>
+        <div class="times">
+          {night.slots.map((slot) => (
+            <>
+              <span class="time" data-when="prelaunch past">
+                {slot.time} PM
+              </span>
+              <a
+                class="time-link"
+                href={slot.url ?? event.ticketsUrl}
+                rel="noreferrer"
+                aria-label={`Reserve ${night.weekday}, ${night.date} at ${slot.time} PM`}
+                data-when="open eventWeek"
+              >
+                {slot.time} PM
+              </a>
+            </>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>

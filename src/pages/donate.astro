@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
 import { event } from "../data/event";
 ---
 
@@ -7,39 +8,25 @@ import { event } from "../data/event";
   title="Donate"
   description="Give to Faith & Fellowship Foundation in support of Journey Through Bethlehem and year-round community service."
 >
-  <section class="page-art" aria-hidden="true">
-    <img
-      src="/images/brand/night-sky.webp"
-      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
-      sizes="100vw"
-      alt=""
-      width="1456"
-      height="816"
-      style="object-position: center 52%;"
-      fetchpriority="high"
-      decoding="async"
-    />
-  </section>
+  <PageHero
+    kicker="Keep the walk free"
+    title="Admission is free because people give."
+    lede="Volunteers rebuild Bethlehem every year, but sets, costumes, lighting, and animal care cost real money. Gifts to the Faith & Fellowship Foundation, a 501(c)(3) nonprofit, are what keep the gate open to every family at no charge."
+    art="child-candle"
+    artAlt="A child in a white veil carrying a candle at dusk."
+    artY="45%"
+  />
 
-  <section class="wrap page-title">
-    <h1>Keep the walk free</h1>
-    <p class="lede">
-      Volunteers rebuild Bethlehem every year. The sets, costumes, lighting, and animal care still
-      cost real money, and gifts to the Faith &amp; Fellowship Foundation are what keep admission
-      free for every family. The Foundation is a 501(c)(3) nonprofit, so donations are
-      tax-deductible to the fullest extent permitted by law.
-    </p>
-  </section>
-
-  <section class="wrap split">
+  <section class="wrap split split-top">
     <form id="donate-form" novalidate>
-      <h2>Make a donation</h2>
+      <p class="kicker">Make a gift</p>
+      <h2>Choose an amount</h2>
       <p id="donate-banner" class="notice" hidden>
         Online giving opens soon. In the meantime, email
         <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help you give another way.
       </p>
 
-      <p id="amount-label">Choose an amount</p>
+      <p id="amount-label" class="field-label">Amount</p>
       <div class="donate-amounts" role="group" aria-labelledby="amount-label">
         <button type="button" data-amount="20" aria-pressed="false">$20</button>
         <button type="button" data-amount="50" aria-pressed="true">$50</button>
@@ -53,23 +40,25 @@ import { event } from "../data/event";
         <input id="custom-amount" name="custom" type="number" min="1" step="1" inputmode="numeric" />
       </div>
 
-      <p id="freq-label">Frequency</p>
+      <p id="freq-label" class="field-label">Frequency</p>
       <div class="freq" role="group" aria-labelledby="freq-label">
         <button type="button" data-freq="once" aria-pressed="true">One-time</button>
         <button type="button" data-freq="monthly" aria-pressed="false">Monthly</button>
       </div>
 
-      <button class="btn" id="donate-submit" type="submit">Donate</button>
+      <button class="btn btn-deep" id="donate-submit" type="submit">Continue to secure checkout</button>
       <p class="status" id="donate-status" role="status"></p>
 
       <div class="trust">
         <h2>Where your gift goes</h2>
-        <p>
-          Gifts fund the production and the
-          <a href={event.fffUrl} rel="noreferrer">Faith &amp; Fellowship Foundation’s</a> work in
-          the community all year. Checkout is handled securely by Stripe, and your receipt arrives
-          by email.
-        </p>
+        <ul class="trust-list">
+          <li>The production: sets, costumes, lighting, sound, and care for the animals.</li>
+          <li>
+            The <a href={event.fffUrl} rel="noreferrer">Faith &amp; Fellowship Foundation’s</a> work
+            in the community the rest of the year.
+          </li>
+          <li>Checkout is handled by Stripe. Your receipt arrives by email.</li>
+        </ul>
         <p>
           Planning a larger gift, or prefer to give by check? Write to
           <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help.
@@ -77,7 +66,7 @@ import { event } from "../data/event";
       </div>
     </form>
 
-    <figure class="matted">
+    <figure class="matted" data-reveal>
       <img
         src="/images/photos/marketplace-720.jpg"
         srcset="/images/photos/marketplace-720.jpg 720w, /images/photos/marketplace.jpg 1800w"
@@ -88,8 +77,9 @@ import { event } from "../data/event";
         loading="lazy"
         decoding="async"
       />
-      <figcaption class="photo-caption">
-        Gifts support the nativity and the year-round work of the Foundation.
+      <figcaption>
+        The marketplace on a December night. Every stall is staffed by a volunteer; every gift
+        keeps admission free.
       </figcaption>
     </figure>
   </section>

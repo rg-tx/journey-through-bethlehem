@@ -3,26 +3,33 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base title="Page not found">
-  <section class="page-art" aria-hidden="true">
-    <img
-      src="/images/brand/night-sky.webp"
-      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
-      sizes="100vw"
-      alt=""
-      width="1456"
-      height="816"
-      style="object-position: center 16%;"
-      decoding="async"
-    />
-  </section>
-
-  <section class="wrap page-title prose">
-    <h1>This page is not on the map.</h1>
-    <p>Even the wise men needed a star to follow. Try one of these roads instead.</p>
-    <div class="actions">
-      <a class="btn" href="/">Home</a>
-      <a class="btn btn-surface" href="/tickets">Tickets</a>
-      <a class="btn btn-surface" href="/get-involved">Get involved</a>
+  <section class="lost">
+    <div class="lost-art" aria-hidden="true">
+      <img
+        src="/images/brand/night-sky.webp"
+        srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
+        sizes="100vw"
+        alt=""
+        width="1456"
+        height="816"
+        decoding="async"
+      />
+    </div>
+    <div class="lost-content">
+      <h1>This page is not on the map.</h1>
+      <p>Even the wise men needed a star to follow. Try one of these roads instead.</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="/">Home</a>
+        <a class="btn btn-ghost" href="/tickets">Tickets</a>
+        <a class="btn btn-ghost" href="/get-involved">Get involved</a>
+      </div>
     </div>
   </section>
 </Base>
+
+<style is:global>
+  /* the lost page is night from top to bottom */
+  .site-footer {
+    margin-top: 0;
+  }
+</style>

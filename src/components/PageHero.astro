@@ -1,0 +1,40 @@
+---
+/**
+ * Interior pages open the same way: a painting the reader can actually make
+ * out, and a paper title card rising out of it. Each page names its painting.
+ */
+interface Props {
+  kicker?: string;
+  title: string;
+  lede?: string;
+  /** Basename in /images/brand, e.g. "wise-men" (expects -768 variant too). */
+  art: string;
+  artAlt?: string;
+  /** Vertical crop of the painting, e.g. "40%". */
+  artY?: string;
+}
+const { kicker, title, lede, art, artAlt = "", artY = "50%" } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="page-hero-art" style={`--art-y:${artY};`}>
+    <img
+      src={`/images/brand/${art}.webp`}
+      srcset={`/images/brand/${art}-768.webp 768w, /images/brand/${art}.webp 1456w`}
+      sizes="100vw"
+      alt={artAlt}
+      width="1456"
+      height="816"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+  <div class="page-hero-card">
+    <div>
+      {kicker && <p class="kicker">{kicker}</p>}
+      <h1>{title}</h1>
+      {lede && <p class="lede">{lede}</p>}
+      <slot />
+    </div>
+  </div>
+</section>

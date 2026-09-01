@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
 import {
   event,
   foodDriveUrl,
@@ -15,29 +16,16 @@ import {
   description="Volunteer or donate in-kind for Journey Through Bethlehem. Sign up to help, or bring diapers, food, and toys to the nativity."
   image="/images/photos/marketplace.jpg"
 >
-  <section class="page-art" aria-hidden="true">
-    <img
-      src="/images/brand/night-sky.webp"
-      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
-      sizes="100vw"
-      alt=""
-      width="1456"
-      height="816"
-      style="object-position: center 80%;"
-      fetchpriority="high"
-      decoding="async"
-    />
-  </section>
+  <PageHero
+    kicker="Built by neighbors"
+    title="There’s a place for you in the town."
+    lede="Bethlehem is built, staffed, and torn down by volunteers. Whether you can give a night in costume or a box of diapers, the town needs you."
+    art="shepherd-lamb"
+    artAlt="A shepherd carrying a lamb toward a hillside town."
+    artY="40%"
+  />
 
-  <section class="wrap page-title">
-    <h1>Get involved</h1>
-    <p class="lede">
-      Bethlehem is built, staffed, and torn down by neighbors. Whether you can give a night in
-      costume or a box of diapers, there’s a place for you in the town.
-    </p>
-  </section>
-
-  <section class="wrap split">
+  <section class="wrap split split-top" aria-labelledby="volunteer-title">
     <figure class="matted" data-reveal>
       <img
         src="/images/photos/manger-scene-720.jpg"
@@ -49,12 +37,14 @@ import {
         loading="lazy"
         decoding="async"
       />
+      <figcaption>The cast on opening night. Everyone pictured is a volunteer.</figcaption>
     </figure>
     <div>
-      <h2>Volunteer with us</h2>
+      <p class="kicker">Volunteer</p>
+      <h2 id="volunteer-title">Give a night in costume</h2>
       <p>
-        No experience is needed, and costumes are provided. Pick a night and a role on the
-        sign-up form; we’ll take it from there. A few of the ways people serve:
+        No experience is needed, and costumes are provided. Pick a night and a role on the sign-up
+        form; we’ll take it from there. A few of the ways people serve:
       </p>
       <div class="roles">
         {
@@ -68,67 +58,47 @@ import {
       </div>
       <div class="actions">
         <a class="btn btn-deep" href={volunteerAdultUrl} rel="noreferrer">Sign up to volunteer</a>
+        <a class="btn btn-surface" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
       </div>
-      <p class="section-sub" style="margin-top: 0.9rem;">
+      <p class="section-sub" style="margin-top: 1rem;">
+        Shepherds, angels, and musicians are mostly played by young people, who have their own form.
         Questions about roles or shifts? <a href={`mailto:${event.email}`}>{event.email}</a>
       </p>
     </div>
   </section>
 
-  <section class="wrap split">
-    <figure class="matted" data-reveal>
-      <img
-        src="/images/photos/nativity-126-720.jpg"
-        srcset="/images/photos/nativity-126-720.jpg 720w, /images/photos/nativity-126.jpg 1800w"
-        sizes="(min-width: 900px) 45vw, 92vw"
-        alt="Youth in biblical costumes during the nativity performance."
-        width="720"
-        height="480"
-        loading="lazy"
-        decoding="async"
-      />
-    </figure>
-    <div>
-      <h2>Youth volunteers</h2>
-      <p>
-        Shepherds, angels, musicians, marketplace helpers: young people carry much of Bethlehem.
-        Youth have their own sign-up form.
-      </p>
-      <div class="actions" style="margin-top: 1.25rem;">
-        <a class="btn btn-deep" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
+  <section class="wrap" id="give-goods" aria-labelledby="goods-title">
+    <div class="section-head">
+      <div>
+        <p class="kicker">The marketplace gives back</p>
+        <h2 id="goods-title">Give goods</h2>
+        <p class="section-sub">
+          Each drive supports a local partner. Bring items to the drop-off tables at the nativity, or
+          shop a list from home and have it shipped.
+        </p>
       </div>
+      <a class="btn btn-surface" href={foodDriveUrl} rel="noreferrer">Help run the food drive</a>
     </div>
-  </section>
-
-  <section class="wrap" id="give-goods">
-    <p class="kicker">The marketplace gives back</p>
-    <h2>Give goods</h2>
-    <p class="prose">
-      Each drive below supports a local partner organization. Bring items to the drop-off tables
-      at the nativity, or shop the Amazon lists from home. The food drive also needs helpers, and
-      that sign-up is open now.
-    </p>
-    <div class="actions" style="margin: 1.15rem 0 0.5rem;">
-      <a class="btn btn-surface" href={foodDriveUrl} rel="noreferrer">Food drive sign-up</a>
+    <div class="drives">
+      {
+        inKindDrives.map((drive, i) => (
+          <article class="drive" data-reveal style={`--reveal-delay:${i * 90}ms;`}>
+            <h3>{drive.title}</h3>
+            <p class="benefits">
+              Benefits{" "}
+              <a href={drive.orgHref} rel="noreferrer">
+                {drive.org}
+              </a>
+            </p>
+            <p>{drive.body}</p>
+            <div class="actions">
+              <a class="btn btn-surface" href={drive.amazon} rel="noreferrer">
+                {drive.amazonLabel}
+              </a>
+            </div>
+          </article>
+        ))
+      }
     </div>
-    {
-      inKindDrives.map((drive) => (
-        <article class="drive">
-          <h3>{drive.title}</h3>
-          <p class="prose">{drive.body}</p>
-          <p>
-            Benefits{" "}
-            <a href={drive.orgHref} rel="noreferrer">
-              {drive.org}
-            </a>
-          </p>
-          <div class="actions">
-            <a class="btn btn-surface" href={drive.amazon} rel="noreferrer">
-              {drive.amazonLabel}
-            </a>
-          </div>
-        </article>
-      ))
-    }
   </section>
 </Base>

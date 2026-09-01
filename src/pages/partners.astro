@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
 import PartnerGrid from "../components/PartnerGrid.astro";
 ---
 
@@ -7,28 +8,14 @@ import PartnerGrid from "../components/PartnerGrid.astro";
   title="Partners"
   description="Churches and community organizations that make Journey Through Bethlehem possible."
 >
-  <section class="page-art" aria-hidden="true">
-    <img
-      src="/images/brand/night-sky.webp"
-      srcset="/images/brand/night-sky-768.webp 768w, /images/brand/night-sky.webp 1456w"
-      sizes="100vw"
-      alt=""
-      width="1456"
-      height="816"
-      style="object-position: center 34%;"
-      fetchpriority="high"
-      decoding="async"
-    />
-  </section>
-
-  <section class="wrap page-title">
-    <h1>Our partners</h1>
-    <p class="lede">
-      Bethlehem rises each December because churches, charities, and the Town of Trophy Club build
-      it together. These organizations make the walk possible. Several of them also distribute the
-      diapers, food, and toys you bring to the marketplace drives.
-    </p>
-  </section>
+  <PageHero
+    kicker="Made possible by"
+    title="Our partners"
+    lede="Bethlehem rises each December because churches, charities, and the Town of Trophy Club build it together. Several of these organizations also distribute the diapers, food, and toys you bring to the marketplace drives."
+    art="sleepy-bethlehem"
+    artAlt="The rooftops and tower of Bethlehem glowing at night."
+    artY="50%"
+  />
 
   <section class="wrap">
     <PartnerGrid />
