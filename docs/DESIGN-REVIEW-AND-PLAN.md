@@ -1,5 +1,7 @@
 # Journey Through Bethlehem — Design Review & Elevation Plan
 
+> **Execution status (2026-09-01):** all four phases below are implemented on this branch. The result passed a functional QA audit (state machine verified at four mocked dates, 332 KB cold home load, zero axe violations) and two rounds of adversarial design review, with a PASS verdict in round two. Facts still owed by organizers are tracked in `CONTENT-TODO.md`.
+
 **Reviewed:** the public site on branch `cursor/jtb-public-site-b3ba` (commit `045267f`), built and audited on 2026-09-01.
 **Method:** four independent expert reviews — (1) visual design & brand, (2) UX / conversion / information architecture, (3) accessibility, mobile & performance (with axe-core, keyboard testing, and measured page weights against the built site), and (4) front-end craft & motion — each working from the source, the running build, and full-page desktop (1440px) and mobile (390px) screenshots of every page. This document is the synthesis.
 
