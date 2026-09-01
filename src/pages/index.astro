@@ -1,140 +1,114 @@
 ---
 import Base from "../layouts/Base.astro";
+import Star from "../components/Star.astro";
 import WalkJourney from "../components/WalkJourney.astro";
-import EmailCapture from "../components/EmailCapture.astro";
-import { event, involveCards } from "../data/event";
+import Showtimes from "../components/Showtimes.astro";
+import { event, invite, involveCards, partners, nightsUntil } from "../data/event";
+
+const nights = Math.max(1, nightsUntil());
 ---
 
 <Base
   title="Journey Through Bethlehem | Free Live Nativity in DFW"
   description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
 >
-  <section class="hero-art" aria-label="Nativity painting">
+  <section class="hero" aria-label="Journey through Bethlehem">
     <img
-      src="/images/brand/nativity-hero.webp"
-      srcset="/images/brand/nativity-hero-768.webp 768w, /images/brand/nativity-hero.webp 1456w"
+      class="hero-painting"
+      src="/images/brand/hero-painting-1456.webp"
+      srcset="/images/brand/hero-painting-768.webp 768w, /images/brand/hero-painting-1456.webp 1456w, /images/brand/hero-painting.webp 2000w"
       sizes="100vw"
-      alt="A painterly nativity of Mary, Joseph, and the child in the manger."
-      width="1456"
-      height="816"
+      alt="A painting of Mary and Joseph kneeling at the manger inside a wooden stable."
+      width="2000"
+      height="1121"
       fetchpriority="high"
       decoding="async"
     />
+    <h1 class="hero-lockup">
+      <img
+        src="/images/brand/wordmark-presented.webp"
+        alt="Journey through Bethlehem. Presented by Faith & Fellowship Foundation."
+        width="1600"
+        height="416"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </h1>
   </section>
 
-  <section class="paper-invite">
-    <h1 class="paper-invite-h1">
-      <span class="paper-invite-lead">Celebrate the birth of</span>
-      <span class="paper-invite-christ">Christ</span>
-      <span class="paper-invite-lead">at a free community event</span>
-    </h1>
-    <p class="paper-invite-when">{event.datesLabel} · Trophy Club</p>
-    <hr class="rule" />
-    <p class="paper-invite-address">
-      <a href={event.mapsUrl}>{event.venueFull}</a>
-    </p>
-    <hr class="rule" />
-
-    <div data-when="prelaunch">
-      <p class="paper-invite-copy">
-        Admission is free. Reservations open {event.ticketsOpenLabel}, and we can send you one
-        reminder when they do.
-      </p>
-      <EmailCapture />
-      <p class="paper-invite-note">
-        Or read about <a href="/tickets">tickets and showtimes</a> first.
-      </p>
+  <section class="invite" aria-labelledby="invite-title">
+    <div class="invite-art">
+      <img
+        src="/images/brand/wise-men.webp"
+        srcset="/images/brand/wise-men-768.webp 768w, /images/brand/wise-men.webp 1456w"
+        sizes="(min-width: 900px) 50vw, 100vw"
+        alt="Three wise men on camels crossing the desert toward a bright star."
+        width="1456"
+        height="816"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
-
-    <div data-when="open">
-      <p class="paper-invite-copy">
-        Admission is free. Reserve a showtime so we can welcome you at the gate. Popular nights do
-        fill.
-      </p>
-      <div class="actions">
+    <div class="invite-body">
+      <p class="kicker">{invite.kicker}</p>
+      <h2 id="invite-title">{invite.title}</h2>
+      <ul class="facts" aria-label="When and where">
+        <li>{event.datesLabel}</li>
+        <li><a href={event.mapsUrl} rel="noreferrer">{event.venueName}</a></li>
+        <li>{event.venueCity}</li>
+        <li><strong>Admission is free</strong></li>
+      </ul>
+      {invite.body.map((para) => <p>{para}</p>)}
+      <div class="actions" data-when="prelaunch">
+        <a class="btn" href="#showtimes">See showtimes</a>
+        <a class="btn btn-surface" href={event.mapsUrl} rel="noreferrer">Get directions</a>
+      </div>
+      <div class="actions" data-when="open">
         <a class="btn" href="/tickets">Reserve a showtime</a>
+        <a class="btn btn-surface" href={event.mapsUrl} rel="noreferrer">Get directions</a>
       </div>
-    </div>
-
-    <div data-when="eventWeek">
-      <p class="paper-invite-copy">
-        Bethlehem is open tonight. Admission is free. Reserve a showtime and bring the whole
-        family.
-      </p>
-      <div class="actions">
+      <div class="actions" data-when="eventWeek">
         <a class="btn" href="/tickets">See tonight’s showtimes</a>
+        <a class="btn btn-surface" href={event.mapsUrl} rel="noreferrer">Get directions</a>
       </div>
-    </div>
-
-    <div data-when="past">
-      <p class="paper-invite-copy">
-        The {event.annual} Journey Through Bethlehem has ended. Thank you, Trophy Club. Leave your
-        email and you’ll be the first to hear about next December.
+      <div class="actions" data-when="past">
+        <a class="btn" href="/get-involved">Join us next December</a>
+      </div>
+      <p class="countdown" data-countdown={event.eventStartIso} data-when="prelaunch open">
+        <Star size={18} />
+        <span><span data-countdown-nights>{nights}</span> nights until Bethlehem</span>
       </p>
-      <EmailCapture />
     </div>
-
-    <p class="countdown" data-countdown={event.eventStartIso} data-when="prelaunch open">
-      <img src="/images/brand/star-320.webp" alt="" width="26" height="26" decoding="async" />
-      <span
-        ><span data-countdown-nights>{Math.max(1, Math.ceil((Date.parse(event.eventStartIso) - Date.now()) / 86_400_000))}</span>
-        nights until Bethlehem</span
-      >
-    </p>
   </section>
 
   <WalkJourney />
 
-  <section class="night-section" id="showtimes" aria-label="Showtimes">
+  <section class="night-section" id="showtimes" aria-labelledby="showtimes-title">
     <div class="wrap">
       <div class="section-head">
         <div>
           <p class="kicker">Four nights only</p>
-          <h2>Showtimes</h2>
+          <h2 id="showtimes-title">Showtimes</h2>
           <p class="section-sub">
-            Evening walks, {event.datesLabel}. All times Central.
+            Evening walks, {event.datesLabel}. All times Central. Each walk leaves on the hour.
           </p>
         </div>
         <a class="btn btn-gold" href="/tickets" data-when="open eventWeek">Reserve a showtime</a>
-        <a class="btn btn-gold" href="/tickets" data-when="prelaunch">Plan your visit</a>
+        <p class="section-sub" data-when="prelaunch">Free reservations open {event.ticketsOpenLabel}.</p>
       </div>
-      <div class="nights-grid">
-        {
-          event.showtimes.map((night) => (
-            <div class="night-card" data-reveal>
-              <h3>{night.date}</h3>
-              <div class="times">
-                {night.times.map((time) => (
-                  <>
-                    <span class="time" data-when="prelaunch past">
-                      {time} PM
-                    </span>
-                    <a
-                      class="time-link"
-                      href={event.ticketsUrl}
-                      rel="noreferrer"
-                      data-when="open eventWeek"
-                    >
-                      {time} PM
-                    </a>
-                  </>
-                ))}
-              </div>
-            </div>
-          ))
-        }
-      </div>
+      <Showtimes tone="night" />
       <p class="night-note">{event.accommodations}</p>
     </div>
   </section>
 
-  <section class="wrap" aria-label="Get involved">
+  <section class="wrap" aria-labelledby="involve-title">
     <div class="section-head">
       <div>
-        <p class="kicker">Built by volunteers</p>
-        <h2>Help build Bethlehem</h2>
+        <p class="kicker">Built by neighbors</p>
+        <h2 id="involve-title">Help build Bethlehem</h2>
         <p class="section-sub">
-          The town is staffed entirely by volunteers, and the marketplace gives back.
+          Every villager, shepherd, and stall-keeper is a volunteer, and the marketplace gives back
+          to families across the county.
         </p>
       </div>
       <a class="btn btn-surface" href="/get-involved">All the ways to help</a>
@@ -154,6 +128,7 @@ import { event, involveCards } from "../data/event";
               decoding="async"
             />
             <div class="card-body">
+              <p class="eyebrow">{card.eyebrow}</p>
               <h3>{card.title}</h3>
               <p>{card.body}</p>
               <a class="card-link" href={card.href} rel="noreferrer">
@@ -161,6 +136,19 @@ import { event, involveCards } from "../data/event";
               </a>
             </div>
           </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap partner-strip" aria-label="Partners">
+    <p class="kicker">In partnership with</p>
+    <div class="logos">
+      {
+        partners.map((partner) => (
+          <a href={partner.href} rel="noreferrer" title={partner.name}>
+            <img src={partner.logo} alt={partner.name} loading="lazy" decoding="async" />
+          </a>
         ))
       }
     </div>

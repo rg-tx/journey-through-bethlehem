@@ -1,5 +1,7 @@
 # Journey Through Bethlehem — Design Review & Elevation Plan
 
+> **Redesign pass (2026-09-01, branch `claude/fable-redesign`):** a second, holistic pass on top of this plan — invitation diptych hero, the Walk rebuilt as a route, interior title cards, engraved type system. Notes and before/after screenshots: `docs/artifacts/2026-09/design/redesign-notes.html`.
+>
 > **Execution status (2026-09-01):** all four phases below are implemented on this branch. The result passed a functional QA audit (state machine verified at four mocked dates, 332 KB cold home load, zero axe violations) and two rounds of adversarial design review, with a PASS verdict in round two. Facts still owed by organizers are tracked in `CONTENT-TODO.md`.
 
 **Reviewed:** the public site on branch `cursor/jtb-public-site-b3ba` (commit `045267f`), built and audited on 2026-09-01.

@@ -5,6 +5,7 @@ export const event = {
   year: 2026,
   annual: "3rd annual",
   datesLabel: "December 3–6, 2026",
+  datesShort: "December 3–6",
   dateStart: "2026-12-03",
   dateEnd: "2026-12-06",
   venueName: "2509 Trophy Club Drive",
@@ -19,6 +20,7 @@ export const event = {
   fffUrl: "https://faithfellowshipfoundation.com/",
   ticketsUrl: "https://buytickets.at/trophyclubnativity/2388791",
   ticketsOpenLabel: "November 1, 2026",
+  ticketsOpenShort: "November 1",
   // Midnight Nov 1 in Chicago is still CDT (UTC-05:00); DST ends later that morning.
   ticketsOpenIso: "2026-11-01T00:00:00-05:00",
   // First showtime is 6:00 PM CST Dec 3; the last walk leaves 9:00 PM CST Dec 6.
@@ -26,27 +28,47 @@ export const event = {
   eventEndIso: "2026-12-06T22:00:00-06:00",
   accommodations:
     "American Sign Language is offered at Friday’s 7:00 p.m. showtime and at every Saturday and Sunday showtime. Spanish translation is offered every night. Choose the accommodation you need when you reserve.",
+  /**
+   * Each time may carry its own Ticket Tailor occurrence URL so a tap lands on
+   * that exact showtime. Until organizers paste those in (Ticket Tailor
+   * dashboard -> the date -> Share, or GET /v1/event_series/{id}/events), the
+   * chip falls back to the series page.
+   */
   showtimes: [
     {
-      date: "Thursday, December 3",
+      date: "December 3",
       weekday: "Thursday",
-      times: ["6:00", "7:00", "8:00", "9:00"],
+      slots: [{ time: "6:00" }, { time: "7:00" }, { time: "8:00" }, { time: "9:00" }],
     },
     {
-      date: "Friday, December 4",
+      date: "December 4",
       weekday: "Friday",
-      times: ["6:00", "7:00", "8:00", "9:00"],
+      slots: [{ time: "6:00" }, { time: "7:00" }, { time: "8:00" }, { time: "9:00" }],
     },
     {
-      date: "Saturday, December 5",
+      date: "December 5",
       weekday: "Saturday",
-      times: ["5:00", "6:00", "7:00", "8:00", "9:00"],
+      slots: [{ time: "5:00" }, { time: "6:00" }, { time: "7:00" }, { time: "8:00" }, { time: "9:00" }],
     },
     {
-      date: "Sunday, December 6",
+      date: "December 6",
       weekday: "Sunday",
-      times: ["5:00", "6:00", "7:00", "8:00", "9:00"],
+      slots: [{ time: "5:00" }, { time: "6:00" }, { time: "7:00" }, { time: "8:00" }, { time: "9:00" }],
     },
+  ] as ReadonlyArray<{
+    date: string;
+    weekday: string;
+    slots: ReadonlyArray<{ time: string; url?: string }>;
+  }>,
+} as const;
+
+/** The second module: the invitation leaders know from the flyer and the old site. */
+export const invite = {
+  kicker: "You’re invited",
+  title: "Celebrate the birth of Christ at a free community event.",
+  body: [
+    "You are invited to the 3rd annual live nativity in Trophy Club. Step into an interactive Bethlehem marketplace: listen to live music, sample the food, toss a dreidel, make a clay lamp, and meet the live manger animals.",
+    "The evening culminates in a live musical performance of the nativity story, with actors, animals, the humble stable, and the guiding star. Bring your friends and family for a heartwarming celebration of faith and love.",
   ],
 } as const;
 
@@ -65,59 +87,80 @@ export const volunteerYouthUrl =
 export const foodDriveUrl =
   "https://m.signupgenius.com/#!/showSignUp/10C0A49A9AE2DA3F9C16-59054454-food";
 
-// One sentence each — spoken like a guide, not a caption.
-export const walkStations = [
+// Moments from the walk, for the What to expect carousel. Captions, not stations.
+export const walkMoments = [
   {
-    title: "The marketplace",
-    line: "Barter with bakers and artisans in the lantern-lit stalls of old Bethlehem.",
+    caption: "The marketplace: bread, crafts, and a dreidel to toss.",
     src: "/images/photos/marketplace.jpg",
     src720: "/images/photos/marketplace-720.jpg",
     alt: "A volunteer at a marketplace stall with baskets of bread.",
   },
   {
-    title: "The choir",
-    line: "You’ll hear the carols before you see the singers.",
+    caption: "Carolers you hear before you see.",
     src: "/images/photos/choir.jpg",
     src720: "/images/photos/choir-720.jpg",
     alt: "Women and girls in white and gold robes singing at the nativity.",
   },
   {
-    title: "The road",
-    line: "Travelers and their camel share the road to the census.",
+    caption: "A real camel on the road to the census.",
     src: "/images/photos/camel.jpg",
     src720: "/images/photos/camel-720.jpg",
     alt: "A camel in period trappings on the road to the nativity.",
   },
   {
-    title: "The shepherds",
-    line: "In the fields, shepherds point to a star that wasn’t there yesterday.",
+    caption: "The whole cast, on opening night.",
+    src: "/images/photos/manger-scene.jpg",
+    src720: "/images/photos/manger-scene-720.jpg",
+    alt: "Cast and a Roman soldier on horseback at the live nativity.",
+  },
+  {
+    caption: "Artisans at work inside the town.",
+    src: "/images/photos/artisans.jpg",
+    src720: "/images/photos/artisans-720.jpg",
+    alt: "Volunteers in period clothing inside a decorated marketplace room.",
+  },
+  {
+    caption: "Mary and Joseph, played by neighbors.",
+    src: "/images/photos/nativity-142.jpg",
+    src720: "/images/photos/nativity-142-720.jpg",
+    alt: "Two actors portraying Mary and Joseph on the stage.",
+  },
+  {
+    caption: "Shepherds under a painted sky.",
     src: "/images/photos/shepherds.jpg",
     src720: "/images/photos/shepherds-720.jpg",
     alt: "Volunteers in biblical dress in front of a night-sky star backdrop.",
   },
+  {
+    caption: "The gate into Bethlehem.",
+    src: "/images/photos/bethlehem-sign.jpg",
+    src720: "/images/photos/bethlehem-sign-720.jpg",
+    alt: "A wooden Bethlehem sign and lantern at the entrance, with visitors inside.",
+  },
 ] as const;
 
-// The last station breaks the pattern: the painting, and the only CTA.
+// The walk ends here: the animated painting of Mary and Joseph on the road.
 export const walkFinale = {
-  title: "The stable",
-  line: "Every road through Bethlehem ends here.",
-  src: "/images/brand/nativity-scene-2.webp",
-  src768: "/images/brand/nativity-scene-2-768.webp",
-  alt: "A painterly nativity of Mary, Joseph, and the child at the stable.",
+  title: "Every road ends at the stable.",
+  line: "Reserve a showtime, come as you are, and take the walk at your own pace.",
+  video: "/video/journey.mp4",
+  poster: "/images/brand/journey-poster.webp",
 } as const;
 
 export const involveCards = [
   {
+    eyebrow: "Adults",
     title: "Volunteer",
     src: "/images/photos/manger-scene.jpg",
     src720: "/images/photos/manger-scene-720.jpg",
     alt: "Cast and a Roman soldier on horseback at the live nativity.",
-    body: "Play a villager, sing a carol, or help behind the scenes. Pick a night and a role on the sign-up form.",
+    body: "Play a villager, sing a carol, tend a stall, or help behind the scenes. Costumes are provided and no experience is needed.",
     href: volunteerAdultUrl,
     action: "Sign up to volunteer",
   },
   {
-    title: "Youth",
+    eyebrow: "Youth",
+    title: "Be a shepherd",
     src: "/images/photos/nativity-126.jpg",
     src720: "/images/photos/nativity-126-720.jpg",
     alt: "Youth in biblical costumes during the nativity performance.",
@@ -126,11 +169,12 @@ export const involveCards = [
     action: "Youth sign-up",
   },
   {
+    eyebrow: "Neighbors in need",
     title: "Give goods",
-    src: "/images/photos/artisans.jpg",
-    src720: "/images/photos/artisans-720.jpg",
-    alt: "Volunteers in period clothing inside a decorated marketplace room.",
-    body: "Bring diapers, food, or toys for neighbors in need. Drop them off at the nativity, or shop the Amazon lists from home.",
+    src: "/images/photos/bethlehem-sign.jpg",
+    src720: "/images/photos/bethlehem-sign-720.jpg",
+    alt: "Visitors arriving through the lantern-lit Bethlehem gate.",
+    body: "Bring diapers, food, or toys for local families. Drop them at the marketplace, or shop the Amazon lists from home.",
     href: "/get-involved#give-goods",
     action: "See the drives",
   },
@@ -206,7 +250,7 @@ export const volunteerRoles = [
 export const faq = [
   {
     q: "What is Journey Through Bethlehem?",
-    a: "A free outdoor live nativity. You walk through a recreated Bethlehem at night, past the marketplace, the choir, and travelers with their animals, and the road ends at the stable. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
+    a: "A free outdoor live nativity. You walk through a recreated Bethlehem at night: a marketplace with food, crafts, and artisans; carolers; travelers and live animals on the road; and, at the end, a live musical telling of the nativity at the stable. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
   },
   {
     q: "Does it really cost nothing?",
@@ -244,24 +288,24 @@ export const inKindDrives = [
     org: "Catholic Charities Fort Worth",
     orgHref: "https://catholiccharitiesfortworth.org/",
     amazon: "https://www.amazon.com/hz/wishlist/ls/31IP27JT1C1K3?ref_=wl_share",
-    amazonLabel: "Diapers & Wipes Amazon List",
-    body: "Help families in need by donating diapers and wipes. Please bring new, unopened packages of diapers (all sizes welcome) and baby wipes. Your thoughtful donation ensures that babies and young children in our community have the essentials they need to stay clean, healthy, and comfortable this holiday season.",
+    amazonLabel: "Shop the diaper list",
+    body: "New, unopened packages of diapers in any size, and baby wipes, so babies in our community stay clean, healthy, and comfortable this winter.",
   },
   {
     title: "Food drive",
     org: "Roanoke Food Pantry",
     orgHref: "https://www.facebook.com/RoanokeFoodPantry/",
     amazon: "https://www.amazon.com/hz/wishlist/ls/2CKJHLD8QC1OY?ref_=wl_share",
-    amazonLabel: "Food Drive Amazon List",
-    body: "Donate any non-perishable food items for families in need this Christmas. Possibilities include canned meat, canned soup, canned fruits or vegetables, canned milk, peanut butter, jelly, boxed pasta, pasta sauce, dried beans, rice, cake mix, pancake mix, syrup, instant potatoes, box jello, ramen noodles, and more.",
+    amazonLabel: "Shop the food list",
+    body: "Non-perishables for families this Christmas: canned meat, soup, fruit and vegetables, peanut butter and jelly, pasta and sauce, rice, dried beans, cake and pancake mix, instant potatoes.",
   },
   {
     title: "Toy drive",
     org: "GRACE",
     orgHref: "https://www.gracegrapevine.org/",
     amazon: "https://www.amazon.com/hz/wishlist/ls/2J8IT28MGSE9M?ref_=wl_share",
-    amazonLabel: "Toy Drive Amazon List",
-    body: "Donate a toy for a child who would otherwise not receive one. Please bring new, unwrapped toys appropriate for ages 5–15. Examples include board games, soccer balls, footballs, kickballs, arts and crafts sets, Play-Doh kits, markers and crayon sets, action figures, Hot Wheels sets, Legos, Barbies, and baby dolls.",
+    amazonLabel: "Shop the toy list",
+    body: "New, unwrapped toys for ages 5–15: board games, balls, art sets, Play-Doh, markers, action figures, Hot Wheels, Legos, dolls.",
   },
 ] as const;
 

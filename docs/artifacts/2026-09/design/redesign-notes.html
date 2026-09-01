@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journey Through Bethlehem — Redesign notes</title>
+<style>
+/* ============================================================================
+   to-html-base.css — design tokens & primitives for every /to-html artifact
+   ----------------------------------------------------------------------------
+   Inlined verbatim at the top of every artifact's <style> block. Artifact-
+   or recipe-specific overrides go BELOW this block in the same <style> tag.
+
+   Aesthetic: "simple, elegant, Figma-leaning." Restrained cool-neutral
+   palette, single blue accent, system fonts, 8pt rhythm, hairline borders,
+   subtle single-layer shadow. Light mode is the only mode here — dark must
+   be opted into via $ARGUMENTS at the call site.
+
+   To change taste system-wide, edit this file. Recipes and artifacts must
+   reference these tokens (var(--success), var(--font-sans), etc.) instead
+   of inlining hex/font literals so changes flow through cleanly.
+   ============================================================================ */
+
+:root {
+  /* === Neutrals (cool gray ramp — zinc-leaning) === */
+  --bg:        #fafafa;
+  --surface:   #ffffff;
+  --surface-2: #f4f4f5;
+  --ink:       #18181b;
+  --ink-2:     #3f3f46;
+  --muted:     #71717a;
+  --muted-2:   #a1a1aa;
+  --line:      #e4e4e7;
+  --line-2:    #d4d4d8;
+
+  /* === Single accent slot (overridable per project) === */
+  --accent:      #2563eb;
+  --accent-deep: #1d4ed8;
+  --accent-soft: #eff6ff;
+  --accent-line: #bfdbfe;
+
+  /* === Semantic — use only for status, not decoration === */
+  --success: #16a34a; --success-bg: #f0fdf4; --success-line: #bbf7d0;
+  --warning: #d97706; --warning-bg: #fffbeb; --warning-line: #fde68a;
+  --danger:  #dc2626; --danger-bg:  #fef2f2; --danger-line:  #fecaca;
+  --info:    #2563eb; --info-bg:    #eff6ff; --info-line:    #bfdbfe;
+
+  /* === Typography (system stack — no remote font loads) === */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Type ramp — 4 sizes + display */
+  --t-xs:   11.5px;
+  --t-sm:   13px;
+  --t-base: 14px;
+  --t-lg:   16px;
+  --t-xl:   20px;
+  --t-2xl:  28px;
+  --t-display: clamp(28px, 5vw, 42px);
+
+  /* === Spacing — 4pt base === */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-12: 48px;
+
+  /* === Shape === */
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --r-pill: 999px;
+  --shadow: 0 1px 2px rgba(15,15,15,.04), 0 4px 12px rgba(15,15,15,.04);
+  --shadow-lg: 0 1px 2px rgba(15,15,15,.04), 0 12px 32px rgba(15,15,15,.08);
+}
+
+/* === Reset + base === */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font: var(--t-base)/1.55 var(--font-sans);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* === Layout primitives === */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 var(--s-6); }
+.wrap-tight { max-width: 760px; margin: 0 auto; padding: 0 var(--s-6); }
+
+/* === Type primitives === */
+.eyebrow {
+  font-size: var(--t-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  font-weight: 600;
+}
+.display {
+  font-size: var(--t-display);
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin: 0;
+}
+.lede {
+  font-size: var(--t-lg);
+  color: var(--muted);
+  max-width: 68ch;
+  line-height: 1.55;
+  margin: 0;
+}
+.mono, code {
+  font-family: var(--font-mono);
+  font-size: .92em;
+  background: var(--surface-2);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+}
+
+/* === Card === */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: var(--s-4); }
+
+/* === Badge / pill === */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  letter-spacing: .02em;
+}
+.badge.success { background: var(--success-bg); border-color: var(--success-line); color: var(--success); }
+.badge.warning { background: var(--warning-bg); border-color: var(--warning-line); color: var(--warning); }
+.badge.danger  { background: var(--danger-bg);  border-color: var(--danger-line);  color: var(--danger); }
+.badge.info    { background: var(--info-bg);    border-color: var(--info-line);    color: var(--info); }
+.badge.recommended {
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+/* === Callout === */
+.callout {
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  background: var(--surface-2);
+  font-size: var(--t-sm);
+  line-height: 1.5;
+}
+.callout.info    { background: var(--info-bg);    border-color: var(--info-line);    border-left-color: var(--info); }
+.callout.success { background: var(--success-bg); border-color: var(--success-line); border-left-color: var(--success); }
+.callout.warning { background: var(--warning-bg); border-color: var(--warning-line); border-left-color: var(--warning); }
+.callout.danger  { background: var(--danger-bg);  border-color: var(--danger-line);  border-left-color: var(--danger); }
+
+/* === Tables === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+}
+th, td {
+  text-align: left;
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--line);
+}
+th {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: var(--t-xs);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* === SVG diagrams === */
+svg.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  color: var(--ink-2);            /* sets currentColor for strokes/labels */
+  font: 500 var(--t-sm) var(--font-sans);
+}
+svg.diagram .stroke      { stroke: currentColor; fill: none; stroke-width: 1.5; }
+svg.diagram .stroke-soft { stroke: var(--line-2); fill: none; stroke-width: 1; }
+svg.diagram .fill-soft   { fill: var(--surface-2); stroke: var(--line); stroke-width: 1; }
+svg.diagram .accent      { stroke: var(--accent); fill: none; }
+svg.diagram .accent-fill { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; }
+svg.diagram text         { fill: var(--ink-2); font-family: var(--font-sans); font-size: 12px; }
+svg.diagram .label-muted { fill: var(--muted); font-size: 11px; }
+
+/* Diagram wrapper — REQUIRED when embedding svg.diagram in an artifact.
+   Lets wide viewBoxes scale to container width without being squeezed below
+   their natural readability. Pair with <svg class="diagram"> inside.
+   See ~/.claude/assets/to-html-svg-patterns.md "Anti-patterns" table for
+   the failure modes this prevents (the min-width:600px squeeze bug, etc.). */
+.diagram-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--s-4) 0;
+}
+.diagram-wrap svg.diagram {
+  width: 100%;
+  min-width: 0;   /* NEVER override with min-width: 600px+ — that's the bug */
+  height: auto;
+}
+
+/* Diagram legend — for long labels (watchdog names, flag taxonomies, cron
+   identifiers) that would clip past the viewBox edge if rendered as <text>.
+   Render HTML <ul class="diagram-legend"> UNDER the SVG, not inside it. */
+.diagram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  font-size: var(--t-xs);
+  color: var(--muted);
+  list-style: none;
+  padding: var(--s-2) 0 0;
+  margin: 0;
+}
+.diagram-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.diagram-legend .swatch {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex: 0 0 auto;
+}
+.diagram-legend .swatch.success { background: var(--success); }
+.diagram-legend .swatch.warning { background: var(--warning); }
+.diagram-legend .swatch.danger  { background: var(--danger); }
+.diagram-legend .swatch.info    { background: var(--info); }
+.diagram-legend .swatch.muted   { background: var(--muted-2); }
+
+/* === Print niceties === */
+@media print {
+  body { background: white; }
+  .card { box-shadow: none; }
+}
+
+/* ---- artifact overrides (tokens only) ---- */
+:root {
+  --accent: #395f72;
+  --accent-deep: #2c4a59;
+  --accent-soft: #eef3f5;
+  --accent-line: #c7d6dd;
+}
+body { padding: var(--s-12) 0; }
+header.top { margin-bottom: var(--s-12); }
+h2 { font-size: var(--t-xl); margin: var(--s-12) 0 var(--s-3); }
+h3 { font-size: var(--t-lg); margin: var(--s-6) 0 var(--s-2); }
+p { margin: 0 0 var(--s-3); max-width: 72ch; }
+ul { padding-left: 1.2em; }
+li { margin: 0 0 var(--s-2); max-width: 72ch; }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); margin: var(--s-4) 0 var(--s-6); }
+.compare figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); }
+.compare img { display: block; width: 100%; height: auto; }
+.compare figcaption { font-size: var(--t-sm); color: var(--muted); padding: var(--s-3) var(--s-4); border-top: 1px solid var(--line); }
+.compare.tall img { max-height: 900px; object-fit: cover; object-position: top; }
+.swatches { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: var(--s-3) 0 var(--s-6); }
+.sw { width: 132px; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+.sw i { display: block; height: 48px; }
+.sw span { display: block; padding: 6px 8px; font-size: var(--t-xs); color: var(--ink-2); }
+.sw code { display: block; font-size: 11px; background: none; padding: 0 8px 8px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); margin: var(--s-3) 0 var(--s-6); }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .06em; }
+.callout { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: var(--s-3) var(--s-4); border-radius: 0 var(--r-md) var(--r-md) 0; margin: var(--s-4) 0; }
+@media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Design notes · 2026-09-01 · branch claude/fable-redesign</p>
+    <h1 class="display">Journey Through Bethlehem, redesigned end to end</h1>
+    <p class="lede">What changed on the public site, why each change was made, and what is still owed by the organizers. The site was already good. This pass makes it feel designed as one place rather than assembled from sections.</p>
+  </header>
+
+  <h2>The idea in one line</h2>
+  <p>The site is an opened invitation, and the night falls behind it. Paintings are the environment, photographs are artifacts brought back from the walk, and the type is set like an engraved card.</p>
+
+  <div class="callout">
+    <strong>Nothing from Squarespace was copied.</strong> Last year's page was consulted for one thing only: facts the new site had dropped. It mentions sampling food, tossing a dreidel, making a clay lamp, and that the evening ends in a live musical performance of the nativity. Those facts are now in the Walk copy and the FAQ.
+  </div>
+
+  <h2>Home page, before and after</h2>
+  <div class="compare tall">
+    <figure><img src="img/before-desktop-home.jpg" alt="Previous home page at desktop width"><figcaption>Before · 7,938px tall. Letterboxed painting, centered card, five full-screen stations before showtimes.</figcaption></figure>
+    <figure><img src="img/after-desktop-home.jpg" alt="Redesigned home page at desktop width"><figcaption>After · about 4,850px tall. Diptych hero, the Walk as a route, showtimes two screens down.</figcaption></figure>
+  </div>
+
+  <h3>1. Hero as a diptych</h3>
+  <div class="compare">
+    <figure><img src="img/before-hero.jpg" alt="Previous hero: painting band fading into a centered invitation card"><figcaption>Before. The dissolve erased Mary, Joseph, and the manger.</figcaption></figure>
+    <figure><img src="img/after-hero.jpg" alt="New hero: painting fills the left leaf, invitation typeset on the right"><figcaption>After. Full-height portrait crop keeps tower, star, stable, and manger. The painting dissolves sideways into paper.</figcaption></figure>
+  </div>
+  <ul>
+    <li>The headline promotes the best line the site already had: "Walk into Bethlehem the night He was born." The old hero copy was inherited from last year.</li>
+    <li>Dates, address, town, and "Admission is free" are set as an engraved facts block between hairlines. A parent gets everything in five seconds.</li>
+    <li>The call to action is state-aware: email reminder before November 1, "Reserve a showtime" once tickets open, "See tonight's showtimes" during event week, a thank-you and 2027 signup after.</li>
+    <li>Load sequence: painting fades in, then each line of the invitation rises in order. Disabled under reduced motion.</li>
+  </ul>
+
+  <h3>2. The Walk as a route, not a slideshow</h3>
+  <div class="compare">
+    <figure><img src="img/before-route.jpg" alt="Previous station: one small arched photo floating in a full-screen sky"><figcaption>Before. Each station was a 92vh screen with one small photo. Six thousand pixels of scrolling for four sentences.</figcaption></figure>
+    <figure><img src="img/after-route.jpg" alt="New route: four arched stations on a dashed road with lanterns"><figcaption>After. Four doorways on a drawn road, in the order visitors meet them, lanterns at each stop. Mobile runs the road down the left edge.</figcaption></figure>
+  </div>
+  <ul>
+    <li>The station copy now describes the real program: food, dreidels, clay lamps, artisans, carolers, a camel, shepherds.</li>
+    <li>The finale keeps its role as the pattern-breaker: the stable painting, one line, one button. Its copy now says the evening closes with a live musical telling of the nativity.</li>
+    <li>The sky painting is a fixed backdrop with a slow scroll-driven drift where browsers support scroll timelines. Stars still breathe.</li>
+  </ul>
+
+  <h3>3. Showtimes as four lit windows</h3>
+  <p>One column per night on desktop, weekday as an engraved label, date in Playfair, times as quiet chips before launch and glowing links after. The same component appears on paper on the tickets page.</p>
+
+  <h2>Interior pages share one identity</h2>
+  <div class="compare">
+    <figure><img src="img/before-tickets.jpg" alt="Previous tickets page: thin sky strip, left-aligned heading, table"><figcaption>Before. A sliver of sky, then a plain document.</figcaption></figure>
+    <figure><img src="img/after-tickets.jpg" alt="New tickets page: paper title card rising out of a taller painted sky"><figcaption>After. A taller sky, a paper title card with a candle-gold rule rising out of it, the schedule as cards, FAQ in two columns.</figcaption></figure>
+  </div>
+  <ul>
+    <li>Tickets, Get involved, Donate, and Partners all open the same way; only the crop of the sky changes.</li>
+    <li>Headlines now carry a voice: "There's a place for you in the town." and "Admission is free because people give."</li>
+    <li>Get involved: roles grid, one volunteer block with both sign-ups, and the three drives as cards instead of long text.</li>
+    <li>Tickets: add-to-calendar files for the November 1 launch and for the event itself, a first FAQ item open by default.</li>
+    <li>Donate: the trust block is a checklist. No invented impact figures; the CONTENT-TODO still asks organizers for EIN and mailing address.</li>
+    <li>404 and footer are night from edge to edge. Footer gains a fourth column and a legal line.</li>
+  </ul>
+
+  <h2>Type and color</h2>
+  <p>Same three self-hosted faces, deployed with more conviction. Tenor Sans is the engraved voice for dates, labels, times, and buttons, which ties the page to the BETHLEHEM wordmark. Playfair Display carries three or four big moments per page plus italic "voice" lines in slate. PT Serif stays for reading.</p>
+  <div class="swatches">
+    <div class="sw"><i style="background:#f7f3ec"></i><span>Paper</span><code>#f7f3ec</code></div>
+    <div class="sw"><i style="background:#efe6da"></i><span>Plaster</span><code>#efe6da</code></div>
+    <div class="sw"><i style="background:#3b2f25"></i><span>Ink</span><code>#3b2f25</code></div>
+    <div class="sw"><i style="background:#395f72"></i><span>Slate</span><code>#395f72</code></div>
+    <div class="sw"><i style="background:#8a6420"></i><span>Gold on paper</span><code>#8a6420</code></div>
+    <div class="sw"><i style="background:#d9b667"></i><span>Gold on night</span><code>#d9b667</code></div>
+    <div class="sw"><i style="background:#f4d59a"></i><span>Candle</span><code>#f4d59a</code></div>
+    <div class="sw"><i style="background:#121d24"></i><span>Night</span><code>#121d24</code></div>
+  </div>
+  <p>Paper warmed one step toward the painted plaster walls. A new plaster tone is used for notices. The star from the paintings becomes an inline SVG glyph in the header, countdown, and footer, replacing the raster mark.</p>
+
+  <h2>Format and layout decisions</h2>
+  <table>
+    <tr><th>Decision</th><th>Reason</th></tr>
+    <tr><td>Split hero on desktop, stacked on mobile</td><td>Uses desktop width, keeps the painting type-free, and shows the manger. Mobile crop keeps the full vertical of the painting.</td></tr>
+    <tr><td>Route replaces per-station screens</td><td>Home page halves in height. Showtimes move from six screens down to two.</td></tr>
+    <tr><td>Showtimes moved above Get involved</td><td>"When can we go" is the second question a family asks.</td></tr>
+    <tr><td>Partner logos on the home page</td><td>Social proof for a volunteer-run event, quiet and grayscale.</td></tr>
+    <tr><td>Title cards over sky on interior pages</td><td>One recognizable identity across five pages without putting type on a painting.</td></tr>
+    <tr><td>Two-column FAQ</td><td>Eight questions fit in one screen on desktop.</td></tr>
+  </table>
+
+  <h2>Quality floor</h2>
+  <ul>
+    <li>Responsive from 390px up. Checked at 390 and 1440.</li>
+    <li>Reduced motion disables the load sequence, reveals, twinkle, and sky drift.</li>
+    <li>Visible focus rings, 44px tap targets, skip link, native disclosure widgets, pressed states announced on the donate toggles.</li>
+    <li>Every below-fold image is lazy; the hero is high priority. No third-party requests.</li>
+    <li>Any state can be previewed with <code>?state=prelaunch|open|eventWeek|past</code>.</li>
+  </ul>
+
+  <h2>Revision after Reed's feedback (same day)</h2>
+  <div class="compare">
+    <figure><img src="img/after-hero.jpg" alt="Diptych hero, superseded"><figcaption>First pass. Diptych hero with live type.</figcaption></figure>
+    <figure><img src="img/v2-hero.jpg" alt="Final hero: the familiar painting with the presented-by wordmark on it"><figcaption>Final. The painting everyone knows, the approved wordmark lockup, a soft breath of light behind it as on the flyer.</figcaption></figure>
+  </div>
+  <ul>
+    <li><strong>Wordmark.</strong> The header uses the approved lockup without the presenter line (unreadable below 60px); the hero carries the full "Presented by Faith &amp; Fellowship Foundation" version. Both trimmed and served as WebP with alpha from the Wordmark folder.</li>
+    <li><strong>Second module.</strong> The invitation from the old site returns with the three wise men painting: "Celebrate the birth of Christ at a free community event," dates, address, the program paragraph, and the countdown. No address in the hero.</li>
+    <li><strong>No reminders.</strong> Email capture, the subscribe function, and the calendar files are gone.</li>
+    <li><strong>What to expect.</strong> No stations. A scroll-snap carousel of eight photos with captions, arrows, dots, keyboard and mouse drag. It closes on the animated painting of Mary and Joseph on the road, a 9.5 second muted loop that plays only on screen and never under reduced motion.</li>
+    <li><strong>Showtimes.</strong> Every time chip has an optional per-occurrence Ticket Tailor URL and falls back to the series page. Ticket Tailor blocks automated fetches, so the URL pattern still needs the organizers' Share links.</li>
+    <li><strong>Interior banners.</strong> Wise men on Tickets, shepherd and lamb on Get involved, child with candle on Donate, the sleeping town on Partners. Taller crops so the subject is legible.</li>
+    <li><strong>Privacy notice.</strong> A dismissable card on first visit, remembered in localStorage, stating honestly that the site sets no tracking cookies.</li>
+    <li><strong>Give goods</strong> now uses the Bethlehem gate photo.</li>
+  </ul>
+
+  <h2>Still owed by organizers</h2>
+  <p>Unchanged from <code>docs/CONTENT-TODO.md</code>: walk duration, parking, weather channel, accessibility specifics, EIN, mailing address, canonical SignUpGenius links, per-showtime Ticket Tailor links, and a KV binding for the email list.</p>
+</div>
+</body>
+</html>
