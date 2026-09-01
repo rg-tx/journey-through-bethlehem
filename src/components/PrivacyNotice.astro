@@ -1,0 +1,34 @@
+<aside class="privacy-bar" data-privacy-notice hidden aria-label="Privacy notice">
+  <p>
+    We use local storage to remember this choice. Details on the
+    <a href="/privacy-policy">privacy</a> page.
+  </p>
+  <button class="btn btn-surface" type="button" data-privacy-accept>OK</button>
+</aside>
+
+<script>
+  const STORAGE_KEY = "jtb-privacy-ok";
+  const bar = document.querySelector<HTMLElement>("[data-privacy-notice]");
+  const accept = bar?.querySelector<HTMLButtonElement>("[data-privacy-accept]");
+
+  function dismissed() {
+    try {
+      return localStorage.getItem(STORAGE_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  if (bar && !dismissed()) {
+    bar.hidden = false;
+  }
+
+  accept?.addEventListener("click", () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, "1");
+    } catch {
+      /* private mode may block storage; hiding still stops this visit's nag */
+    }
+    if (bar) bar.hidden = true;
+  });
+</script>

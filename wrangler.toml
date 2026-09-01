@@ -10,11 +10,3 @@ pages_build_output_dir = "dist"
 # STRIPE_SECRET_KEY
 # STRIPE_PUBLISHABLE_KEY
 # STRIPE_DONATE_PRICE_ID   (optional; checkout uses custom amounts via price_data)
-
-# Email capture ("remind me when tickets open") stores signups in KV.
-# Create a namespace and bind it as SUBSCRIBERS in the Pages project settings
-# (or uncomment below with the real id). Until bound, the form degrades to a
-# "email us and we'll add you by hand" message.
-# [[kv_namespaces]]
-# binding = "SUBSCRIBERS"
-# id = "<namespace-id>"
