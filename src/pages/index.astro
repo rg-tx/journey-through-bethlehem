@@ -1,0 +1,115 @@
+---
+import Base from "../layouts/Base.astro";
+import { event, involveRows, walkStations } from "../data/event";
+---
+
+<Base
+  title="Journey Through Bethlehem | Free Live Nativity in DFW"
+  description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
+  image="/images/brand/nativity-hero.png"
+>
+  <section class="hero-art" aria-label="Nativity painting">
+    <img
+      src="/images/brand/nativity-hero.png"
+      alt="A painterly nativity of Mary, Joseph, and the child in the manger."
+      width="1456"
+      height="816"
+    />
+  </section>
+
+  <section class="paper-invite">
+    <h1 class="paper-invite-h1">
+      <span class="paper-invite-lead">Celebrate the birth of</span>
+      <span class="paper-invite-christ">Christ</span>
+      <span class="paper-invite-lead">at a free community event</span>
+    </h1>
+    <p class="paper-invite-when">{event.datesLabel} · Trophy Club</p>
+    <hr class="rule" />
+    <p class="paper-invite-address">
+      <a href={event.mapsUrl}>{event.venueFull}</a>
+    </p>
+    <hr class="rule" />
+    <p class="paper-invite-copy">Admission is free. Reserve a showtime so we can welcome you at the gate.</p>
+    <div class="actions">
+      <a class="btn" href="/tickets">Get tickets</a>
+    </div>
+    <p class="paper-invite-note">Tickets open November 1, 2026.</p>
+  </section>
+
+  <section class="sky-art" aria-label="Night sky painting">
+    <img src="/images/brand/night-sky.png" alt="" width="1456" height="816" />
+  </section>
+
+  <section class="wrap" aria-label="The walk">
+    <div class="section-head">
+      <div>
+        <h2>The walk</h2>
+      </div>
+      <div class="walk-controls">
+        <button class="walk-btn" type="button" data-walk-prev aria-label="Previous station">‹</button>
+        <button class="walk-btn" type="button" data-walk-next aria-label="Next station">›</button>
+      </div>
+    </div>
+    <div class="walk-track" data-walk>
+      {
+        walkStations.map((station) => (
+          <article class="walk-card">
+            <img src={station.src} alt={station.alt} width="800" height="600" />
+            <p>{station.title}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap" aria-label="Get involved">
+    <div class="section-head">
+      <div>
+        <h2>Get involved</h2>
+      </div>
+    </div>
+    {
+      involveRows.map((row) => (
+        <details class="reveal">
+          <summary>{row.title}</summary>
+          <div class="reveal-body">
+            <img src={row.src} alt={row.alt} width="1200" height="800" />
+            <div>
+              <p>{row.body}</p>
+              <div class="actions" style="margin-top: 1rem;">
+                <a class="btn btn-deep" href={row.href} rel="noreferrer">
+                  {row.action}
+                </a>
+              </div>
+            </div>
+          </div>
+        </details>
+      ))
+    }
+  </section>
+
+  <section class="wrap" id="showtimes" aria-label="Showtimes">
+    <div class="section-head">
+      <div>
+        <h2>Showtimes</h2>
+        <p class="section-sub">All times America/Chicago. Open a night, or go to the full table.</p>
+      </div>
+      <a class="btn btn-surface" href="/tickets#showtimes">See tickets</a>
+    </div>
+    {
+      event.showtimes.map((night) => (
+        <details class="night">
+          <summary>{night.date}</summary>
+          <div class="night-body">
+            <div class="times">
+              {night.times.map((time) => (
+                <span class="time">{time} PM</span>
+              ))}
+            </div>
+            {night.weekday === "Friday" && <p class="night-note">ASL at the 7:00 PM performance.</p>}
+          </div>
+        </details>
+      ))
+    }
+  </section>
+</Base>

@@ -1,0 +1,87 @@
+---
+import Base from "../layouts/Base.astro";
+import { foodDriveUrl, inKindDrives, volunteerAdultUrl, volunteerYouthUrl } from "../data/event";
+---
+
+<Base
+  title="Get involved"
+  description="Volunteer or donate in-kind for Journey Through Bethlehem. Sign up to help, or bring diapers, food, and toys to the nativity."
+  image="/images/photos/marketplace.jpg"
+>
+  <section class="hero-art market-art" aria-label="Marketplace">
+    <img
+      src="/images/photos/marketplace.jpg"
+      alt="A smiling volunteer at a marketplace stall during the nativity."
+      width="1800"
+      height="1201"
+    />
+  </section>
+
+  <section class="wrap page-title">
+    <h1>Get involved.</h1>
+  </section>
+
+  <section class="wrap split">
+    <img
+      class="split-photo soldier"
+      src="/images/photos/manger-scene.jpg"
+      alt="A Roman soldier on horseback beside the live nativity cast."
+      width="1800"
+      height="1201"
+    />
+    <div>
+      <h2>Volunteer with us.</h2>
+      <p>
+        Join us and help make this year’s live nativity unforgettable with your own talents. Adults sign up through the live form.
+      </p>
+      <div class="actions" style="margin-top: 1.25rem;">
+        <a class="btn btn-deep" href={volunteerAdultUrl} rel="noreferrer">Sign up to volunteer</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap split">
+    <img
+      class="split-photo"
+      src="/images/photos/nativity-126.jpg"
+      alt="Youth in biblical costumes during the nativity performance."
+      width="1800"
+      height="1200"
+    />
+    <div>
+      <h2>Youth volunteers.</h2>
+      <p>Youth sign up through the live form.</p>
+      <div class="actions" style="margin-top: 1.25rem;">
+        <a class="btn btn-deep" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Give goods.</h2>
+    <p class="prose">
+      Stripe donations for the production are not open yet. You can shop the Amazon lists below or bring donations to the drop-off tables at the nativity. The food drive sign-up is live.
+    </p>
+    <div class="actions" style="margin: 1.15rem 0 0.5rem;">
+      <a class="btn btn-surface" href={foodDriveUrl} rel="noreferrer">Food drive sign-up</a>
+    </div>
+    {
+      inKindDrives.map((drive) => (
+        <article class="drive">
+          <h3>{drive.title}</h3>
+          <p>{drive.body}</p>
+          <p>
+            <a href={drive.orgHref} rel="noreferrer">
+              {drive.org}
+            </a>
+          </p>
+          <div class="actions">
+            <a class="btn btn-surface" href={drive.amazon} rel="noreferrer">
+              {drive.amazonLabel}
+            </a>
+          </div>
+        </article>
+      ))
+    }
+  </section>
+</Base>

@@ -1,0 +1,35 @@
+---
+import { event } from "../data/event";
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand">Journey through Bethlehem</p>
+      <p>
+        Presented by {event.presentedBy}. A free live nativity in Trophy Club, Texas.
+      </p>
+      <p class="footer-quiet">
+        <a href="/privacy-policy">Privacy</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/partners">Partners</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/donate">Donate</a>
+      </p>
+    </div>
+    <div>
+      <p class="footer-label">Visit</p>
+      <ul class="footer-links">
+        <li><a href="/tickets">Tickets</a></li>
+        <li><a href="/get-involved">Get involved</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-label">Follow</p>
+      <ul class="footer-links">
+        <li><a href={event.instagram} rel="noreferrer">Instagram</a></li>
+        <li><a href={event.facebook} rel="noreferrer">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

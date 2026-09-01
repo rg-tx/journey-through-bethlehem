@@ -1,0 +1,13 @@
+---
+import { partners } from "../data/event";
+---
+
+<div class="partners">
+  {
+    partners.map((partner) => (
+      <a class="partner" href={partner.href} rel="noreferrer">
+        <img src={partner.logo} alt={partner.name} />
+      </a>
+    ))
+  }
+</div>
