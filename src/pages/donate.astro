@@ -15,19 +15,19 @@ import { event } from "../data/event";
       alt=""
       width="1456"
       height="816"
+      style="object-position: center 52%;"
       fetchpriority="high"
       decoding="async"
     />
   </section>
 
   <section class="wrap page-title">
-    <p class="kicker">Support the nativity</p>
-    <h1>Your support unites us</h1>
+    <h1>Keep the walk free</h1>
     <p class="lede">
-      Bethlehem is rebuilt every year by volunteers — but the sets, costumes, lighting, and animal
-      care are real costs. Gifts to the Faith &amp; Fellowship Foundation keep the walk free for
-      every family and sustain the Foundation’s year-round service to the community. We are a
-      501(c)(3) organization; donations are tax-deductible to the fullest extent permitted by law.
+      Volunteers rebuild Bethlehem every year. The sets, costumes, lighting, and animal care still
+      cost real money, and gifts to the Faith &amp; Fellowship Foundation are what keep admission
+      free for every family. The Foundation is a 501(c)(3) nonprofit, so donations are
+      tax-deductible to the fullest extent permitted by law.
     </p>
   </section>
 
@@ -57,7 +57,6 @@ import { event } from "../data/event";
       <div class="freq" role="group" aria-labelledby="freq-label">
         <button type="button" data-freq="once" aria-pressed="true">One-time</button>
         <button type="button" data-freq="monthly" aria-pressed="false">Monthly</button>
-        <button type="button" data-freq="quarterly" aria-pressed="false">Quarterly</button>
       </div>
 
       <button class="btn" id="donate-submit" type="submit">Donate</button>
@@ -66,14 +65,14 @@ import { event } from "../data/event";
       <div class="trust">
         <h2>Where your gift goes</h2>
         <p>
-          Gifts fund the production — sets, costumes, lighting, animals — and the
+          Gifts fund the production and the
           <a href={event.fffUrl} rel="noreferrer">Faith &amp; Fellowship Foundation’s</a> work in
           the community all year. Checkout is handled securely by Stripe, and your receipt arrives
           by email.
         </p>
         <p>
           Planning a larger gift, or prefer to give by check? Write to
-          <a href={`mailto:${event.email}`}>{event.email}</a> — we’d love to talk.
+          <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help.
         </p>
       </div>
     </form>
@@ -108,7 +107,7 @@ import { event } from "../data/event";
 
   const MAX_DOLLARS = 1000;
   const LARGE_GIFT_MSG =
-    "For gifts over $1,000, email team@journeythroughbethlehem.org — we’d love to help directly.";
+    "For gifts over $1,000, email team@journeythroughbethlehem.org and we’ll help directly.";
 
   let amount = 50;
   let custom = false;

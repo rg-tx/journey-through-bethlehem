@@ -112,7 +112,7 @@ export const involveCards = [
     src: "/images/photos/manger-scene.jpg",
     src720: "/images/photos/manger-scene-720.jpg",
     alt: "Cast and a Roman soldier on horseback at the live nativity.",
-    body: "Play a villager, sing a carol, or help behind the scenes. No experience needed — pick a night and a role on the sign-up form.",
+    body: "Play a villager, sing a carol, or help behind the scenes. Pick a night and a role on the sign-up form.",
     href: volunteerAdultUrl,
     action: "Sign up to volunteer",
   },
@@ -121,7 +121,7 @@ export const involveCards = [
     src: "/images/photos/nativity-126.jpg",
     src720: "/images/photos/nativity-126-720.jpg",
     alt: "Youth in biblical costumes during the nativity performance.",
-    body: "Young people carry much of Bethlehem — shepherds, angels, musicians. Youth have their own sign-up.",
+    body: "Shepherds, angels, and musicians are mostly played by young people. Youth have their own sign-up.",
     href: volunteerYouthUrl,
     action: "Youth sign-up",
   },
@@ -130,7 +130,7 @@ export const involveCards = [
     src: "/images/photos/artisans.jpg",
     src720: "/images/photos/artisans-720.jpg",
     alt: "Volunteers in period clothing inside a decorated marketplace room.",
-    body: "Bring diapers, food, or toys for neighbors in need — drop them off at the nativity, or shop the Amazon lists from home.",
+    body: "Bring diapers, food, or toys for neighbors in need. Drop them off at the nativity, or shop the Amazon lists from home.",
     href: "/get-involved#give-goods",
     action: "See the drives",
   },
@@ -184,7 +184,7 @@ export const partners = [
 export const volunteerRoles = [
   {
     title: "Cast & characters",
-    body: "Villagers, shepherds, wise men, Roman guards — costumes are provided, and no acting experience is needed.",
+    body: "Villagers, shepherds, wise men, Roman guards. Costumes are provided, and no acting experience is needed.",
   },
   {
     title: "Music",
@@ -196,7 +196,7 @@ export const volunteerRoles = [
   },
   {
     title: "Behind the scenes",
-    body: "Set-up, tear-down, costumes, and the hundred quiet jobs that make the town run.",
+    body: "Set-up, tear-down, costumes, and the quiet jobs that keep the town running.",
   },
 ] as const;
 
@@ -206,7 +206,7 @@ export const volunteerRoles = [
 export const faq = [
   {
     q: "What is Journey Through Bethlehem?",
-    a: "A free, outdoor live nativity — you walk through a recreated Bethlehem at night, past the marketplace, the choir, travelers and their animals, ending at the stable. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
+    a: "A free outdoor live nativity. You walk through a recreated Bethlehem at night, past the marketplace, the choir, and travelers with their animals, and the road ends at the stable. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
   },
   {
     q: "Does it really cost nothing?",
@@ -214,7 +214,7 @@ export const faq = [
   },
   {
     q: "Is it outdoors? What if it’s cold?",
-    a: "Yes — Bethlehem is outdoors and December evenings in Texas can be chilly, so dress warmly. If weather forces a change to a showtime, we’ll post it here and reach reservation holders through Ticket Tailor.",
+    a: "Yes, Bethlehem is outdoors, and December evenings in Texas can be chilly. Dress warmly. If weather forces a change to a showtime, we’ll post it here and reach reservation holders through Ticket Tailor.",
   },
   {
     q: "Is the walk stroller and wheelchair friendly?",
@@ -222,11 +222,11 @@ export const faq = [
   },
   {
     q: "Are there real animals?",
-    a: "Yes — live animals, including a camel, share the road through Bethlehem.",
+    a: "Yes. Live animals, including a camel, share the road through Bethlehem.",
   },
   {
     q: "What ages is it for?",
-    a: "All of them. The walk is gentle, the story is familiar, and children are very welcome — many of the villagers you’ll meet are kids themselves.",
+    a: "All of them. The walk is gentle and children are very welcome. Many of the villagers you’ll meet are kids themselves.",
   },
   {
     q: "Where do I park?",
@@ -234,7 +234,7 @@ export const faq = [
   },
   {
     q: "What if my night is full?",
-    a: "Showtimes are capped so the walk stays unhurried, and popular nights do fill. If your first choice is gone, try an earlier showtime the same evening — or another night; the town is the same warm place all four nights.",
+    a: "Showtimes are capped so the walk stays unhurried, and popular nights do fill. If your first choice is gone, try an earlier time the same evening or come another night.",
   },
 ] as const;
 

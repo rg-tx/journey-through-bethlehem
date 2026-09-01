@@ -76,17 +76,17 @@ const { tone = "paper" } = Astro.props;
         });
         const data = await res.json();
         if (data.ok) {
-          say("You’re on the list — we’ll email you when reservations open.");
+          say("You’re on the list. We’ll email you when reservations open.");
           form.reset();
           return;
         }
         if (data.configured === false) {
-          say(`Signups aren’t connected yet — email ${contactEmail} and we’ll add you by hand.`);
+          say(`Signups aren’t connected yet. Email ${contactEmail} and we’ll add you by hand.`);
           return;
         }
         say(data.error || "Something went wrong. Please try again.");
       } catch {
-        say(`We couldn’t reach the signup service — email ${contactEmail} and we’ll add you by hand.`);
+        say(`We couldn’t reach the signup service. Email ${contactEmail} and we’ll add you by hand.`);
       }
     });
   }

@@ -16,6 +16,7 @@ import { event, faq } from "../data/event";
       alt=""
       width="1456"
       height="816"
+      style="object-position: center 6%;"
       fetchpriority="high"
       decoding="async"
     />
@@ -25,8 +26,8 @@ import { event, faq } from "../data/event";
     <p class="kicker">Admission is free</p>
     <h1>Tickets</h1>
     <p class="lede">
-      Reserving a showtime is free — it simply tells us when to welcome your family at the gate,
-      so the walk never gets crowded. We never take payment for tickets.
+      Reserving a showtime is free. It just tells us when to welcome your family at the gate, and
+      it keeps the walk from getting crowded. We never take payment for tickets.
     </p>
   </section>
 
@@ -35,7 +36,7 @@ import { event, faq } from "../data/event";
       <div class="notice">
         <p>
           Reservations open <strong>{event.ticketsOpenLabel}</strong>. Leave your email below and
-          we’ll write the moment they do.
+          we’ll send a reminder when they open.
         </p>
       </div>
       <div style="margin-top: 1.25rem; max-width: 34rem;">
@@ -52,16 +53,16 @@ import { event, faq } from "../data/event";
         <a class="btn btn-surface" href={event.mapsUrl}>Get directions</a>
       </div>
       <p class="section-sub" style="margin-top: 0.9rem;">
-        Reservations are handled securely by Ticket Tailor. Showtimes are capped and popular
-        nights fill quickly.
+        Reservations are handled securely by Ticket Tailor. Showtimes are capped, and popular
+        nights do fill.
       </p>
     </div>
 
     <div data-when="past">
       <div class="notice">
         <p>
-          The {event.year} walk has ended — thank you for a wonderful four nights. Leave your
-          email and we’ll tell you when next December’s reservations open.
+          The {event.year} walk has ended. Thank you for a wonderful four nights. Leave your email
+          and we’ll tell you when next December’s reservations open.
         </p>
       </div>
       <div style="margin-top: 1.25rem; max-width: 34rem;">
@@ -130,7 +131,7 @@ import { event, faq } from "../data/event";
       }
     </div>
     <p class="section-sub" style="margin-top: 1.5rem;">
-      Anything else — group visits, accessibility, lost mittens —
+      Questions about group visits or accessibility? Email
       <a href={`mailto:${event.email}`}>{event.email}</a>.
     </p>
   </section>
