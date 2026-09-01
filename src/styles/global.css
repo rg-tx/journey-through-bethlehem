@@ -76,6 +76,11 @@ img {
   display: block;
 }
 
+/* author display rules (e.g. .field { display: grid }) must not defeat [hidden] */
+[hidden] {
+  display: none !important;
+}
+
 a {
   color: var(--ink);
   text-underline-offset: 0.18em;
@@ -809,11 +814,11 @@ p:last-child {
   color: var(--gold-bright);
 }
 
-.night-section a {
+.night-section a:not(.btn) {
   color: var(--night-text);
 }
 
-.night-section a:hover {
+.night-section a:not(.btn):hover {
   color: var(--gold-bright);
 }
 
