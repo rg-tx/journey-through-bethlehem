@@ -458,59 +458,292 @@ p:last-child {
   align-items: center;
 }
 
-/* ---------- hero: the painting everyone knows, with the lockup on it ---------- */
+/* ---------- hero: the comet sky, a headline, no wordmark ---------- */
 
-.hero {
+.sky-hero {
   position: relative;
-  background: var(--paper);
-  overflow: clip;
+  min-height: min(calc(100dvh - 4.25rem), 52rem);
+  height: clamp(30rem, 88vh, 52rem);
   display: grid;
+  align-items: end;
+  overflow: hidden;
+  background: var(--night);
+  color: var(--night-text);
+  isolation: isolate;
 }
 
-.hero-painting {
-  grid-area: 1 / 1;
-  width: 100%;
-  height: clamp(24rem, 84vh, 50rem);
-  object-fit: cover;
-  object-position: center 42%;
-  /* the painting dissolves into the paper below */
-  -webkit-mask-image: linear-gradient(180deg, #000 82%, rgba(0, 0, 0, 0.5) 93%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 82%, rgba(0, 0, 0, 0.5) 93%, transparent 100%);
-}
-
-.hero-lockup {
-  grid-area: 1 / 1;
-  align-self: end;
-  justify-self: center;
-  margin: 0 var(--gutter) clamp(2.5rem, 7vh, 5rem);
-  width: min(88vw, 40rem);
-  position: relative;
-}
-
-/* a soft breath of light behind the lettering, as on the printed piece */
-.hero-lockup::before {
-  content: "";
+.sky-hero-canvas {
   position: absolute;
-  inset: -22% -10%;
-  background: radial-gradient(ellipse at center, rgba(255, 252, 246, 0.6), rgba(255, 252, 246, 0) 70%);
-  pointer-events: none;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.hero-lockup img {
-  position: relative;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 2px 14px rgba(35, 26, 18, 0.18));
+/* strokes are fully laid down unless this is the first visit of the session */
+.sky-stroke {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 175;
+  stroke-linecap: round;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.js .hero-painting {
-    animation: fade-in var(--dur-3) var(--ease-out) both;
+  html.paint-sky .sky-stroke {
+    stroke-dasharray: 2500;
+    stroke-dashoffset: 2500;
+    animation: sky-draw 1.05s var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 200ms + 150ms);
   }
-  html.js .hero-lockup {
-    animation: rise-in var(--dur-3) var(--ease-out) both;
-    animation-delay: 300ms;
+  html.paint-sky .sky-hero-copy {
+    opacity: 0;
+    animation: rise-in 1.2s var(--ease-out) forwards;
+    animation-delay: 2.4s;
   }
+  html.paint-sky .sky-hero-cloud {
+    opacity: 0;
+    animation: fade-in 1.6s var(--ease-out) forwards;
+    animation-delay: 1.8s;
+  }
+}
+
+@keyframes sky-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.sky-hero-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sky-hero-stars i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--night-text);
+  box-shadow: 0 0 6px 1px rgba(237, 230, 214, 0.7);
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sky-hero-stars i {
+    animation: twinkle var(--tw, 5s) ease-in-out infinite;
+    animation-delay: var(--td, 0s);
+  }
+}
+
+/* the ground settles into the night the next module starts from */
+.sky-hero-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  background: linear-gradient(
+    180deg,
+    rgba(14, 26, 33, 0) 0%,
+    rgba(14, 26, 33, 0.35) 40%,
+    rgba(14, 26, 33, 0.82) 78%,
+    #0e1a21 100%
+  );
+  pointer-events: none;
+}
+
+/* companion cloud, cut from a different sky painting, drifting low */
+.sky-hero-cloud {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 44%;
+  background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+@keyframes cloud-drift {
+  from {
+    translate: -6% 0;
+  }
+  to {
+    translate: 6% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sky-hero-cloud {
+    animation: cloud-drift 46s ease-in-out infinite alternate;
+  }
+}
+
+.sky-hero-copy {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) clamp(2.5rem, 9vh, 5rem);
+  text-shadow: 0 2px 22px rgba(12, 20, 24, 0.65);
+}
+
+.sky-hero-copy > * {
+  max-width: 44rem;
+}
+
+.sky-hero-kicker {
+  font-family: var(--font-ui);
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin: 0 0 1rem;
+}
+
+.sky-hero h1 {
+  color: var(--night-text);
+  font-size: clamp(2.3rem, 5.4vw, 4.6rem);
+  margin: 0 0 1rem;
+}
+
+.sky-hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(90deg, #fff6dc, var(--candle) 60%, #e6c77c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sky-hero-voice {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  margin: 0 0 1.6rem;
+}
+
+.sky-hero .actions .btn {
+  text-shadow: none;
+}
+
+/* ---------- module two: the painting, arriving out of the night ---------- */
+
+.stable {
+  position: relative;
+  background: linear-gradient(180deg, #0e1a21 0%, #26404c 45%, var(--paper) 100%);
+  min-height: clamp(24rem, 78vh, 46rem);
+  display: grid;
+}
+
+.stable-painting {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: clamp(24rem, 78vh, 46rem);
+  object-fit: cover;
+  object-position: center 42%;
+  -webkit-mask-image: linear-gradient(180deg, transparent 6%, rgba(0, 0, 0, 0.5) 20%, #000 34%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 6%, rgba(0, 0, 0, 0.5) 20%, #000 34%, #000 84%, transparent 100%);
+}
+
+/* it rises as it arrives */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .stable-painting {
+    translate: 0 8%;
+    opacity: 0;
+    transition:
+      translate 1.6s var(--ease-out),
+      opacity 1.4s var(--ease-out);
+  }
+  html.js .stable.is-in .stable-painting {
+    translate: 0 0;
+    opacity: 1;
+  }
+  html.js .stable-lockup {
+    opacity: 0;
+    translate: -50% 14px;
+    transition:
+      opacity 1s 0.6s,
+      translate 1.2s 0.6s var(--ease-out);
+  }
+  html.js .stable.is-in .stable-lockup {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  .stable-seam {
+    animation: cloud-drift 52s ease-in-out infinite alternate reverse;
+  }
+}
+
+/* cloud straddling the seam: the sky hands the stable over instead of stopping */
+.stable-seam {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: -24%;
+  height: 50%;
+  background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 1.8s ease;
+}
+
+.stable.is-in .stable-seam {
+  opacity: 0.18;
+}
+
+/* the star's light lands on the manger */
+.stable-glow {
+  position: absolute;
+  left: 50%;
+  top: 66%;
+  width: 36%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: radial-gradient(circle, rgba(244, 213, 154, 0.45), transparent 60%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 2s 0.9s ease;
+  pointer-events: none;
+}
+
+.stable.is-in .stable-glow {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stable.is-in .stable-glow {
+    animation: glow 6s ease-in-out infinite;
+  }
+}
+
+.stable-lockup {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  translate: -50% 0;
+  width: min(80%, 36rem);
+  z-index: 3;
+}
+
+/* a soft breath of light behind the lettering, as on the printed piece */
+.stable-lockup::before {
+  content: "";
+  position: absolute;
+  inset: -28% -12%;
+  background: radial-gradient(ellipse at center, rgba(255, 252, 246, 0.55), rgba(255, 252, 246, 0) 70%);
+  pointer-events: none;
+}
+
+.stable-lockup img {
+  position: relative;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 14px rgba(35, 26, 18, 0.25));
 }
 
 /* ---------- the invitation module ---------- */
@@ -518,7 +751,7 @@ p:last-child {
 .invite {
   max-width: var(--page);
   margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 3rem) var(--gutter) clamp(3rem, 6vw, 5rem);
+  padding: clamp(2rem, 5vw, 4rem) var(--gutter) clamp(3rem, 6vw, 5rem);
   display: grid;
   gap: 2rem;
   align-items: center;

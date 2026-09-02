@@ -65,7 +65,7 @@ export const event = {
 /** The second module: the invitation leaders know from the flyer and the old site. */
 export const invite = {
   kicker: "You’re invited",
-  title: "Celebrate the birth of Christ at a free community event.",
+  title: "Four December nights in Bethlehem.",
   body: [
     "You are invited to the 3rd annual live nativity in Trophy Club. Step into an interactive Bethlehem marketplace: listen to live music, sample the food, toss a dreidel, make a clay lamp, and meet the live manger animals.",
     "The evening culminates in a live musical performance of the nativity story, with actors, animals, the humble stable, and the guiding star. Bring your friends and family for a heartwarming celebration of faith and love.",
@@ -140,6 +140,15 @@ export const walkMoments = [
 ] as const;
 
 // The walk ends here: the animated painting of Mary and Joseph on the road.
+/** Hero copy: the sky, a headline, no wordmark. The wordmark follows on the painting. */
+export const hero = {
+  kicker: "The 3rd annual live nativity · Trophy Club, Texas",
+  lead: "Celebrate the birth of",
+  emphasis: "Christ",
+  tail: "at a free community event.",
+  voice: "Four December nights. A town rebuilt by neighbors. A star to follow.",
+} as const;
+
 export const walkFinale = {
   title: "Every road ends at the stable.",
   line: "Reserve a showtime, come as you are, and take the walk at your own pace.",

@@ -3,6 +3,8 @@ import Base from "../layouts/Base.astro";
 import Star from "../components/Star.astro";
 import WalkJourney from "../components/WalkJourney.astro";
 import Showtimes from "../components/Showtimes.astro";
+import SkyHero from "../components/SkyHero.astro";
+import StableModule from "../components/StableModule.astro";
 import { event, invite, involveCards, partners, nightsUntil } from "../data/event";
 
 const nights = Math.max(1, nightsUntil());
@@ -12,29 +14,8 @@ const nights = Math.max(1, nightsUntil());
   title="Journey Through Bethlehem | Free Live Nativity in DFW"
   description="You are invited to the 3rd annual live nativity in Trophy Club, Texas. December 3–6, 2026. Free tickets. Presented by Faith & Fellowship Foundation."
 >
-  <section class="hero" aria-label="Journey through Bethlehem">
-    <img
-      class="hero-painting"
-      src="/images/brand/hero-painting-1456.webp"
-      srcset="/images/brand/hero-painting-768.webp 768w, /images/brand/hero-painting-1456.webp 1456w, /images/brand/hero-painting.webp 2000w"
-      sizes="100vw"
-      alt="A painting of Mary and Joseph kneeling at the manger inside a wooden stable."
-      width="2000"
-      height="1121"
-      fetchpriority="high"
-      decoding="async"
-    />
-    <h1 class="hero-lockup">
-      <img
-        src="/images/brand/wordmark-presented.webp"
-        alt="Journey through Bethlehem. Presented by Faith & Fellowship Foundation."
-        width="1600"
-        height="416"
-        fetchpriority="high"
-        decoding="async"
-      />
-    </h1>
-  </section>
+  <SkyHero />
+  <StableModule />
 
   <section class="invite" aria-labelledby="invite-title">
     <div class="invite-art">
