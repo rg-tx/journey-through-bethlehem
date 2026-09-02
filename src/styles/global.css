@@ -472,43 +472,60 @@ p:last-child {
   isolation: isolate;
 }
 
-.sky-hero-canvas {
+.sky-hero-sky {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 30% 22%;
 }
 
-/* strokes are fully laid down unless this is the first visit of the session */
-.sky-stroke {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 175;
-  stroke-linecap: round;
+/* a small, quiet arrival: the sky fades in, the words rise */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .sky-hero-sky {
+    animation: fade-in 1.2s var(--ease-out) both;
+  }
+  html.js .sky-hero-copy {
+    animation: rise-in 1s var(--ease-out) both;
+    animation-delay: 350ms;
+  }
+  html.js .sky-hero-cloud {
+    animation:
+      fade-in 1.6s var(--ease-out) both,
+      cloud-drift 46s ease-in-out infinite alternate;
+  }
+}
+
+/* the comet's star breathes */
+.sky-hero-star {
+  position: absolute;
+  left: var(--star-x, 29%);
+  top: var(--star-y, 26%);
+  width: clamp(120px, 14vw, 220px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 250, 235, 0.55) 0%, rgba(255, 250, 235, 0.18) 28%, rgba(255, 250, 235, 0) 62%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.paint-sky .sky-stroke {
-    stroke-dasharray: 2500;
-    stroke-dashoffset: 2500;
-    animation: sky-draw 1.05s var(--ease-out) forwards;
-    animation-delay: calc(var(--i, 0) * 200ms + 150ms);
-  }
-  html.paint-sky .sky-hero-copy {
-    opacity: 0;
-    animation: rise-in 1.2s var(--ease-out) forwards;
-    animation-delay: 2.4s;
-  }
-  html.paint-sky .sky-hero-cloud {
-    opacity: 0;
-    animation: fade-in 1.6s var(--ease-out) forwards;
-    animation-delay: 1.8s;
+  .sky-hero-star {
+    animation: star-breathe 5.5s ease-in-out infinite;
   }
 }
 
-@keyframes sky-draw {
-  to {
-    stroke-dashoffset: 0;
+@keyframes star-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 0.9;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.08;
   }
 }
 
@@ -571,12 +588,6 @@ p:last-child {
   }
   to {
     translate: 6% 0;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .sky-hero-cloud {
-    animation: cloud-drift 46s ease-in-out infinite alternate;
   }
 }
 
