@@ -1,0 +1,52 @@
+---
+/**
+ * Module two: the painting everyone knows, with the "Presented by" lockup where
+ * the flyer puts it. It rises out of the night as it scrolls into view; a band of
+ * cloud straddles the seam with the hero, and the star's light lands on the manger.
+ */
+---
+
+<section class="stable" data-stable aria-label="Journey through Bethlehem, presented by Faith & Fellowship Foundation">
+  <img
+    class="stable-painting"
+    data-emerge
+    src="/images/brand/hero-painting-1456.webp"
+    srcset="/images/brand/hero-painting-768.webp 768w, /images/brand/hero-painting-1456.webp 1456w, /images/brand/hero-painting.webp 2000w"
+    sizes="100vw"
+    alt="A painting of Mary and Joseph kneeling at the manger inside a wooden stable."
+    width="2000"
+    height="1121"
+    decoding="async"
+  />
+  <div class="stable-seam" aria-hidden="true"></div>
+  <div class="stable-glow" aria-hidden="true"></div>
+  <div class="stable-lockup">
+    <img
+      src="/images/brand/wordmark-presented.webp"
+      alt="Journey through Bethlehem. Presented by Faith & Fellowship Foundation."
+      width="1600"
+      height="416"
+      decoding="async"
+    />
+  </div>
+</section>
+
+<script>
+  const stable = document.querySelector<HTMLElement>("[data-stable]");
+  if (stable && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            stable.classList.add("is-in");
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(stable);
+  } else {
+    stable?.classList.add("is-in");
+  }
+</script>
