@@ -1,0 +1,48 @@
+# Builds the site and deploys it to Cloudflare Pages.
+#   push to main      -> production (journey-through-bethlehem.pages.dev)
+#   pull request      -> preview deployment, URL posted in the job summary
+#
+# Requires one repository secret: CLOUDFLARE_API_TOKEN, a Cloudflare API token
+# with "Cloudflare Pages: Edit" on this account. See docs/DEPLOY.md.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 44ff032b8eebb7328ed6ac547efa80a7
+          command: >-
+            pages deploy dist
+            --project-name journey-through-bethlehem
+            --branch ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
+            --commit-hash ${{ github.event.pull_request.head.sha || github.sha }}

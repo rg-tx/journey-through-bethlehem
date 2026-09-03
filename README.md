@@ -57,6 +57,10 @@ https://buytickets.at/trophyclubnativity/2388791
 
 Tickets open November 1, 2026, 12:00 a.m. America/Chicago. Do not clone Ticket Tailor checkout, cart, or seat maps.
 
+## Deploying
+
+Merges to `main` deploy to Cloudflare Pages via GitHub Actions once the `CLOUDFLARE_API_TOKEN` secret is set. Details and the manual fallback: `docs/DEPLOY.md`.
+
 ## Brand
 
 Three notes: **paper, night, and candlelight.** Tokens live in `src/styles/global.css`.
