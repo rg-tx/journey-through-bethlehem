@@ -1,8 +1,8 @@
 ---
 /**
- * The hero: the comet sky with a headline, no wordmark. On the first visit of a
- * session the sky is brushed on in eight strokes; afterwards it is simply there.
- * The painting everyone knows follows in the next module (StableModule).
+ * The hero: the comet sky with a headline, no wordmark. The sky fades in, the
+ * copy rises, and the comet's star breathes. The painting everyone knows
+ * follows in the next module (StableModule).
  */
 import { event, hero } from "../data/event";
 
@@ -10,44 +10,25 @@ const stars = [
   { x: 48, y: 12, tw: 5.2, td: 0 }, { x: 62, y: 8, tw: 4.6, td: 2 }, { x: 78, y: 18, tw: 6.4, td: 1 },
   { x: 90, y: 9, tw: 5.5, td: 0.4 }, { x: 8, y: 10, tw: 5.9, td: 1.6 }, { x: 20, y: 6, tw: 4.8, td: 2.7 },
 ];
-const strokes = [
-  "M -120 70 C 380 20, 1150 130, 1720 60",
-  "M 1720 190 C 1200 150, 420 260, -120 180",
-  "M -120 300 C 500 250, 1100 360, 1720 290",
-  "M 1720 420 C 1150 380, 450 480, -120 410",
-  "M -120 540 C 480 500, 1120 600, 1720 530",
-  "M 1720 660 C 1180 620, 420 720, -120 650",
-  "M -120 780 C 500 740, 1100 840, 1720 770",
-  "M 1720 900 C 1150 860, 450 960, -120 890",
-];
 ---
 
-<section class="sky-hero" aria-labelledby="hero-title">
-  <svg class="sky-hero-canvas" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="3" result="n" />
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="22" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-      <mask id="sky-strokes" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">
-        <g filter="url(#brush)">
-          {strokes.map((d, i) => <path class="sky-stroke" style={`--i:${i};`} d={d} />)}
-        </g>
-      </mask>
-    </defs>
-    <image
-      href="/images/brand/comet-sky.webp"
-      x="0"
-      y="0"
-      width="1600"
-      height="900"
-      preserveAspectRatio="xMidYMid slice"
-      mask="url(#sky-strokes)"
-    />
-  </svg>
+<section class="sky-hero" aria-labelledby="hero-title" data-sky-hero>
+  <img
+    class="sky-hero-sky"
+    src="/images/brand/comet-sky.webp"
+    srcset="/images/brand/comet-sky-768.webp 768w, /images/brand/comet-sky.webp 1456w"
+    sizes="100vw"
+    alt=""
+    width="1456"
+    height="728"
+    fetchpriority="high"
+    decoding="async"
+  />
   <div class="sky-hero-stars" aria-hidden="true">
     {stars.map((s) => <i style={`left:${s.x}%;top:${s.y}%;--tw:${s.tw}s;--td:${s.td}s;`}></i>)}
   </div>
+  <!-- a soft breath of light on the comet's own star -->
+  <div class="sky-hero-star" aria-hidden="true"></div>
   <div class="sky-hero-cloud" aria-hidden="true"></div>
   <div class="sky-hero-ground" aria-hidden="true"></div>
 
@@ -67,12 +48,19 @@ const strokes = [
   </div>
 </section>
 
-<script is:inline>
-  // First visit this session: let the brushstrokes play. Otherwise the sky is already painted.
-  try {
-    if (!sessionStorage.getItem("jtb-sky-painted")) {
-      document.documentElement.classList.add("paint-sky");
-      sessionStorage.setItem("jtb-sky-painted", "1");
-    }
-  } catch {}
+<script>
+  // Put the glow on the painting's star wherever `object-fit: cover` lands it.
+  // The canvas is 2:1; the star sits at (29.2%, 26%); object-position is 30% 22%.
+  const heroEl = document.querySelector<HTMLElement>("[data-sky-hero]");
+  const place = () => {
+    if (!heroEl) return;
+    const W = heroEl.clientWidth, H = heroEl.clientHeight;
+    const scale = Math.max(W / 2, H);
+    const imgW = scale * 2, imgH = scale;
+    const offX = (W - imgW) * 0.3, offY = (H - imgH) * 0.22;
+    heroEl.style.setProperty("--star-x", `${(((offX + 0.292 * imgW) / W) * 100).toFixed(2)}%`);
+    heroEl.style.setProperty("--star-y", `${(((offY + 0.26 * imgH) / H) * 100).toFixed(2)}%`);
+  };
+  place();
+  addEventListener("resize", place, { passive: true });
 </script>
