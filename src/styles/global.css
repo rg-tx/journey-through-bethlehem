@@ -67,6 +67,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -339,6 +340,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   display: flex;
   align-items: center;
   min-height: var(--tap);
+  min-width: 0;
 }
 
 .brand-mark {
@@ -512,9 +514,22 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
     animation-delay: 350ms;
   }
   html.js .sky-hero-cloud {
+    animation: fade-in 1.6s var(--ease-out) both;
+  }
+  html.js .sky-hero-cloud-back {
     animation:
       fade-in 1.6s var(--ease-out) both,
+      cloud-drift-back 58s ease-in-out infinite alternate;
+  }
+  html.js .sky-hero-cloud-mid {
+    animation:
+      fade-in 1.8s 120ms var(--ease-out) both,
       cloud-drift 46s ease-in-out infinite alternate;
+  }
+  html.js .sky-hero-cloud-front {
+    animation:
+      fade-in 2s 240ms var(--ease-out) both,
+      cloud-drift-front 36s ease-in-out infinite alternate;
   }
 }
 
@@ -527,9 +542,60 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 250, 235, 0.55) 0%, rgba(255, 250, 235, 0.18) 28%, rgba(255, 250, 235, 0) 62%);
+  background:
+    radial-gradient(circle, rgba(255, 250, 235, 0.52) 0 3%, rgba(244, 213, 154, 0.25) 13%, rgba(219, 229, 221, 0.11) 36%, transparent 68%);
   mix-blend-mode: screen;
+  filter: drop-shadow(0 0 18px rgba(244, 213, 154, 0.42));
   pointer-events: none;
+}
+
+.sky-hero-star::before,
+.sky-hero-star::after,
+.sky-hero-star-rays,
+.sky-hero-star-core {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+/* Long, feathered brush-stroke rays—not a hard digital lens flare. */
+.sky-hero-star::before {
+  width: 112%;
+  height: 2.2%;
+  rotate: -10deg;
+  background: linear-gradient(90deg, transparent, rgba(255, 248, 226, 0.34) 42%, #fff9e9 50%, rgba(255, 248, 226, 0.32) 58%, transparent);
+  filter: blur(1.4px);
+}
+
+.sky-hero-star::after {
+  width: 2.2%;
+  height: 88%;
+  rotate: -10deg;
+  background: linear-gradient(180deg, transparent, rgba(255, 248, 226, 0.3) 42%, #fff9e9 50%, rgba(255, 248, 226, 0.26) 58%, transparent);
+  filter: blur(1.2px);
+}
+
+.sky-hero-star-rays {
+  width: 72%;
+  aspect-ratio: 1;
+  opacity: 0.5;
+  background: repeating-conic-gradient(from 4deg, rgba(255, 248, 226, 0.36) 0deg 0.7deg, transparent 0.7deg 14deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0 5%, rgba(0, 0, 0, 0.65) 14%, transparent 62%);
+  mask-image: radial-gradient(circle, #000 0 5%, rgba(0, 0, 0, 0.65) 14%, transparent 62%);
+  filter: blur(0.45px);
+}
+
+.sky-hero-star-core {
+  width: 8%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fffdf3;
+  box-shadow:
+    0 0 7px 3px rgba(255, 250, 235, 0.95),
+    0 0 18px 8px rgba(244, 213, 154, 0.5);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -593,14 +659,37 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 /* companion cloud, cut from a different sky painting, drifting low */
 .sky-hero-cloud {
   position: absolute;
-  left: -10%;
-  right: -10%;
-  bottom: 0;
-  height: 44%;
+  pointer-events: none;
   background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
   mix-blend-mode: screen;
-  opacity: 0.38;
-  pointer-events: none;
+  transform-origin: center bottom;
+}
+
+.sky-hero-cloud-back {
+  left: -8%;
+  right: 24%;
+  bottom: 22%;
+  height: 28%;
+  opacity: 0.12;
+  filter: blur(1.2px) saturate(0.78);
+}
+
+.sky-hero-cloud-mid {
+  left: -12%;
+  right: -12%;
+  bottom: 2%;
+  height: 43%;
+  opacity: 0.28;
+  filter: saturate(0.88);
+}
+
+.sky-hero-cloud-front {
+  left: 18%;
+  right: -24%;
+  bottom: -13%;
+  height: 48%;
+  opacity: 0.2;
+  filter: blur(0.35px) saturate(0.82);
 }
 
 @keyframes cloud-drift {
@@ -609,6 +698,28 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   }
   to {
     translate: 6% 0;
+  }
+}
+
+@keyframes cloud-drift-back {
+  from {
+    translate: -2% -1%;
+    scale: 1.02;
+  }
+  to {
+    translate: 3% 1%;
+    scale: 1.06;
+  }
+}
+
+@keyframes cloud-drift-front {
+  from {
+    translate: 3% 1%;
+    scale: 1.06;
+  }
+  to {
+    translate: -4% -1%;
+    scale: 1.1;
   }
 }
 
@@ -668,6 +779,9 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   background: linear-gradient(180deg, #0e1a21 0%, #26404c 45%, var(--paper) 100%);
   min-height: clamp(24rem, 78vh, 46rem);
   display: grid;
+  /* The drifting seam is deliberately wider than the viewport. Contain it
+     here so it never creates a horizontal page scrollbar. */
+  overflow: clip;
 }
 
 .stable-painting {
@@ -1961,6 +2075,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   align-items: center;
   min-height: var(--tap);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .footer-legal {
@@ -2250,6 +2365,132 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 @media (prefers-reduced-motion: no-preference) {
   .consent:not([hidden]) {
     animation: rise-in var(--dur-2) var(--ease-out) both;
+  }
+}
+
+/* ---------- narrow-screen hardening ---------- */
+
+@media (max-width: 479px) {
+  .header-inner {
+    gap: 0.5rem;
+  }
+
+  .brand-mark {
+    width: min(13rem, calc(100vw - 6.5rem));
+    height: auto;
+  }
+
+  .sky-hero {
+    /* svh avoids the jump caused by mobile browser chrome appearing and
+       disappearing; the content can still make the hero taller if needed. */
+    height: auto;
+    min-height: calc(100svh - 4rem);
+  }
+
+  .sky-hero-copy {
+    padding-top: clamp(4.5rem, 16svh, 7rem);
+    padding-bottom: 2.25rem;
+  }
+
+  .sky-hero h1 {
+    font-size: clamp(2.15rem, 11.5vw, 3rem);
+  }
+
+  .sky-hero-kicker {
+    letter-spacing: 0.14em;
+  }
+
+  .sky-hero-star {
+    width: clamp(104px, 34vw, 148px);
+  }
+
+  .sky-hero-cloud-back {
+    right: 4%;
+    bottom: 26%;
+    opacity: 0.1;
+  }
+
+  .sky-hero-cloud-mid {
+    left: -32%;
+    right: -42%;
+    bottom: 7%;
+    height: 38%;
+  }
+
+  .sky-hero-cloud-front {
+    left: 2%;
+    right: -58%;
+    bottom: -9%;
+    opacity: 0.17;
+  }
+
+  .sky-hero .actions,
+  .invite-body .actions,
+  .finale-content .actions,
+  .split .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sky-hero .actions .btn,
+  .invite-body .actions .btn,
+  .finale-content .actions .btn,
+  .split .actions .btn {
+    width: 100%;
+  }
+
+  .stable,
+  .stable-painting {
+    min-height: 28rem;
+    height: 70svh;
+    max-height: 36rem;
+  }
+
+  .stable-lockup {
+    width: 88%;
+    bottom: 6%;
+  }
+
+  .page-hero-art {
+    height: 13rem;
+  }
+
+  .page-hero-card {
+    margin-top: -2rem;
+  }
+
+  .page-hero-card > div {
+    padding-top: 1.35rem;
+  }
+
+  .carousel-track {
+    padding-inline: 10vw;
+    scroll-padding-inline: 10vw;
+  }
+
+  .slide {
+    flex-basis: 80vw;
+  }
+
+  .footer-legal > div {
+    flex-direction: column;
+  }
+
+  .consent {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    max-height: calc(100dvh - 1.5rem);
+    overflow-y: auto;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 899px) {
+  /* On the volunteer page, lead with the invitation and actions rather than
+     making phone users scroll past a large photograph to reach them. */
+  .split-top > .matted:first-child {
+    order: 2;
   }
 }
 
