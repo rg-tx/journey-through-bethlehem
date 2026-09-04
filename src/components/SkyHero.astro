@@ -24,12 +24,18 @@ const stars = [
     fetchpriority="high"
     decoding="async"
   />
+  <!-- Softly masked echoes of the painting itself give its cloud banks depth
+       without introducing foreign artwork or visible raster boundaries. -->
+  <div class="sky-hero-atmosphere sky-hero-atmosphere-back" aria-hidden="true"></div>
+  <div class="sky-hero-atmosphere sky-hero-atmosphere-front" aria-hidden="true"></div>
   <div class="sky-hero-stars" aria-hidden="true">
     {stars.map((s) => <i style={`left:${s.x}%;top:${s.y}%;--tw:${s.tw}s;--td:${s.td}s;`}></i>)}
   </div>
-  <!-- a soft breath of light on the comet's own star -->
-  <div class="sky-hero-star" aria-hidden="true"></div>
-  <div class="sky-hero-cloud" aria-hidden="true"></div>
+  <!-- Layered light stays pinned to the star already painted into the sky. -->
+  <div class="sky-hero-star" aria-hidden="true">
+    <i class="sky-hero-star-rays"></i>
+    <i class="sky-hero-star-core"></i>
+  </div>
   <div class="sky-hero-ground" aria-hidden="true"></div>
 
   <div class="sky-hero-copy">

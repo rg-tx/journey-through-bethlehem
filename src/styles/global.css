@@ -67,6 +67,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -293,6 +294,27 @@ p:last-child {
     border-color var(--dur-1) var(--ease-out);
 }
 
+/* On the home page the header steps aside while the sky hero is on screen,
+   so nothing sits above the star. It slides back the moment the hero leaves,
+   the menu opens, or a keyboard user focuses into it. */
+html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
+  translate: 0 -100%;
+  box-shadow: none;
+}
+
+.site-header {
+  transition:
+    translate 420ms var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out);
+}
+
+/* the hero sits under where the header was, so the sky starts at the very top */
+.sky-hero {
+  margin-top: calc(-1 * var(--header-h, 0px));
+  padding-top: var(--header-h, 0px);
+}
+
 .site-header.is-scrolled {
   border-bottom-color: var(--line);
   box-shadow: 0 1px 14px rgba(35, 26, 18, 0.07);
@@ -318,6 +340,7 @@ p:last-child {
   display: flex;
   align-items: center;
   min-height: var(--tap);
+  min-width: 0;
 }
 
 .brand-mark {
@@ -490,10 +513,11 @@ p:last-child {
     animation: rise-in 1s var(--ease-out) both;
     animation-delay: 350ms;
   }
-  html.js .sky-hero-cloud {
-    animation:
-      fade-in 1.6s var(--ease-out) both,
-      cloud-drift 46s ease-in-out infinite alternate;
+  html.js .sky-hero-atmosphere-back {
+    animation: atmosphere-drift-back 22s ease-in-out infinite alternate;
+  }
+  html.js .sky-hero-atmosphere-front {
+    animation: atmosphere-drift-front 17s ease-in-out infinite alternate;
   }
 }
 
@@ -506,9 +530,60 @@ p:last-child {
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 250, 235, 0.55) 0%, rgba(255, 250, 235, 0.18) 28%, rgba(255, 250, 235, 0) 62%);
+  background:
+    radial-gradient(circle, rgba(255, 250, 235, 0.52) 0 3%, rgba(244, 213, 154, 0.25) 13%, rgba(219, 229, 221, 0.11) 36%, transparent 68%);
   mix-blend-mode: screen;
+  filter: drop-shadow(0 0 18px rgba(244, 213, 154, 0.42));
   pointer-events: none;
+}
+
+.sky-hero-star::before,
+.sky-hero-star::after,
+.sky-hero-star-rays,
+.sky-hero-star-core {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+/* Long, feathered brush-stroke rays—not a hard digital lens flare. */
+.sky-hero-star::before {
+  width: 112%;
+  height: 2.2%;
+  rotate: -10deg;
+  background: linear-gradient(90deg, transparent, rgba(255, 248, 226, 0.34) 42%, #fff9e9 50%, rgba(255, 248, 226, 0.32) 58%, transparent);
+  filter: blur(1.4px);
+}
+
+.sky-hero-star::after {
+  width: 2.2%;
+  height: 88%;
+  rotate: -10deg;
+  background: linear-gradient(180deg, transparent, rgba(255, 248, 226, 0.3) 42%, #fff9e9 50%, rgba(255, 248, 226, 0.26) 58%, transparent);
+  filter: blur(1.2px);
+}
+
+.sky-hero-star-rays {
+  width: 72%;
+  aspect-ratio: 1;
+  opacity: 0.5;
+  background: repeating-conic-gradient(from 4deg, rgba(255, 248, 226, 0.36) 0deg 0.7deg, transparent 0.7deg 14deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0 5%, rgba(0, 0, 0, 0.65) 14%, transparent 62%);
+  mask-image: radial-gradient(circle, #000 0 5%, rgba(0, 0, 0, 0.65) 14%, transparent 62%);
+  filter: blur(0.45px);
+}
+
+.sky-hero-star-core {
+  width: 8%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fffdf3;
+  box-shadow:
+    0 0 7px 3px rgba(255, 250, 235, 0.95),
+    0 0 18px 8px rgba(244, 213, 154, 0.5);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -569,17 +644,29 @@ p:last-child {
   pointer-events: none;
 }
 
-/* companion cloud, cut from a different sky painting, drifting low */
-.sky-hero-cloud {
+/* Two translucent echoes of the original painting move just enough to make
+   its cloud banks breathe. Overscan and radial masks keep every edge soft. */
+.sky-hero-atmosphere {
   position: absolute;
-  left: -10%;
-  right: -10%;
-  bottom: 0;
-  height: 44%;
-  background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
-  mix-blend-mode: screen;
-  opacity: 0.38;
+  inset: -5%;
   pointer-events: none;
+  background: url("/images/brand/comet-sky.webp") 30% 22% / cover no-repeat;
+  mix-blend-mode: screen;
+  transform-origin: center;
+}
+
+.sky-hero-atmosphere-back {
+  opacity: 0.09;
+  filter: blur(1.2px) saturate(0.8);
+  -webkit-mask-image: radial-gradient(ellipse 88% 31% at 48% 72%, #000 5%, rgba(0, 0, 0, 0.72) 46%, transparent 76%);
+  mask-image: radial-gradient(ellipse 88% 31% at 48% 72%, #000 5%, rgba(0, 0, 0, 0.72) 46%, transparent 76%);
+}
+
+.sky-hero-atmosphere-front {
+  opacity: 0.13;
+  filter: blur(0.35px) saturate(0.88);
+  -webkit-mask-image: radial-gradient(ellipse 76% 28% at 58% 80%, #000 4%, rgba(0, 0, 0, 0.68) 48%, transparent 78%);
+  mask-image: radial-gradient(ellipse 76% 28% at 58% 80%, #000 4%, rgba(0, 0, 0, 0.68) 48%, transparent 78%);
 }
 
 @keyframes cloud-drift {
@@ -588,6 +675,28 @@ p:last-child {
   }
   to {
     translate: 6% 0;
+  }
+}
+
+@keyframes atmosphere-drift-back {
+  from {
+    translate: -1.2% -0.25%;
+    scale: 1.045;
+  }
+  to {
+    translate: 1.4% 0.35%;
+    scale: 1.065;
+  }
+}
+
+@keyframes atmosphere-drift-front {
+  from {
+    translate: 1.6% 0.25%;
+    scale: 1.06;
+  }
+  to {
+    translate: -1.8% -0.35%;
+    scale: 1.085;
   }
 }
 
@@ -647,6 +756,9 @@ p:last-child {
   background: linear-gradient(180deg, #0e1a21 0%, #26404c 45%, var(--paper) 100%);
   min-height: clamp(24rem, 78vh, 46rem);
   display: grid;
+  /* The drifting seam is deliberately wider than the viewport. Contain it
+     here so it never creates a horizontal page scrollbar. */
+  overflow: clip;
 }
 
 .stable-painting {
@@ -1940,6 +2052,7 @@ p:last-child {
   align-items: center;
   min-height: var(--tap);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .footer-legal {
@@ -2229,6 +2342,124 @@ p:last-child {
 @media (prefers-reduced-motion: no-preference) {
   .consent:not([hidden]) {
     animation: rise-in var(--dur-2) var(--ease-out) both;
+  }
+}
+
+/* ---------- narrow-screen hardening ---------- */
+
+@media (max-width: 479px) {
+  .header-inner {
+    gap: 0.5rem;
+  }
+
+  .brand-mark {
+    width: min(13rem, calc(100vw - 6.5rem));
+    height: auto;
+  }
+
+  .sky-hero {
+    /* svh avoids the jump caused by mobile browser chrome appearing and
+       disappearing; the content can still make the hero taller if needed. */
+    height: auto;
+    min-height: calc(100svh - 4rem);
+  }
+
+  .sky-hero-copy {
+    padding-top: clamp(4.5rem, 16svh, 7rem);
+    padding-bottom: 2.25rem;
+  }
+
+  .sky-hero h1 {
+    font-size: clamp(2.15rem, 11.5vw, 3rem);
+  }
+
+  .sky-hero-kicker {
+    letter-spacing: 0.14em;
+  }
+
+  .sky-hero-star {
+    width: clamp(104px, 34vw, 148px);
+  }
+
+  .sky-hero-atmosphere-back {
+    opacity: 0.07;
+    -webkit-mask-image: radial-gradient(ellipse 105% 25% at 55% 70%, #000 4%, rgba(0, 0, 0, 0.65) 48%, transparent 78%);
+    mask-image: radial-gradient(ellipse 105% 25% at 55% 70%, #000 4%, rgba(0, 0, 0, 0.65) 48%, transparent 78%);
+  }
+
+  .sky-hero-atmosphere-front {
+    opacity: 0.1;
+    -webkit-mask-image: radial-gradient(ellipse 92% 23% at 62% 78%, #000 4%, rgba(0, 0, 0, 0.62) 50%, transparent 80%);
+    mask-image: radial-gradient(ellipse 92% 23% at 62% 78%, #000 4%, rgba(0, 0, 0, 0.62) 50%, transparent 80%);
+  }
+
+  .sky-hero .actions,
+  .invite-body .actions,
+  .finale-content .actions,
+  .split .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sky-hero .actions .btn,
+  .invite-body .actions .btn,
+  .finale-content .actions .btn,
+  .split .actions .btn {
+    width: 100%;
+  }
+
+  .stable,
+  .stable-painting {
+    min-height: 28rem;
+    height: 70svh;
+    max-height: 36rem;
+  }
+
+  .stable-lockup {
+    width: 88%;
+    bottom: 6%;
+  }
+
+  .page-hero-art {
+    height: 13rem;
+  }
+
+  .page-hero-card {
+    margin-top: -2rem;
+  }
+
+  .page-hero-card > div {
+    padding-top: 1.35rem;
+  }
+
+  .carousel-track {
+    padding-inline: 10vw;
+    scroll-padding-inline: 10vw;
+  }
+
+  .slide {
+    flex-basis: 80vw;
+  }
+
+  .footer-legal > div {
+    flex-direction: column;
+  }
+
+  .consent {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    max-height: calc(100dvh - 1.5rem);
+    overflow-y: auto;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 899px) {
+  /* On the volunteer page, lead with the invitation and actions rather than
+     making phone users scroll past a large photograph to reach them. */
+  .split-top > .matted:first-child {
+    order: 2;
   }
 }
 

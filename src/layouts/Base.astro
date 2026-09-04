@@ -120,6 +120,7 @@ const eventJsonLd = JSON.stringify({
       function setNav(open: boolean) {
         nav?.classList.toggle("is-open", open);
         toggle?.setAttribute("aria-expanded", open ? "true" : "false");
+        document.querySelector(".site-header")?.classList.toggle("menu-open", open);
       }
 
       toggle?.addEventListener("click", () => {
@@ -144,8 +145,33 @@ const eventJsonLd = JSON.stringify({
         }
       });
 
-      // --- header shadow once the page scrolls ---
       const header = document.querySelector<HTMLElement>(".site-header");
+
+      // --- the header steps aside while the sky hero is on screen ---
+      // Reveals when the hero has mostly scrolled away, when the menu is open,
+      // or when anything inside the header has focus (keyboard users).
+      const skyHero = document.querySelector<HTMLElement>("[data-sky-hero]");
+      if (header && skyHero && "IntersectionObserver" in window) {
+        // the hero tucks under the header by exactly the header's height
+        const measure = () =>
+          document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`);
+        measure();
+        addEventListener("resize", measure, { passive: true });
+        header.classList.add("is-veiled");
+        const heroIo = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              header.classList.toggle("is-veiled", e.isIntersecting && e.intersectionRatio > 0.45);
+            }
+          },
+          { threshold: [0, 0.45, 1] },
+        );
+        heroIo.observe(skyHero);
+        header.addEventListener("focusin", () => header.classList.add("has-focus"));
+        header.addEventListener("focusout", () => header.classList.remove("has-focus"));
+      }
+
+      // --- header shadow once the page scrolls ---
       let scrolledFrame = 0;
       window.addEventListener(
         "scroll",
