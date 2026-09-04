@@ -80,15 +80,6 @@ body {
   overflow-x: clip;
 }
 
-/* Cross-fade between pages where supported; a normal jump elsewhere. */
-@view-transition {
-  navigation: auto;
-}
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 260ms;
-}
-
 img,
 svg {
   max-width: 100%;
@@ -504,20 +495,26 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   object-position: 30% 22%;
 }
 
-/* a small, quiet arrival: the sky fades in, the words rise */
+/* The painting is the first frame. Type settles gently while the atmospheric
+   layers provide the continuing motion. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js .sky-hero-sky {
-    animation: fade-in 1.2s var(--ease-out) both;
-  }
   html.js .sky-hero-copy {
-    animation: rise-in 1s var(--ease-out) both;
-    animation-delay: 350ms;
+    animation: hero-copy-settle 650ms var(--ease-out) both;
   }
   html.js .sky-hero-atmosphere-back {
     animation: atmosphere-drift-back 22s ease-in-out infinite alternate;
   }
   html.js .sky-hero-atmosphere-front {
     animation: atmosphere-drift-front 17s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes hero-copy-settle {
+  from {
+    translate: 0 8px;
+  }
+  to {
+    translate: 0 0;
   }
 }
 

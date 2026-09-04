@@ -4,7 +4,7 @@ import { nav } from "../data/event";
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
-<header class="site-header">
+<header class:list={["site-header", { "is-veiled": path === "/" }]}>
   <div class="header-inner">
     <a class="brand" href="/">
       <img

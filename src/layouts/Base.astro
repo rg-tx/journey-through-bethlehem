@@ -157,7 +157,6 @@ const eventJsonLd = JSON.stringify({
           document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`);
         measure();
         addEventListener("resize", measure, { passive: true });
-        header.classList.add("is-veiled");
         const heroIo = new IntersectionObserver(
           (entries) => {
             for (const e of entries) {
