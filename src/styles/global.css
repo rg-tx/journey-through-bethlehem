@@ -519,17 +519,22 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   html.js .sky-hero-cloud-back {
     animation:
       fade-in 1.6s var(--ease-out) both,
-      cloud-drift-back 58s ease-in-out infinite alternate;
+      cloud-drift-back 38s ease-in-out infinite alternate;
+  }
+  html.js .sky-hero-cloud-painted {
+    animation:
+      fade-in 1.7s 80ms var(--ease-out) both,
+      cloud-drift-painted 32s ease-in-out infinite alternate;
   }
   html.js .sky-hero-cloud-mid {
     animation:
       fade-in 1.8s 120ms var(--ease-out) both,
-      cloud-drift 46s ease-in-out infinite alternate;
+      cloud-drift 30s ease-in-out infinite alternate;
   }
   html.js .sky-hero-cloud-front {
     animation:
       fade-in 2s 240ms var(--ease-out) both,
-      cloud-drift-front 36s ease-in-out infinite alternate;
+      cloud-drift-front 24s ease-in-out infinite alternate;
   }
 }
 
@@ -660,9 +665,13 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 .sky-hero-cloud {
   position: absolute;
   pointer-events: none;
-  background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
+  background: url("/images/brand/cloud-band.webp") center bottom / cover no-repeat;
   mix-blend-mode: screen;
   transform-origin: center bottom;
+  /* Every source is a rectangular raster crop. Fade both crop boundaries so
+     no straight edge can surface as the layers scale across breakpoints. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 72%, transparent 100%);
 }
 
 .sky-hero-cloud-back {
@@ -672,6 +681,18 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   height: 28%;
   opacity: 0.12;
   filter: blur(1.2px) saturate(0.78);
+}
+
+.sky-hero-cloud-painted {
+  left: -18%;
+  right: -10%;
+  bottom: 13%;
+  height: 35%;
+  opacity: 0.16;
+  background-image: url("/images/brand/cloud-band-painted-v2.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  filter: blur(0.25px) saturate(0.82);
 }
 
 .sky-hero-cloud-mid {
@@ -709,6 +730,17 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   to {
     translate: 3% 1%;
     scale: 1.06;
+  }
+}
+
+@keyframes cloud-drift-painted {
+  from {
+    translate: 4% 1%;
+    scale: 1.04;
+  }
+  to {
+    translate: -5% -1%;
+    scale: 1.09;
   }
 }
 
@@ -2408,6 +2440,14 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
     right: 4%;
     bottom: 26%;
     opacity: 0.1;
+  }
+
+  .sky-hero-cloud-painted {
+    left: -48%;
+    right: -42%;
+    bottom: 12%;
+    height: 38%;
+    opacity: 0.14;
   }
 
   .sky-hero-cloud-mid {
