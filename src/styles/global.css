@@ -513,28 +513,11 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
     animation: rise-in 1s var(--ease-out) both;
     animation-delay: 350ms;
   }
-  html.js .sky-hero-cloud {
-    animation: fade-in 1.6s var(--ease-out) both;
+  html.js .sky-hero-atmosphere-back {
+    animation: atmosphere-drift-back 22s ease-in-out infinite alternate;
   }
-  html.js .sky-hero-cloud-back {
-    animation:
-      fade-in 1.6s var(--ease-out) both,
-      cloud-drift-back 38s ease-in-out infinite alternate;
-  }
-  html.js .sky-hero-cloud-painted {
-    animation:
-      fade-in 1.7s 80ms var(--ease-out) both,
-      cloud-drift-painted 32s ease-in-out infinite alternate;
-  }
-  html.js .sky-hero-cloud-mid {
-    animation:
-      fade-in 1.8s 120ms var(--ease-out) both,
-      cloud-drift 30s ease-in-out infinite alternate;
-  }
-  html.js .sky-hero-cloud-front {
-    animation:
-      fade-in 2s 240ms var(--ease-out) both,
-      cloud-drift-front 24s ease-in-out infinite alternate;
+  html.js .sky-hero-atmosphere-front {
+    animation: atmosphere-drift-front 17s ease-in-out infinite alternate;
   }
 }
 
@@ -661,56 +644,29 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   pointer-events: none;
 }
 
-/* companion cloud, cut from a different sky painting, drifting low */
-.sky-hero-cloud {
+/* Two translucent echoes of the original painting move just enough to make
+   its cloud banks breathe. Overscan and radial masks keep every edge soft. */
+.sky-hero-atmosphere {
   position: absolute;
+  inset: -5%;
   pointer-events: none;
-  background: url("/images/brand/cloud-band.webp") center bottom / cover no-repeat;
+  background: url("/images/brand/comet-sky.webp") 30% 22% / cover no-repeat;
   mix-blend-mode: screen;
-  transform-origin: center bottom;
-  /* Every source is a rectangular raster crop. Fade both crop boundaries so
-     no straight edge can surface as the layers scale across breakpoints. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 72%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 72%, transparent 100%);
+  transform-origin: center;
 }
 
-.sky-hero-cloud-back {
-  left: -8%;
-  right: 24%;
-  bottom: 22%;
-  height: 28%;
-  opacity: 0.12;
-  filter: blur(1.2px) saturate(0.78);
+.sky-hero-atmosphere-back {
+  opacity: 0.09;
+  filter: blur(1.2px) saturate(0.8);
+  -webkit-mask-image: radial-gradient(ellipse 88% 31% at 48% 72%, #000 5%, rgba(0, 0, 0, 0.72) 46%, transparent 76%);
+  mask-image: radial-gradient(ellipse 88% 31% at 48% 72%, #000 5%, rgba(0, 0, 0, 0.72) 46%, transparent 76%);
 }
 
-.sky-hero-cloud-painted {
-  left: -18%;
-  right: -10%;
-  bottom: 13%;
-  height: 35%;
-  opacity: 0.16;
-  background-image: url("/images/brand/cloud-band-painted-v2.webp");
-  background-size: 100% 100%;
-  background-position: center;
-  filter: blur(0.25px) saturate(0.82);
-}
-
-.sky-hero-cloud-mid {
-  left: -12%;
-  right: -12%;
-  bottom: 2%;
-  height: 43%;
-  opacity: 0.28;
-  filter: saturate(0.88);
-}
-
-.sky-hero-cloud-front {
-  left: 18%;
-  right: -24%;
-  bottom: -13%;
-  height: 48%;
-  opacity: 0.2;
-  filter: blur(0.35px) saturate(0.82);
+.sky-hero-atmosphere-front {
+  opacity: 0.13;
+  filter: blur(0.35px) saturate(0.88);
+  -webkit-mask-image: radial-gradient(ellipse 76% 28% at 58% 80%, #000 4%, rgba(0, 0, 0, 0.68) 48%, transparent 78%);
+  mask-image: radial-gradient(ellipse 76% 28% at 58% 80%, #000 4%, rgba(0, 0, 0, 0.68) 48%, transparent 78%);
 }
 
 @keyframes cloud-drift {
@@ -722,36 +678,25 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   }
 }
 
-@keyframes cloud-drift-back {
+@keyframes atmosphere-drift-back {
   from {
-    translate: -2% -1%;
-    scale: 1.02;
+    translate: -1.2% -0.25%;
+    scale: 1.045;
   }
   to {
-    translate: 3% 1%;
-    scale: 1.06;
+    translate: 1.4% 0.35%;
+    scale: 1.065;
   }
 }
 
-@keyframes cloud-drift-painted {
+@keyframes atmosphere-drift-front {
   from {
-    translate: 4% 1%;
-    scale: 1.04;
-  }
-  to {
-    translate: -5% -1%;
-    scale: 1.09;
-  }
-}
-
-@keyframes cloud-drift-front {
-  from {
-    translate: 3% 1%;
+    translate: 1.6% 0.25%;
     scale: 1.06;
   }
   to {
-    translate: -4% -1%;
-    scale: 1.1;
+    translate: -1.8% -0.35%;
+    scale: 1.085;
   }
 }
 
@@ -2436,32 +2381,16 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
     width: clamp(104px, 34vw, 148px);
   }
 
-  .sky-hero-cloud-back {
-    right: 4%;
-    bottom: 26%;
+  .sky-hero-atmosphere-back {
+    opacity: 0.07;
+    -webkit-mask-image: radial-gradient(ellipse 105% 25% at 55% 70%, #000 4%, rgba(0, 0, 0, 0.65) 48%, transparent 78%);
+    mask-image: radial-gradient(ellipse 105% 25% at 55% 70%, #000 4%, rgba(0, 0, 0, 0.65) 48%, transparent 78%);
+  }
+
+  .sky-hero-atmosphere-front {
     opacity: 0.1;
-  }
-
-  .sky-hero-cloud-painted {
-    left: -48%;
-    right: -42%;
-    bottom: 12%;
-    height: 38%;
-    opacity: 0.14;
-  }
-
-  .sky-hero-cloud-mid {
-    left: -32%;
-    right: -42%;
-    bottom: 7%;
-    height: 38%;
-  }
-
-  .sky-hero-cloud-front {
-    left: 2%;
-    right: -58%;
-    bottom: -9%;
-    opacity: 0.17;
+    -webkit-mask-image: radial-gradient(ellipse 92% 23% at 62% 78%, #000 4%, rgba(0, 0, 0, 0.62) 50%, transparent 80%);
+    mask-image: radial-gradient(ellipse 92% 23% at 62% 78%, #000 4%, rgba(0, 0, 0, 0.62) 50%, transparent 80%);
   }
 
   .sky-hero .actions,
