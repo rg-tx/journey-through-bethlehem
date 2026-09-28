@@ -20,33 +20,37 @@ import { event } from "../data/event";
   <section class="wrap split split-top">
     <form id="donate-form" novalidate>
       <p class="kicker">Make a gift</p>
-      <h2>Choose an amount</h2>
+      <h2>Give your way.</h2>
+      <p>Choose how often you’d like to give, then your amount. You’ll securely enter your payment details with Stripe.</p>
       <p id="donate-banner" class="notice" hidden>
         Online giving opens soon. In the meantime, email
         <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help you give another way.
       </p>
 
-      <p id="amount-label" class="field-label">Amount</p>
-      <div class="donate-amounts" role="group" aria-labelledby="amount-label">
-        <button type="button" data-amount="20" aria-pressed="false">$20</button>
-        <button type="button" data-amount="50" aria-pressed="true">$50</button>
-        <button type="button" data-amount="100" aria-pressed="false">$100</button>
-        <button type="button" data-amount="250" aria-pressed="false">$250</button>
-        <button type="button" data-amount="custom" aria-pressed="false">Custom</button>
-      </div>
-
-      <div class="field" id="custom-field" hidden>
-        <label for="custom-amount">Custom amount (USD)</label>
-        <input id="custom-amount" name="custom" type="number" min="1" step="1" inputmode="numeric" />
-      </div>
-
       <p id="freq-label" class="field-label">Frequency</p>
       <div class="freq" role="group" aria-labelledby="freq-label">
         <button type="button" data-freq="once" aria-pressed="true">One-time</button>
         <button type="button" data-freq="monthly" aria-pressed="false">Monthly</button>
+        <button type="button" data-freq="annual" aria-pressed="false">Annually</button>
       </div>
 
-      <button class="btn btn-deep" id="donate-submit" type="submit">Continue to secure checkout</button>
+      <p id="amount-label" class="field-label">Amount</p>
+      <div class="donate-amounts" role="group" aria-labelledby="amount-label">
+        <button type="button" data-amount="25" aria-pressed="false">$25</button>
+        <button type="button" data-amount="50" aria-pressed="true">$50</button>
+        <button type="button" data-amount="100" aria-pressed="false">$100</button>
+        <button type="button" data-amount="custom" aria-pressed="false">Other</button>
+      </div>
+
+      <div class="field" id="custom-field" hidden>
+        <label for="custom-amount">Custom amount (USD)</label>
+        <input id="custom-amount" name="custom" type="number" min="1" max="1000" step="0.01" inputmode="decimal" />
+      </div>
+
+      <p id="donation-summary" aria-live="polite">A one-time gift of $50.00.</p>
+      <p id="donor-portal" hidden>Already giving? <a id="donor-portal-link">Manage or cancel your recurring gift</a> using your checkout email.</p>
+      <noscript><p>Please enable JavaScript to give online, or email us for help.</p></noscript>
+      <button class="btn btn-deep" id="donate-submit" type="submit" disabled>Checking availability…</button>
       <p class="status" id="donate-status" role="status"></p>
 
       <div class="trust">
@@ -101,8 +105,20 @@ import { event } from "../data/event";
 
   let amount = 50;
   let custom = false;
-  let frequency: "once" | "monthly" | "quarterly" = "once";
+  let frequency: "once" | "monthly" | "annual" = "once";
   let configured = false;
+  const requestId = crypto.randomUUID();
+
+  function updateSummary() {
+    const dollars = custom ? Number(customInput?.value) : amount;
+    const label = Number.isFinite(dollars) && dollars >= 1
+      ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dollars) : "your chosen amount";
+    const summary = document.querySelector("#donation-summary");
+    if (summary) summary.textContent = frequency === "once"
+      ? `A one-time gift of ${label}.`
+      : `${label} today and every ${frequency === "monthly" ? "month" : "year"} until you cancel. Cancel future gifts through the donor portal.`;
+  }
+  customInput?.addEventListener("input", updateSummary);
 
   function setStatus(message: string) {
     if (status) status.textContent = message;
@@ -126,11 +142,17 @@ import { event } from "../data/event";
     try {
       const res = await fetch("/api/donate-config");
       const data = await res.json();
+      const portal = document.querySelector<HTMLAnchorElement>("#donor-portal-link");
+      if (portal && data.portalUrl) {
+        portal.href = data.portalUrl;
+        document.querySelector("#donor-portal")?.removeAttribute("hidden");
+      }
       if (!data?.configured) {
         lockForm();
         return;
       }
       configured = true;
+      if (submit) { submit.disabled = false; submit.textContent = "Continue to secure checkout"; }
     } catch {
       lockForm();
     }
@@ -143,6 +165,7 @@ import { event } from "../data/event";
       customField?.toggleAttribute("hidden", !custom);
       if (custom) customInput?.focus();
       if (!custom) amount = Number(button.dataset.amount);
+      updateSummary();
     });
   });
 
@@ -150,12 +173,13 @@ import { event } from "../data/event";
     button.addEventListener("click", () => {
       press(freqs, button);
       frequency = button.dataset.freq as typeof frequency;
+      updateSummary();
     });
   });
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!configured) return;
+    if (!configured || submit?.disabled) return;
     const dollars = custom ? Number(customInput?.value) : amount;
     if (!Number.isFinite(dollars) || dollars < 1) {
       setStatus("Please enter an amount of at least $1.");
@@ -171,10 +195,10 @@ import { event } from "../data/event";
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amount: Math.round(dollars * 100), frequency }),
+        body: JSON.stringify({ amount: Math.round(dollars * 100), frequency, requestId }),
       });
       const data = await res.json();
-      if (data.url) {
+      if (res.ok && data.url) {
         window.location.href = data.url;
         return;
       }

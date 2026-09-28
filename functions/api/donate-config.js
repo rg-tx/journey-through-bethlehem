@@ -1,7 +1,5 @@
+import { donationsConfigured, donorPortalUrl, json } from "../../lib/donations.js";
+
 export async function onRequestGet({ env }) {
-  const configured = Boolean(env.STRIPE_SECRET_KEY);
-  return Response.json({
-    configured,
-    publishableKey: configured ? env.STRIPE_PUBLISHABLE_KEY || null : null,
-  });
+  return json({ configured: donationsConfigured(env), portalUrl: donorPortalUrl(env) });
 }
