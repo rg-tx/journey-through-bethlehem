@@ -23,13 +23,22 @@ Portal configuration: `bpc_1UKlBnEf2RYKO6o9lrGVWpUx`.
 Portal: https://billing.stripe.com/p/login/6oU3cvbWr8H2e9V5JR04800
 Donors can update name/email/payment methods, view invoices, and cancel immediately with no prorations. Cancellation stops future gifts; it does not refund past donations. Plan switching is disabled. Portal return URL is the current public JtB donation page.
 
-No charges, subscriptions, or test donors were created in live mode.
+No charges, subscriptions, or test donors were created in live mode. Six live Checkout Sessions (two sets covering all three frequencies) were created to verify the actual application code against Stripe and immediately expired without payment.
+
+### Connection completed
+
+- Restricted key `FFF website donations — Cloudflare`: Checkout Sessions write, Prices write, Products read. Stored encrypted as `STRIPE_SECRET_KEY` in preview and production; not committed or saved locally.
+- Live webhook `we_1UKleVEf2RYKO6o9IolJsMw3` registered at the preview URL's `/api/stripe-webhook`, with signing secret encrypted in preview.
+- Actual application Checkout requests returned HTTP 200 for one-time/payment, monthly/subscription, and annual/subscription; $1 amount/currency verified, sessions expired successfully. This verifies credentials and API compatibility, not card settlement or renewals.
+- Deployed webhook: synthetic signed connection event returned HTTP 200; invalid signature returned HTTP 400. This was an ignored diagnostic event, not a donation record or proof of Stripe event delivery.
+- Dashboard shows Payments/Payouts active, but also an overdue **Provide an external account** task and business information **In review**. Resolve the bank task before public launch.
+- Giving remains disabled; no public domain cutover has occurred.
 
 ## Required before accepting gifts
 
 1. Connect a Stripe sandbox/test environment and create its donation product and portal. The plugin currently exposes only the live account. Use sandbox IDs and keys together; never mix modes.
-2. Add a restricted Stripe API key as Cloudflare Pages secret `STRIPE_SECRET_KEY`, with the permissions needed to create Checkout Sessions and their inline prices. Verify permissions with test requests. Do not put secrets in source, browser JavaScript, or chat. Hosted Checkout does not need a publishable key.
-3. Register `/api/stripe-webhook` at the stable donation deployment URL in Stripe Workbench. Subscribe to:
+2. DONE for live mode: restricted key saved as Cloudflare Pages secret `STRIPE_SECRET_KEY`; Checkout creation and expiration verified. Add a separate sandbox key when testing payments. Do not put secrets in source, browser JavaScript, or chat. Hosted Checkout does not need a publishable key.
+3. DONE for live preview: `/api/stripe-webhook` registered. Register the final production URL separately before cutover. Subscribe to:
    - `checkout.session.completed`
    - `checkout.session.async_payment_succeeded`
    - `checkout.session.async_payment_failed`
@@ -38,7 +47,7 @@ No charges, subscriptions, or test donors were created in live mode.
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
    Store that endpoint's signing secret as Cloudflare secret `STRIPE_WEBHOOK_SECRET`.
-4. Set the matching public `STRIPE_DONATION_PRODUCT_ID` and `STRIPE_PORTAL_URL`. Wrangler configuration owns preview variables; dashboard edits to these plain variables can be overwritten at deploy. Preview currently contains live public identifiers but giving is disabled and no API secret is installed.
+4. Set the matching public `STRIPE_DONATION_PRODUCT_ID` and `STRIPE_PORTAL_URL`. Wrangler configuration owns preview variables; dashboard edits to these plain variables can be overwritten at deploy. Preview contains live identifiers and both required secrets, but giving is disabled. Production has the API secret only and needs its final webhook and public variables.
 5. In the test deployment only, enable `STRIPE_DONATIONS_ENABLED="true"` and redeploy. Verify one-time/monthly/annual Checkout with preset and custom amounts, successful/declined/asynchronous payments, signed webhook deliveries, renewals, and donor-portal cancellation. Confirm current account API compatibility with `ui_mode=hosted_page` and name collection. No API version override is specified.
 6. Verify Stripe successful-payment receipts, recurring-payment failure emails, account verification, RBFCU payouts, and nonprofit pricing. None of those settings was verified by this implementation. Receipt email is not a substitute for the foundation's annual acknowledgement process.
 7. Have Reed reconcile Stripe exports to Google Sheets/bank deposits. Use unique Stripe payment IDs, gross amounts, fees, refunds, and net payouts; never count webhook deliveries as gifts. Monitor failed payments/disputes in Stripe Dashboard; webhook logs alone do not notify the treasurer.
@@ -54,7 +63,7 @@ Preserves the supplied Checkout Studio choices: hosted page, automatic billing-a
 - `npm run build`: successful Astro static build.
 - Cloudflare successfully compiled/deployed Pages Functions.
 - Browser verified annual selection and annual recurring-charge disclosure on deployed preview.
-- Real Stripe checkout, renewal, receipt delivery, and cancellation tests remain blocked on test credentials. No end-to-end payment success is claimed.
+- Real Stripe Checkout creation/expiration and deployed webhook signature checks pass. Payment settlement, renewal, receipt delivery, portal cancellation, and real Stripe webhook delivery tests remain outstanding. No end-to-end payment success is claimed.
 - Existing dependency audit reports five issues (including critical Astro and high sharp/tooling advisories). This change adds Stripe but does not upgrade the existing framework. Review/update dependencies before public cutover; the deployed site uses a static build, not Astro SSR.
 
 ## References
