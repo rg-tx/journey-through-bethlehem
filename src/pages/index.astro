@@ -71,14 +71,15 @@ const nights = Math.max(1, nightsUntil());
           <p class="kicker">Four nights only</p>
           <h2 id="showtimes-title">Showtimes</h2>
           <p class="section-sub">
-            Evening walks, {event.datesLabel}. All times Central. Each walk leaves on the hour.
+            {event.datesLabel}. All times Central. The production begins at your reserved time.
           </p>
         </div>
         <a class="btn btn-gold" href="/tickets" data-when="open eventWeek">Reserve a showtime</a>
         <p class="section-sub" data-when="prelaunch">Free reservations open {event.ticketsOpenLabel}.</p>
       </div>
       <Showtimes tone="night" />
-      <p class="night-note">{event.accommodations}</p>
+      <p class="night-note">9 p.m. performances are production-only; Bethlehem is not included afterward.</p>
+      <p class="night-note">{event.accommodations} <a href={`mailto:${event.email}`}>Email our team</a>.</p>
     </div>
   </section>
 

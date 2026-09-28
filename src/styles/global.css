@@ -285,27 +285,6 @@ p:last-child {
     border-color var(--dur-1) var(--ease-out);
 }
 
-/* On the home page the header steps aside while the sky hero is on screen,
-   so nothing sits above the star. It slides back the moment the hero leaves,
-   the menu opens, or a keyboard user focuses into it. */
-html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
-  translate: 0 -100%;
-  box-shadow: none;
-}
-
-.site-header {
-  transition:
-    translate 420ms var(--ease-out),
-    box-shadow var(--dur-1) var(--ease-out),
-    border-color var(--dur-1) var(--ease-out);
-}
-
-/* the hero sits under where the header was, so the sky starts at the very top */
-.sky-hero {
-  margin-top: calc(-1 * var(--header-h, 0px));
-  padding-top: var(--header-h, 0px);
-}
-
 .site-header.is-scrolled {
   border-bottom-color: var(--line);
   box-shadow: 0 1px 14px rgba(35, 26, 18, 0.07);
@@ -1434,11 +1413,8 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 }
 
 .night-card {
-  border: 1px solid var(--night-line);
-  border-top: 2px solid rgba(217, 182, 103, 0.55);
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(26, 41, 48, 0.9), rgba(18, 29, 36, 0.6));
-  padding: 1.15rem 1.25rem 1.3rem;
+  border-top: 1px solid var(--night-line);
+  padding: 1.15rem 0 1.3rem;
 }
 
 .weekday {
@@ -1468,15 +1444,14 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   font-size: 0.95rem;
   letter-spacing: 0.04em;
   color: var(--night-text);
-  border: 1px solid var(--night-line);
-  border-radius: var(--radius);
-  padding: 0.3rem 0.6rem;
+  display: block;
+  padding: 0.3rem 0;
+  flex-basis: 100%;
 }
 
 .on-paper .time {
   color: var(--ink);
-  border-color: var(--line);
-  background: var(--paper);
+  background: transparent;
 }
 
 /* once tickets are live: glowing, tappable chips */
@@ -1662,7 +1637,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 
 .page-hero-art {
   position: relative;
-  height: clamp(14rem, 34vw, 24rem);
+  height: clamp(8rem, 14vw, 12rem);
   overflow: hidden;
   line-height: 0;
   background: var(--night);
@@ -1686,16 +1661,14 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   position: relative;
   z-index: 1;
   max-width: var(--page);
-  margin: -3.75rem auto 0;
+  margin: 0 auto;
   padding: 0 var(--gutter);
 }
 
 .page-hero-card > div {
   background: var(--paper);
-  border-top: 2px solid var(--gold-bright);
-  padding: 1.9rem clamp(1.25rem, 3vw, 2.5rem) 0;
-  max-width: 50rem;
-  box-shadow: 0 -18px 40px rgba(12, 20, 24, 0.18);
+  padding: 2rem 0 0;
+  max-width: 52rem;
 }
 
 .page-hero-card h1 {
@@ -1713,9 +1686,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 /* ---------- photos as artifacts ---------- */
 
 .matted {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  padding: 0.55rem;
+  padding: 0;
   margin: 0;
 }
 
@@ -1815,10 +1786,8 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 }
 
 .schedule-night {
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--gold);
-  background: var(--surface);
-  padding: 1.15rem 1.25rem 1.3rem;
+  border-top: 1px solid var(--line-strong);
+  padding: 1.15rem 0 1.3rem;
 }
 
 .schedule-night .weekday {
@@ -1831,8 +1800,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 }
 
 .notice {
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--gold);
+  border: 0;
   background: var(--plaster);
   padding: 1.05rem 1.25rem;
   max-width: 44rem;
@@ -1882,10 +1850,8 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
 }
 
 .role {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  padding: 1rem 1.15rem 1.1rem;
+  border-top: 1px solid var(--line);
+  padding: 1rem 0;
 }
 
 .role h3 {
@@ -2296,52 +2262,6 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   justify-content: center;
 }
 
-/* ---------- privacy notice ---------- */
-
-.consent {
-  position: fixed;
-  z-index: 60;
-  left: 1rem;
-  right: 1rem;
-  bottom: 1rem;
-  max-width: 26rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--gold-bright);
-  border-radius: var(--radius);
-  box-shadow: 0 14px 40px rgba(35, 26, 18, 0.18);
-  padding: 1rem 1.15rem 1.1rem;
-  font-size: 0.92rem;
-}
-
-@media (min-width: 640px) {
-  .consent {
-    padding: 1.1rem 1.25rem 1.2rem;
-    font-size: 0.95rem;
-  }
-}
-
-.consent p {
-  margin: 0 0 0.9rem;
-}
-
-.consent-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--ink-strong);
-  margin-bottom: 0.4rem !important;
-}
-
-.consent .actions {
-  justify-content: flex-end;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .consent:not([hidden]) {
-    animation: rise-in var(--dur-2) var(--ease-out) both;
-  }
-}
-
 /* ---------- narrow-screen hardening ---------- */
 
 @media (max-width: 479px) {
@@ -2418,11 +2338,11 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
   }
 
   .page-hero-art {
-    height: 13rem;
+    height: 8rem;
   }
 
   .page-hero-card {
-    margin-top: -2rem;
+    margin-top: 0;
   }
 
   .page-hero-card > div {
@@ -2442,14 +2362,7 @@ html.js .site-header.is-veiled:not(.has-focus):not(.menu-open) {
     flex-direction: column;
   }
 
-  .consent {
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    max-height: calc(100dvh - 1.5rem);
-    overflow-y: auto;
-    font-size: 0.875rem;
-  }
+
 }
 
 @media (max-width: 899px) {
@@ -2470,3 +2383,15 @@ html[data-state="eventWeek"] [data-when]:not([data-when~="eventWeek"]),
 html[data-state="past"] [data-when]:not([data-when~="past"]) {
   display: none !important;
 }
+
+/* Shared refinements: align task pages and keep waiting states actionable. */
+.hero-booking { color: var(--night-text); margin: 0 0 1.5rem; font-family: var(--font-ui); }
+.time-detail { display: block; font-size: 0.75rem; letter-spacing: 0; opacity: 0.85; }
+.time-link { flex-direction: column; }
+.schedule-note { margin-top: 1.5rem; font-family: var(--font-ui); }
+#giving-fields { border: 0; padding: 0; margin: 1.5rem 0; min-width: 0; }
+.giving-availability { font-size: var(--t-lede); color: var(--ink-strong); }
+.page-hero-card h1 { font-size: clamp(2rem, 4vw, 3rem); }
+@media (min-width: 900px) and (max-width: 1150px) { .roles { grid-template-columns: 1fr; } }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }

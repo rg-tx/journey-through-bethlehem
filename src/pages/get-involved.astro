@@ -44,8 +44,12 @@ import {
       <h2 id="volunteer-title">Give a night in costume</h2>
       <p>
         No experience is needed, and costumes are provided. Pick a night and a role on the sign-up
-        form; we’ll take it from there. A few of the ways people serve:
+        form; we’ll take it from there.
       </p>
+      <div class="actions">
+        <a class="btn btn-deep" href={volunteerAdultUrl} rel="noreferrer">Sign up to volunteer</a>
+        <a class="btn btn-surface" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
+      </div>
       <div class="roles">
         {
           volunteerRoles.map((role) => (
@@ -55,10 +59,6 @@ import {
             </div>
           ))
         }
-      </div>
-      <div class="actions">
-        <a class="btn btn-deep" href={volunteerAdultUrl} rel="noreferrer">Sign up to volunteer</a>
-        <a class="btn btn-surface" href={volunteerYouthUrl} rel="noreferrer">Youth sign-up</a>
       </div>
       <p class="section-sub" style="margin-top: 1rem;">
         Shepherds, angels, and musicians are mostly played by young people, who have their own form.

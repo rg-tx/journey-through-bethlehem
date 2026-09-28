@@ -19,14 +19,18 @@ import { event } from "../data/event";
 
   <section class="wrap split split-top">
     <form id="donate-form" novalidate>
-      <p class="kicker">Make a gift</p>
-      <h2>Give your way.</h2>
-      <p>Choose how often you’d like to give, then your amount. You’ll securely enter your payment details with Stripe.</p>
-      <p id="donate-banner" class="notice" hidden>
-        Online giving opens soon. In the meantime, email
+      <h2 id="giving-title">Give your way.</h2>
+      <p id="giving-intro" hidden>Choose how often you’d like to give, then your amount. You’ll securely enter your payment details with Stripe.</p>
+      <p id="donate-banner" class="giving-availability" role="status">
+        Checking online giving availability…
+      </p>
+      <p id="giving-alternative" hidden>
+        To give in the meantime, email
         <a href={`mailto:${event.email}`}>{event.email}</a> and we’ll help you give another way.
       </p>
 
+      <fieldset id="giving-fields" disabled hidden>
+      <legend class="sr-only">Choose your gift</legend>
       <p id="freq-label" class="field-label">Frequency</p>
       <div class="freq" role="group" aria-labelledby="freq-label">
         <button type="button" data-freq="once" aria-pressed="true">One-time</button>
@@ -48,9 +52,10 @@ import { event } from "../data/event";
       </div>
 
       <p id="donation-summary" aria-live="polite">A one-time gift of $50.00.</p>
+      </fieldset>
       <p id="donor-portal" hidden>Already giving? <a id="donor-portal-link">Manage or cancel your recurring gift</a> using your checkout email.</p>
       <noscript><p>Please enable JavaScript to give online, or email us for help.</p></noscript>
-      <button class="btn btn-deep" id="donate-submit" type="submit" disabled>Checking availability…</button>
+      <button class="btn btn-deep" id="donate-submit" type="submit" disabled hidden>Checking availability…</button>
       <p class="status" id="donate-status" role="status"></p>
 
       <div class="trust">
@@ -130,7 +135,11 @@ import { event } from "../data/event";
 
   function lockForm() {
     configured = false;
-    banner?.removeAttribute("hidden");
+    if (banner) banner.textContent = "Online giving opens soon.";
+    document.querySelector("#giving-alternative")?.removeAttribute("hidden");
+    document.querySelector("#giving-fields")?.setAttribute("hidden", "");
+    document.querySelector("#giving-intro")?.setAttribute("hidden", "");
+    submit?.setAttribute("hidden", "");
     if (submit) {
       submit.disabled = true;
       submit.textContent = "Online giving opens soon";
@@ -140,7 +149,7 @@ import { event } from "../data/event";
 
   async function checkConfig() {
     try {
-      const res = await fetch("/api/donate-config");
+      const res = await fetch("/api/donate-config", { signal: AbortSignal.timeout(10000) });
       const data = await res.json();
       const portal = document.querySelector<HTMLAnchorElement>("#donor-portal-link");
       if (portal && data.portalUrl) {
@@ -152,6 +161,11 @@ import { event } from "../data/event";
         return;
       }
       configured = true;
+      document.querySelector("#giving-intro")?.removeAttribute("hidden");
+      banner?.setAttribute("hidden", "");
+      const fields = document.querySelector<HTMLFieldSetElement>("#giving-fields");
+      if (fields) { fields.hidden = false; fields.disabled = false; }
+      submit?.removeAttribute("hidden");
       if (submit) { submit.disabled = false; submit.textContent = "Continue to secure checkout"; }
     } catch {
       lockForm();

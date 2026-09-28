@@ -19,16 +19,16 @@ const { tone = "night" } = Astro.props;
           {night.slots.map((slot) => (
             <>
               <span class="time" data-when="prelaunch past">
-                {slot.time} PM
+                {slot.time} PM{slot.time === "9:00" && <span class="time-detail">Production only</span>}
               </span>
               <a
                 class="time-link"
                 href={slot.url ?? event.ticketsUrl}
                 rel="noreferrer"
-                aria-label={`Reserve ${night.weekday}, ${night.date} at ${slot.time} PM`}
+                aria-label={`Reserve ${night.weekday}, ${night.date} at ${slot.time} PM${slot.time === "9:00" ? ", production only" : ""}`}
                 data-when="open eventWeek"
               >
-                {slot.time} PM
+                {slot.time} PM{slot.time === "9:00" && <span class="time-detail">Production only</span>}
               </a>
             </>
           ))}
