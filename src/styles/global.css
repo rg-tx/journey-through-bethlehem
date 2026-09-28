@@ -784,6 +784,11 @@ p:last-child {
   top: -24%;
   height: 50%;
   background: url("/images/brand/cloud-band.webp") center / 100% 100% no-repeat;
+  /* .stable clips everything above its top edge, which sits 48% of the way
+     down this band, right through its opaque middle. Fade the band in from
+     that edge so the clip never shows as a hard line across the page. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 48%, #000 72%);
+  mask-image: linear-gradient(180deg, transparent 48%, #000 72%);
   mix-blend-mode: screen;
   opacity: 0.42;
   pointer-events: none;
