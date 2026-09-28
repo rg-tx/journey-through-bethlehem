@@ -135,9 +135,13 @@ import { event } from "../data/event";
 
   function lockForm() {
     configured = false;
-    if (banner) banner.textContent = "Online giving opens soon.";
+    if (banner) {
+      banner.textContent = "Online giving opens soon.";
+      banner.hidden = false;
+    }
     document.querySelector("#giving-alternative")?.removeAttribute("hidden");
-    document.querySelector("#giving-fields")?.setAttribute("hidden", "");
+    const fields = document.querySelector<HTMLFieldSetElement>("#giving-fields");
+    if (fields) { fields.hidden = true; fields.disabled = true; }
     document.querySelector("#giving-intro")?.setAttribute("hidden", "");
     submit?.setAttribute("hidden", "");
     if (submit) {
