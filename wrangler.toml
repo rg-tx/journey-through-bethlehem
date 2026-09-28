@@ -8,7 +8,15 @@ pages_build_output_dir = "dist"
 
 # Set these as Pages secrets / environment variables — never commit live keys:
 # STRIPE_SECRET_KEY
-# STRIPE_PUBLISHABLE_KEY
-# STRIPE_DONATE_PRICE_ID   (optional; checkout uses custom amounts via price_data)
+# STRIPE_WEBHOOK_SECRET
+# STRIPE_DONATION_PRODUCT_ID
+# STRIPE_PORTAL_URL
+# STRIPE_DONATIONS_ENABLED = "true" only after test checkout and webhook verification
 
 # There is no mailing list or email capture on this site by decision of the organizers.
+
+# Public identifiers only. Keep checkout disabled until end-to-end verification.
+[env.preview.vars]
+STRIPE_DONATION_PRODUCT_ID = "prod_VLRjXYQey9n2XO"
+STRIPE_PORTAL_URL = "https://billing.stripe.com/p/login/6oU3cvbWr8H2e9V5JR04800"
+STRIPE_DONATIONS_ENABLED = "false"

@@ -5,3 +5,6 @@ dist/
 .env.local
 .wrangler/
 .DS_Store
+
+.dev.vars
+.dev.vars.*
