@@ -40,8 +40,7 @@ const faqCols = [faq.slice(0, half), faq.slice(half)];
         <a class="btn btn-surface" href={event.mapsUrl} rel="noreferrer">Get directions</a>
       </div>
       <p class="section-sub" style="margin-top: 0.9rem;">
-        Reservations are handled securely by Ticket Tailor. Tap a time below to go straight to that
-        showtime. Popular nights fill.
+        Reservations are handled securely by Ticket Tailor. Choose your date and time on the reservation page. Popular nights fill.
       </p>
     </div>
 
@@ -58,12 +57,13 @@ const faqCols = [faq.slice(0, half), faq.slice(half)];
         <p class="kicker">Four nights only</p>
         <h2 id="schedule-title">Showtimes</h2>
         <p class="section-sub">
-          Evening walks, {event.datesLabel}. All times Central. Each walk leaves on the hour.
+          {event.datesLabel}. All times Central. The production begins at your reserved time.
         </p>
       </div>
     </div>
     <Showtimes tone="paper" />
-    <p class="section-sub" style="margin-top: 1.5rem; max-width: 52rem;">{event.accommodations}</p>
+    <p class="schedule-note">9 p.m. performances are production-only; Bethlehem is not included afterward.</p>
+    <p class="section-sub" style="margin-top: 1.5rem; max-width: 52rem;">{event.accommodations} <a href={`mailto:${event.email}`}>Email our team</a>.</p>
   </section>
 
   <section class="wrap" id="plan-your-visit" aria-labelledby="faq-title">

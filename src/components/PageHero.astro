@@ -1,7 +1,6 @@
 ---
 /**
- * Interior pages open the same way: a painting the reader can actually make
- * out, and a paper title card rising out of it. Each page names its painting.
+ * Interior pages share a compact painted banner and an aligned paper title.
  */
 interface Props {
   kicker?: string;
@@ -13,7 +12,7 @@ interface Props {
   /** Vertical crop of the painting, e.g. "40%". */
   artY?: string;
 }
-const { kicker, title, lede, art, artAlt = "", artY = "50%" } = Astro.props;
+const { title, lede, art, artAlt = "", artY = "50%" } = Astro.props;
 ---
 
 <section class="page-hero">
@@ -31,7 +30,7 @@ const { kicker, title, lede, art, artAlt = "", artY = "50%" } = Astro.props;
   </div>
   <div class="page-hero-card">
     <div>
-      {kicker && <p class="kicker">{kicker}</p>}
+
       <h1>{title}</h1>
       {lede && <p class="lede">{lede}</p>}
       <slot />

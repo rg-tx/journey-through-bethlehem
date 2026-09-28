@@ -23,11 +23,11 @@ export const event = {
   ticketsOpenShort: "November 1",
   // Midnight Nov 1 in Chicago is still CDT (UTC-05:00); DST ends later that morning.
   ticketsOpenIso: "2026-11-01T00:00:00-05:00",
-  // First showtime is 6:00 PM CST Dec 3; the last walk leaves 9:00 PM CST Dec 6.
+  // First showtime is 6:00 PM CST Dec 3; the last Sunday production starts at 8:00 PM CST.
   eventStartIso: "2026-12-03T18:00:00-06:00",
   eventEndIso: "2026-12-06T22:00:00-06:00",
   accommodations:
-    "American Sign Language is offered at Friday’s 7:00 p.m. showtime and at every Saturday and Sunday showtime. Spanish translation is offered every night. Choose the accommodation you need when you reserve.",
+    "ASL, Spanish interpretation, and accessible route details are being confirmed. Please contact us before reserving if your visit depends on these arrangements.",
   /**
    * Each time may carry its own Ticket Tailor occurrence URL so a tap lands on
    * that exact showtime. Until organizers paste those in (Ticket Tailor
@@ -53,7 +53,7 @@ export const event = {
     {
       date: "December 6",
       weekday: "Sunday",
-      slots: [{ time: "5:00" }, { time: "6:00" }, { time: "7:00" }, { time: "8:00" }, { time: "9:00" }],
+      slots: [{ time: "5:00" }, { time: "6:00" }, { time: "7:00" }, { time: "8:00" }],
     },
   ] as ReadonlyArray<{
     date: string;
@@ -67,8 +67,8 @@ export const invite = {
   kicker: "You’re invited",
   title: "Four December nights in Bethlehem.",
   body: [
-    "You are invited to the 3rd annual live nativity in Trophy Club. Step into an interactive Bethlehem marketplace: listen to live music, sample the food, toss a dreidel, make a clay lamp, and meet the live manger animals.",
-    "The evening culminates in a live musical performance of the nativity story, with actors, animals, the humble stable, and the guiding star. Bring your friends and family for a heartwarming celebration of faith and love.",
+    "Your evening begins with a live musical telling of the nativity. Then step into Bethlehem: listen to live music, sample the food, toss a dreidel, make a clay lamp, and meet the live animals.",
+    "Bring your friends and family for a celebration of faith and love. The 9 p.m. performances on Thursday, Friday, and Saturday include the production only, without the Bethlehem experience afterward.",
   ],
 } as const;
 
@@ -150,8 +150,8 @@ export const hero = {
 } as const;
 
 export const walkFinale = {
-  title: "Every road ends at the stable.",
-  line: "Reserve a showtime, come as you are, and take the walk at your own pace.",
+  title: "Begin with the wonder of the nativity.",
+  line: "Reserve a showtime and join us for the production, followed by Bethlehem. The 9 p.m. performances are production-only.",
   video: "/video/journey.mp4",
   poster: "/images/brand/journey-poster.webp",
 } as const;
@@ -259,7 +259,7 @@ export const volunteerRoles = [
 export const faq = [
   {
     q: "What is Journey Through Bethlehem?",
-    a: "A free outdoor live nativity. You walk through a recreated Bethlehem at night: a marketplace with food, crafts, and artisans; carolers; travelers and live animals on the road; and, at the end, a live musical telling of the nativity at the stable. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
+    a: "A free live nativity. Begin with a live musical telling of the nativity, then explore a recreated outdoor Bethlehem with food, crafts, artisans, carolers, and live animals. The 9 p.m. performances include only the production. It’s presented by Faith & Fellowship Foundation and put on entirely by volunteers from local churches and the community.",
   },
   {
     q: "Does it really cost nothing?",
@@ -271,7 +271,7 @@ export const faq = [
   },
   {
     q: "Is the walk stroller and wheelchair friendly?",
-    a: "The route is a walking path, and we want every family to make it to the stable. If anyone in your group uses a wheelchair or stroller, or you have a mobility question, email us and we’ll make sure you’re taken care of.",
+    a: "Accessible route details are still being confirmed. If anyone in your group uses a wheelchair or stroller, please email team@journeythroughbethlehem.org before reserving so we can discuss your visit.",
   },
   {
     q: "Are there real animals?",
